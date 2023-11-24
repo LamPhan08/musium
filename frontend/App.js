@@ -10,11 +10,13 @@ import {
 } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import RootNavigation from './src/navigators/RootNavigation';
+import AuthStack from './src/navigators/AuthStack';
 
 function App() {
   return (
       <NavigationContainer>
-        <RootNavigation/>
+       {/*<RootNavigation/>*/}
+       <AuthStack />
       </NavigationContainer>
   );
 }
