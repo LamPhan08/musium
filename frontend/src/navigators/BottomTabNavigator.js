@@ -32,19 +32,10 @@ const BottomTabNavigator = () => {
         title: 'Khám phá',
 
       }} />
-<<<<<<< HEAD
-      <Tab.Screen name='Explore' component={Favorites} options={{
-        tabBarIcon: ({ focused }) => <Ionicons name='search' size={24} color={focused ? COLORS.primary : COLORS.white} />,
-        headerLeft: () => (
-          <Text style={{ marginLeft: 20, fontSize: 20, color: '#000', fontWeight: 'bold' }}>Matches</Text>
-        ),
-      }} />
-=======
-      {/* <Tab.Screen name='Favorites' component={Explore} options={{
+       <Tab.Screen name='Favorites' component={Favorites} options={{
         tabBarIcon: ({ focused }) => <Ionicons name='heart-outline' size={26} color={focused ? COLORS.primary : COLORS.white} />,
         title: 'Yêu thích'
-      }} /> */}
->>>>>>> lam
+      }} />
       <Tab.Screen name='Profile' component={Profile} options={{
         tabBarIcon: ({ focused }) => <Ionicons name='person-outline' size={26} color={focused ? COLORS.primary : COLORS.white} />,
         title: 'Cá nhân'

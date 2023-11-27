@@ -3,14 +3,14 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import BottomTabNavigator from './BottomTabNavigator';
 import Splash from '../screens/splash/Splash';
 import OnboardingScreen from '../screens/OnboardingScreen';
-import LoginScreen from '../screens/LoginScreen';
-import RegisterScreen from '../screens/RegisterScreen';
+import LoginScreen from '../screens/login/LoginScreen';
+import RegisterScreen from '../screens/register/RegisterScreen';
 const Stack = createNativeStackNavigator();
 
 const RootNavigation = () => {
     return (
         <Stack.Navigator
-            initialRouteName='App'
+            initialRouteName='Splash'
             screenOptions={{
                 headerShown: false,
                 presentation: 'modal',

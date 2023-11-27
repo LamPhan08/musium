@@ -10,16 +10,16 @@ import {
 
 
 
-import InputField from '../components/InputField';
+import InputField from '../../components/InputField';
 
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import Musium from '../../assets/images/musiumlogo.svg';
-import GoogleSVG from '../../assets/images/google.svg';
-import FacebookSVG from '../../assets/images/facebook.svg';
-import TwitterSVG from '../../assets/images/twitter.svg';
-import CustomButton from '../components/CustomButton';
+import Musium from '../../../assets/images/musiumlogo.svg';
+import GoogleSVG from '../../../assets/images/google.svg';
+import FacebookSVG from '../../../assets/images/facebook.svg';
+import TwitterSVG from '../../../assets/images/twitter.svg';
+import CustomButton from '../../components/CustomButton';
 import LinearGradient from 'react-native-linear-gradient';
 
 const RegisterScreen = ({navigation}) => {

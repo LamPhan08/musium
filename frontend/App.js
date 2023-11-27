@@ -10,8 +10,7 @@ import {
 } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import RootNavigation from './src/navigators/RootNavigation';
-import AuthStack from './src/navigators/AuthStack';
-import Favorites from './src/screens/favorites/Favorites';
+
 
 function App() {
   return (
