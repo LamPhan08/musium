@@ -7,7 +7,7 @@ import Profile from '../screens/profile/Profile';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import AntDesign from 'react-native-vector-icons/MaterialCommunityIcons'
 import { COLORS } from '../constants/colors';
-
+import Favorites from '../screens/favorites/Favorites';
 
 const Tab = createBottomTabNavigator();
 
@@ -34,7 +34,7 @@ const BottomTabNavigator = () => {
         title: 'Home',
 
       }} />
-      <Tab.Screen name='Explore' component={Explore} options={{
+      <Tab.Screen name='Explore' component={Favorites} options={{
         tabBarIcon: ({ focused }) => <Ionicons name='search' size={24} color={focused ? COLORS.primary : COLORS.white} />,
         headerLeft: () => (
           <Text style={{ marginLeft: 20, fontSize: 20, color: '#000', fontWeight: 'bold' }}>Matches</Text>

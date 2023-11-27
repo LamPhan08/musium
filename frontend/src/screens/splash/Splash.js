@@ -5,7 +5,7 @@ import logo from '../../../assets/images/logo.png'
 
 const Splash = ({navigation}) => {
     setTimeout(() => {
-        navigation.navigate("App")
+        navigation.navigate("Onboarding")
     }, 2000)
 
   return (

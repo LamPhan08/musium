@@ -72,7 +72,7 @@ const LoginScreen = ({ navigation }) => {
                     fieldButtonFunction={() => { }}
                 />
 
-                <CustomButton label={"Login"} onPress={() => { }} />
+                <CustomButton label={"Login"} onPress={() => navigation.navigate('App')} />
 
                 <Text style={{ textAlign: 'center', color: '#FFFFFF', marginBottom: 30 }}>
                     Or, login with ...
