@@ -7,7 +7,7 @@ const ZingController = require("../controllers/ZingController")
 router.get("/song", ZingController.getSong)
 
 // getDetailPlaylist
-router.get("/detailplaylist", ZingController.getDetailPlaylist)
+router.get("/playlistdetail", ZingController.getDetailPlaylist)
 
 // getHome
 router.get("/home", ZingController.getHome)
@@ -16,7 +16,7 @@ router.get("/home", ZingController.getHome)
 router.get("/top100", ZingController.getTop100)
 
 // getChartHome
-router.get("/charthome", ZingController.getChartHome)
+router.get("/homechart", ZingController.getChartHome)
 
 // getNewReleaseChart
 router.get("/newreleasechart", ZingController.getNewReleaseChart)
@@ -37,7 +37,7 @@ router.get("/lyric", ZingController.getLyric)
 router.get("/search", ZingController.search)
 
 // getListMV
-router.get("/listmv", ZingController.getListMV)
+router.get("/mvlist", ZingController.getListMV)
 
 // getCategoryMV
 router.get("/categorymv", ZingController.getCategoryMV)
