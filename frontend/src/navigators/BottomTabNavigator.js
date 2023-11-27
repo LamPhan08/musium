@@ -1,11 +1,9 @@
 import React from 'react'
-import { View, Text } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Home from '../screens/home/Home';
-import Explore from '../screens/explore/Explore';
+import Home from '../screens/explore/Explore';
 import Profile from '../screens/profile/Profile';
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import AntDesign from 'react-native-vector-icons/MaterialCommunityIcons'
+import AntDesign from 'react-native-vector-icons/AntDesign'
 import { COLORS } from '../constants/colors';
 
 
@@ -18,7 +16,7 @@ const BottomTabNavigator = () => {
         tabBarActiveTintColor: COLORS.primary,
         tabBarShowLabel: true,
         tabBarStyle: {
-          backgroundColor: '#000',
+          backgroundColor: COLORS.bottomTabBar,
           height: 70,
           paddingBottom: 15,
           paddingTop: 10
@@ -28,20 +26,19 @@ const BottomTabNavigator = () => {
           fontFamily: 'Mulish-Bold'
         }
       }}
-      initialRouteName='Home'>
-      <Tab.Screen name='Home' component={Home} options={{
-        tabBarIcon: ({ focused }) => <AntDesign name='home' size={24} color={focused ? COLORS.primary : COLORS.white} />,
-        title: 'Home',
+      initialRouteName='Explore'>
+      <Tab.Screen name='Explore' component={Home} options={{
+        tabBarIcon: ({ focused }) => <AntDesign name='home' size={26} color={focused ? COLORS.primary : COLORS.white} />,
+        title: 'Khám phá',
 
       }} />
-      <Tab.Screen name='Explore' component={Explore} options={{
-        tabBarIcon: ({ focused }) => <Ionicons name='search' size={24} color={focused ? COLORS.primary : COLORS.white} />,
-        headerLeft: () => (
-          <Text style={{ marginLeft: 20, fontSize: 20, color: '#000', fontWeight: 'bold' }}>Matches</Text>
-        ),
-      }} />
+      {/* <Tab.Screen name='Favorites' component={Explore} options={{
+        tabBarIcon: ({ focused }) => <Ionicons name='heart-outline' size={26} color={focused ? COLORS.primary : COLORS.white} />,
+        title: 'Yêu thích'
+      }} /> */}
       <Tab.Screen name='Profile' component={Profile} options={{
-        tabBarIcon: ({ focused }) => <Ionicons name='person-outline' size={24} color={focused ? COLORS.primary : COLORS.white} />,
+        tabBarIcon: ({ focused }) => <Ionicons name='person-outline' size={26} color={focused ? COLORS.primary : COLORS.white} />,
+        title: 'Cá nhân'
       }} />
     </Tab.Navigator>
   )
