@@ -14,9 +14,9 @@ export default function CustomButton({label, onPress}) {
       <Text
         style={{
           textAlign: 'center',
-          fontWeight: '700',
           fontSize: 16,
           color: '#fff',
+          fontFamily: 'Mulish-ExtraBold'
         }}>
         {label}
       </Text>

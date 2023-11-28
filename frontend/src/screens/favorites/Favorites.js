@@ -20,6 +20,7 @@ import { useNavigation } from "@react-navigation/native";
 import LinearGradient from 'react-native-linear-gradient';
 import { tracks } from '../../../assets/data/tracks';
 import SongItem from '../../components/songItem/SongItem';
+import { COLORS } from '../../constants/colors';
 
 const Favorites = () => {
   const navigation = useNavigation();
@@ -27,26 +28,26 @@ const Favorites = () => {
   return (
     <>
       <LinearGradient colors={["#121111", "#040306"]} style={{ flex: 1 }}>
-        <ScrollView style={{ flex: 1, marginTop: 20 }}>
-          <Pressable
+        <ScrollView style={{ flex: 1, paddingTop: 20,}} showsVerticalScrollIndicator={false} decelerationRate={'fast'}>
+          {/* <Pressable
             onPress={() => navigation.goBack()}
             style={{ marginHorizontal: 10 }}
           >
             <Ionicons name="arrow-back" size={24} color="white" />
-          </Pressable>
+          </Pressable> */}
 
           <Pressable style={{
             marginHorizontal: 10,
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "space-between",
-            marginTop: 9,
+            marginBottom: 10
           }}>
             <Pressable style={{
               flexDirection: "row",
               alignItems: "center",
               gap: 10,
-              backgroundColor: "#D9D9D9",
+              backgroundColor: COLORS.grey,
               padding: 9,
               flex: 1,
               borderRadius: 3,
@@ -63,12 +64,11 @@ const Favorites = () => {
             </Pressable>
           </Pressable>
 
-          <View style={{ height: 30 }} />
           <View style={{ marginHorizontal: 10 }}>
-            <Text style={{ fontSize: 18, fontWeight: "bold", color: "white" }}>
-              Liked Songs
+            <Text style={{ fontSize: 18, fontFamily: 'Mulish-ExtraBold', color: "white" }}>
+              Bài hát đã thích
             </Text>
-            <Text style={{ color: "white", fontSize: 13, marginTop: 5 }}>
+            <Text style={{ color: "white", fontSize: 13, marginTop: 5, fontFamily: 'Mulish-Regular' }}>
               430 songs
             </Text>
           </View>
@@ -119,7 +119,7 @@ const Favorites = () => {
           </Pressable>
 
         
-          <FlatList
+          {/* <FlatList
             showsVerticalScrollIndicator={false}
             data={tracks}
             renderItem={({ item }) => (
@@ -127,7 +127,14 @@ const Favorites = () => {
                 item={item}
               />
             )}
-          />
+          /> */}
+          <View style={{paddingBottom: 20}}>
+          {tracks.map((item, index) => {
+            return (
+              <SongItem item={item} key={index}/>
+            )
+          })}
+          </View>
         </ScrollView>
       </LinearGradient>
     </>

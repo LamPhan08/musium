@@ -5,6 +5,7 @@ import {
   View,
   Text,
   TextInput,
+  Image,
   TouchableOpacity,
 } from 'react-native';
 
@@ -21,6 +22,7 @@ import FacebookSVG from '../../../assets/images/facebook.svg';
 import TwitterSVG from '../../../assets/images/twitter.svg';
 import CustomButton from '../../components/CustomButton';
 import LinearGradient from 'react-native-linear-gradient';
+import logo from '../../../assets/images/logo.png'
 
 const RegisterScreen = ({navigation}) => {
   return (
@@ -30,11 +32,7 @@ const RegisterScreen = ({navigation}) => {
         showsVerticalScrollIndicator={false}
         style={{paddingHorizontal: 25}}>
         <View style={{alignItems: 'center'}}>
-          <Musium
-            height={300}
-            width={300}
-           
-          />
+          <Image source={logo} style={{height: 250, width: 250}}/>
         </View>
         
         <Text
@@ -43,13 +41,14 @@ const RegisterScreen = ({navigation}) => {
             fontSize: 28,
             fontWeight: '500',
             color: '#FFFFFF',
-            marginBottom: 30,
+            marginBottom: 50,
+            fontFamily: 'Mulish-Bold'
           }}>
-          Register
+          Đăng ký tài khoản
         </Text>
        
 
-        <View
+        {/* <View
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
@@ -88,14 +87,14 @@ const RegisterScreen = ({navigation}) => {
             }}>
             <TwitterSVG height={24} width={24} />
           </TouchableOpacity>
-        </View>
+        </View> */}
 
-        <Text style={{textAlign: 'center', color: '#FFFFFF', marginBottom: 30, fontSize: 16,}}>
+        {/* <Text style={{textAlign: 'center', color: '#FFFFFF', marginBottom: 30, fontSize: 16,}}>
           Or, register with email ...
-        </Text>
+        </Text> */}
 
         <InputField
-          label={'Full Name'}
+          label={'Tên người dùng'}
           icon={
             <Ionicons
               name="person"
@@ -107,7 +106,7 @@ const RegisterScreen = ({navigation}) => {
         />
 
         <InputField
-          label={'Email ID'}
+          label={'Email'}
           icon={
             <MaterialIcons
               name="alternate-email"
@@ -120,7 +119,7 @@ const RegisterScreen = ({navigation}) => {
         />
 
         <InputField
-          label={'Password'}
+          label={'Mật khẩu'}
           icon={
             <Ionicons
               name="lock-closed"
@@ -133,7 +132,7 @@ const RegisterScreen = ({navigation}) => {
         />
 
         <InputField
-          label={'Confirm Password'}
+          label={'Xác nhận mật khẩu'}
           icon={
             <Ionicons
               name="lock-closed"
@@ -146,7 +145,53 @@ const RegisterScreen = ({navigation}) => {
         />
 
        
-        <CustomButton label={'Register'} onPress={() => {}} />
+        <CustomButton label={'Tạo tài khoản'} onPress={() => {}} />
+
+        <Text style={{ textAlign: 'center', color: '#FFFFFF', marginBottom: 30, fontFamily: 'Mulish-Regular' }}>
+                    Hoặc tiếp tục với
+                </Text>
+
+                <View
+                    style={{
+                        flexDirection: 'row',
+                        justifyContent: 'center',
+                        gap: 30,
+                        marginBottom: 30,
+                    }}>
+                    <TouchableOpacity
+                        onPress={() => { }}
+                        style={{
+                            borderColor: '#ddd',
+                            borderWidth: 0.5,
+                            borderRadius: 10,
+                            paddingHorizontal: 30,
+                            paddingVertical: 10,
+                        }}>
+                        <GoogleSVG height={24} width={24} />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() => { }}
+                        style={{
+                            borderColor: '#ddd',
+                            borderWidth: 0.5,
+                            borderRadius: 10,
+                            paddingHorizontal: 30,
+                            paddingVertical: 10,
+                        }}>
+                        <FacebookSVG height={24} width={24} />
+                    </TouchableOpacity>
+                    {/* <TouchableOpacity
+                        onPress={() => { }}
+                        style={{
+                            borderColor: '#ddd',
+                            borderWidth: 2,
+                            borderRadius: 10,
+                            paddingHorizontal: 30,
+                            paddingVertical: 10,
+                        }}>
+                        <TwitterSVG height={24} width={24} />
+                    </TouchableOpacity> */}
+                </View>
 
         <View
           style={{
@@ -154,9 +199,9 @@ const RegisterScreen = ({navigation}) => {
             justifyContent: 'center',
             marginBottom: 30,
           }}>
-          <Text>Already registered?</Text>
+          <Text style={{fontFamily: 'Mulish-Regular'}}>Bạn đã có tài khoản?</Text>
           <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Text style={{color: '#06A0B5', fontWeight: '700'}}> Login</Text>
+            <Text style={{color: '#06A0B5', fontFamily: 'Mulish-Bold'}}> Đăng nhập ngay!</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

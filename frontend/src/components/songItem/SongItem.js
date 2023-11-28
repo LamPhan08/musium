@@ -1,21 +1,27 @@
-import { StyleSheet, Text, View, Pressable, Image } from "react-native";
+import { StyleSheet, Text, View, Pressable, Image, TouchableOpacity } from "react-native";
 import React , {useContext} from  "react";
 import Entypo from 'react-native-vector-icons/Entypo';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-
+import { COLORS } from "../../constants/colors";
+import { PressableAndroidRippleConfig } from "react-native";
+ 
+const presableRippleConfig = {
+  color: COLORS.primary
+}
 
 
 const SongItem = ({item}) => {
     const image = item?.album?.images?.[0];
   return (
-    <Pressable
+    <TouchableOpacity
+    android_ripple={presableRippleConfig}
     onPress={() => console.log('Playing track: ', item.id)}
     style={styles.container}
     >
       {image && <Image source={{ uri: image.url }} style={styles.image} />}
         <View style={{ flex: 1 }}>
-          <Text style={styles.title}>{item.name}</Text>
-          <Text style={styles.subtitle}>{item.artists[0]?.name}</Text>
+          <Text style={styles.title} numberOfLines={1}>{item.name}</Text>
+          <Text style={styles.subtitle} numberOfLines={1}>{item.artists[0]?.name}</Text>
         </View>
 
       <View
@@ -29,7 +35,7 @@ const SongItem = ({item}) => {
         <AntDesign name="heart" size={24} color="#06A0B5" />
         <Entypo name="dots-three-vertical" size={24} color="#C0C0C0" />
       </View>
-    </Pressable>
+    </TouchableOpacity>
   );
 };
 
@@ -46,9 +52,11 @@ const styles = StyleSheet.create({ container: {
     fontWeight: '500',
     color: 'white',
     fontSize: 16,
+    fontFamily: 'Mulish-Bold'
   },
   subtitle: {
-    color: 'gray',
+    color: COLORS.grey,
+    fontFamily: 'Mulish-Regular'
   },
   image: {
     width: 50,

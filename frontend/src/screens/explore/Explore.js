@@ -10,9 +10,14 @@ import { getHome } from '../../api/getData'
 import HomeNewReleaseTopTabNavigator from '../../navigators/HomeNewReleaseTopTabNavigator'
 import PlaylistSlider from '../../components/playlistSlider/PlaylistSilder'
 import NewReleaseRanking from '../../components/newReleaseRanking/NewReleaseRanking'
+import {useNavigation} from '@re'
 
-const Explore = () => {
+const Explore = ({navigation}) => {
   const [homeData, setHomeData] = useState([])
+
+  const handleNavigateSearch = () => {
+    navigation.navigate('Search')
+  }
 
   useEffect(() => {
     (
@@ -31,7 +36,7 @@ const Explore = () => {
   const newReleaseRankingData = homeData.find(data => data.sectionType === 'newReleaseChart')
 
   return (
-    <ScrollView style={styles.exploreContainer} showsVerticalScrollIndicator={false}>
+    <ScrollView style={styles.exploreContainer} showsVerticalScrollIndicator={false} decelerationRate={'fast'}>
       <View style={styles.avatarAndSearchContainer}>
         <Image source={avatar} style={styles.avatar} />
 
@@ -41,7 +46,7 @@ const Explore = () => {
           <Text style={styles.name}>John Doe</Text>
         </View>
 
-        <TouchableOpacity>
+        <TouchableOpacity onPress={handleNavigateSearch}>
           <Ionicons name='search' size={26} color={COLORS.white} />
         </TouchableOpacity>
       </View>
