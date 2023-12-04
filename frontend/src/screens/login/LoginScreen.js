@@ -4,7 +4,8 @@ import {
     View,
     Text,
     TouchableOpacity,
-    Image
+    Image,
+    Dimensions
 } from 'react-native';
 
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -20,6 +21,9 @@ import InputField from '../../components/InputField';
 import LinearGradient from 'react-native-linear-gradient';
 
 import logo from '../../../assets/images/logo.png'
+import { COLORS } from '../../constants/colors';
+
+const {width, height} = Dimensions.get('window')
 
 const LoginScreen = ({ navigation }) => {
     return (
@@ -33,7 +37,7 @@ const LoginScreen = ({ navigation }) => {
                 <Text
                     style={{
                         textAlign: 'center',
-                        fontSize: 28,
+                        fontSize: width * 0.06,
                         fontWeight: '500',
                         color: '#FFFFFF',
                         marginBottom: 40,
@@ -125,7 +129,7 @@ const LoginScreen = ({ navigation }) => {
                         justifyContent: 'center',
                         marginBottom: 30,
                     }}>
-                    <Text style={{fontFamily: 'Mulish-Regular'}}>Bạn chưa có tài khoản?</Text>
+                    <Text style={{fontFamily: 'Mulish-Regular', color: COLORS.text}}>Bạn chưa có tài khoản?</Text>
                     <TouchableOpacity onPress={() => navigation.navigate('Register')}>
                         <Text style={{ color: '#06A0B5', fontFamily: 'Mulish-ExtraBold' }}> Đăng ký ngay!</Text>
                     </TouchableOpacity>

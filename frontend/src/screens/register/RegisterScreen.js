@@ -5,6 +5,7 @@ import {
   View,
   Text,
   TextInput,
+  Dimensions,
   Image,
   TouchableOpacity,
 } from 'react-native';
@@ -23,6 +24,9 @@ import TwitterSVG from '../../../assets/images/twitter.svg';
 import CustomButton from '../../components/CustomButton';
 import LinearGradient from 'react-native-linear-gradient';
 import logo from '../../../assets/images/logo.png'
+import { COLORS } from '../../constants/colors';
+
+const {width, height} = Dimensions.get('window')
 
 const RegisterScreen = ({navigation}) => {
   return (
@@ -38,7 +42,7 @@ const RegisterScreen = ({navigation}) => {
         <Text
           style={{
             textAlign: 'center',
-            fontSize: 28,
+            fontSize: width * 0.06,
             fontWeight: '500',
             color: '#FFFFFF',
             marginBottom: 50,
@@ -199,7 +203,7 @@ const RegisterScreen = ({navigation}) => {
             justifyContent: 'center',
             marginBottom: 30,
           }}>
-          <Text style={{fontFamily: 'Mulish-Regular'}}>Bạn đã có tài khoản?</Text>
+          <Text style={{fontFamily: 'Mulish-Regular', color: COLORS.text}}>Bạn đã có tài khoản?</Text>
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Text style={{color: '#06A0B5', fontFamily: 'Mulish-Bold'}}> Đăng nhập ngay!</Text>
           </TouchableOpacity>

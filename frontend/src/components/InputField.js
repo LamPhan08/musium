@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, TextInput} from 'react-native';
+import { COLORS } from '../constants/colors';
 
 export default function InputField({
   label,
@@ -21,17 +22,19 @@ export default function InputField({
       {icon}
       {inputType == 'password' ? (
         <TextInput
+          placeholderTextColor={COLORS.grey}
           placeholder={label}
           keyboardType={keyboardType}
-          style={{flex: 1, paddingVertical: 0, fontFamily: 'Mulish-Regular'}}
+          style={{flex: 1, paddingVertical: 0, fontFamily: 'Mulish-Regular', color: COLORS.text}}
           secureTextEntry={true}
           
         />
       ) : (
         <TextInput
+        placeholderTextColor={COLORS.grey}
           placeholder={label}
           keyboardType={keyboardType}
-          style={{flex: 1, paddingVertical: 0, fontFamily: 'Mulish-Regular'}}
+          style={{flex: 1, paddingVertical: 0, fontFamily: 'Mulish-Regular', color: COLORS.text}}
         />
       )}
       <TouchableOpacity onPress={fieldButtonFunction}>

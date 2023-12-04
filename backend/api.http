@@ -1,1 +1,1 @@
-GET http://localhost:5000/api/home
+GET http://localhost:5000/api/newreleasechart

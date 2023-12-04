@@ -3,20 +3,17 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import AllNewRelease from '../screens/newRelease/allNewRelease/AllNewRelease'
 import VPopNewRelease from '../screens/newRelease/vPopNewRelease/VPopNewRelease'
 import OthersNewRelease from '../screens/newRelease/othersNewRelease/OthersNewRelease'
-import { Dimensions } from 'react-native'
 import { COLORS } from '../constants/colors'
-
-const { width } = Dimensions.get('window')
 
 const tabs = createMaterialTopTabNavigator()
 
 const HomeNewReleaseTopTabNavigator = ({ newReleaseData }) => {
   // console.log(newReleaseData.items)
-  const allNewReleaseData = newReleaseData.items.all.slice(0, 12)
-  const vPopNewReleaseData = newReleaseData.items.vPop.slice(0, 12)
-  const othersNewReleaseData = newReleaseData.items.others.slice(0, 12)
+  const allNewReleaseData = newReleaseData.items.all
+  const vPopNewReleaseData = newReleaseData.items.vPop
+  const othersNewReleaseData = newReleaseData.items.others
 
-
+  
   return (
     <tabs.Navigator screenOptions={{
       swipeEnabled: false,
