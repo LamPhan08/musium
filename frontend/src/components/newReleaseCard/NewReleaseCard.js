@@ -19,6 +19,8 @@ const NewReleaseCard = ({ newReleaseData, newReleaseList, cardIndex }) => {
     await TrackPlayer.skip(cardIndex * 3 + index)
 
     TrackPlayer.play()
+
+    // console.log(newReleaseData)
   }
 
   return (

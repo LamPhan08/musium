@@ -16,7 +16,6 @@ export default styles = StyleSheet.create({
     },
 
     dotsWrapper: {
-        width: width * 0.25,
-        
+        width: width * 0.25,      
     },
 })
