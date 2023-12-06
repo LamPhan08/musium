@@ -8,7 +8,9 @@ export default styles = StyleSheet.create({
         padding: 10,
         backgroundColor: '#ccc',
         gap: 10,
-        backgroundColor: COLORS.bottomTabBar
+        backgroundColor: COLORS.bottomTabBar,
+        borderBottomColor: '#000',
+        borderBottomWidth: 1
     },
 
     playerThumbnail: {
@@ -22,6 +24,17 @@ export default styles = StyleSheet.create({
         flex: 1,
         // backgroundColor: 'red',
     },
+
+    titleWrapper: {
+        flexDirection: 'row',
+        gap: 5,
+        alignItems: 'center'
+    },
+
+    soundWaveIcon: {
+        height: 25,
+        width: 25
+    },  
 
     songTitle: {
         color: COLORS.text,
