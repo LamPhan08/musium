@@ -29,6 +29,11 @@ import { COLORS } from '../../constants/colors';
 const {width, height} = Dimensions.get('window')
 
 const RegisterScreen = ({navigation}) => {
+
+  const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   return (
     <LinearGradient colors={["#121111", "#040306" ]} style={{ flex: 1 }}>
     <SafeAreaView style={{flex: 1, justifyContent: 'center'}}>
@@ -107,6 +112,8 @@ const RegisterScreen = ({navigation}) => {
               style={{marginRight: 5}}
             />
           }
+          value={name}
+         onChangeText={text => setName(text)}
         />
 
         <InputField
@@ -120,6 +127,8 @@ const RegisterScreen = ({navigation}) => {
             />
           }
           keyboardType="email-address"
+          value={email}
+          onChangeText={text => setEmail(text)}
         />
 
         <InputField
@@ -133,6 +142,8 @@ const RegisterScreen = ({navigation}) => {
             />
           }
           inputType="password"
+          value={password}
+          onChangeText={text => setPassword(text)}
         />
 
         <InputField
@@ -146,6 +157,8 @@ const RegisterScreen = ({navigation}) => {
             />
           }
           inputType="password"
+          value={confirmPassword}
+          onChangeText={text => setConfirmPassword(text)}
         />
 
        

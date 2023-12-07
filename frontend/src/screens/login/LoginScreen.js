@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     SafeAreaView,
     View,
@@ -26,6 +26,9 @@ import { COLORS } from '../../constants/colors';
 const {width, height} = Dimensions.get('window')
 
 const LoginScreen = ({ navigation }) => {
+    const [email,setEmail] = useState(null);
+    const [password,setPassword] = useState(null)
+
     return (
         <LinearGradient colors={["#121111", "#040306" ]} style={{ flex: 1 }}>
         <SafeAreaView style={{ flex: 1, justifyContent: 'center' }}>
@@ -58,6 +61,8 @@ const LoginScreen = ({ navigation }) => {
                         />
                     }
                     keyboardType="email-address"
+                    value={email}
+                    onChangeText={text => setEmail(text)}
                 />
 
                 <InputField
@@ -73,6 +78,8 @@ const LoginScreen = ({ navigation }) => {
                     inputType="password"
                     fieldButtonLabel={"Quên?"}
                     fieldButtonFunction={() => { }}
+                    value={password}
+                    onChangeText={text => setPassword(text)}
                 />
 
                 <CustomButton label={"Đăng nhập"} onPress={() => navigation.navigate('App')} />
