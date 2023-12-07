@@ -1,6 +1,5 @@
 import React from 'react'
 import { SafeAreaView, View, Text, TouchableOpacity } from 'react-native';
-
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Musium from '../../assets/images/musiumlogo.svg';
 import LinearGradient from 'react-native-linear-gradient';

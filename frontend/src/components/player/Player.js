@@ -1,10 +1,12 @@
-import React, {useState} from 'react'
-import { View, Text, Image, TouchableOpacity} from 'react-native'
+import React, { useState } from 'react'
+import { View, Text, Image, TouchableOpacity } from 'react-native'
 import styles from './player.style'
 import { useDispatch, useSelector } from 'react-redux'
 import TrackPlayer, { useTrackPlayerEvents, Event } from 'react-native-track-player'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { setSong } from '../../redux/songSlice'
+import soundWave from '../../../assets/images/soundWave.gif'
+import staticSoundWave from '../../../assets/images/staticSoundWave.png'
 
 const Player = () => {
     const { song, songList } = useSelector(state => state.song)
@@ -20,6 +22,7 @@ const Player = () => {
         }
 
         dispatch(setSong(trackObject))
+
     })
 
 
@@ -69,7 +72,11 @@ const Player = () => {
             <Image style={styles.playerThumbnail} source={{ uri: song.thumbnail }} />
 
             <View style={styles.songDetails}>
-                <Text style={styles.songTitle} numberOfLines={1}>{song.title}</Text>
+                <View style={styles.titleWrapper}>
+                    <Image style={styles.soundWaveIcon} source={playerState === 'playing' ? soundWave : staticSoundWave} />
+
+                    <Text style={styles.songTitle} numberOfLines={1}>{song.title}</Text>
+                </View>
 
                 <Text style={styles.songArtist} numberOfLines={1}>{song.artist}</Text>
             </View>
