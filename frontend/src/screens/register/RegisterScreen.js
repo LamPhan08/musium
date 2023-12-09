@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useContext} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -26,14 +26,50 @@ import LinearGradient from 'react-native-linear-gradient';
 import logo from '../../../assets/images/logo.png'
 import { COLORS } from '../../constants/colors';
 
+import {AuthContext} from './../../context/AuthContext.js';
+import {BASE_URL} from './../../utils/config.js';
+
 const {width, height} = Dimensions.get('window')
 
 const RegisterScreen = ({navigation}) => {
 
   const [email, setEmail] = useState('');
-  const [name, setName] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+
+  const {dispatch} = useContext(AuthContext);
+
+  const handleClick = async e => {
+      e.preventDefault();
+
+      try {
+          const res = await fetch(`${BASE_URL}/auth/register`, {
+              method: 'post',
+              headers: {
+                  'content-type':'application/json'
+              },
+              body: JSON.stringify({
+                username,
+                email,
+                password
+              })
+          });
+          const result = await res.json();
+
+          if(!res.ok) {
+              alert(result.message);
+          }
+
+          dispatch({type: 'REGISTER_SUCCESS'});
+          // navigate('/login');
+          navigation.navigate('Login')
+      } catch (err) {
+          alert(err.message);
+          console.log(err.message)
+      }
+  }
+
   return (
     <LinearGradient colors={["#121111", "#040306" ]} style={{ flex: 1 }}>
     <SafeAreaView style={{flex: 1, justifyContent: 'center'}}>
@@ -112,8 +148,8 @@ const RegisterScreen = ({navigation}) => {
               style={{marginRight: 5}}
             />
           }
-          value={name}
-         onChangeText={text => setName(text)}
+          value={username}
+         onChangeText={text => setUsername(text)}
         />
 
         <InputField
@@ -162,7 +198,10 @@ const RegisterScreen = ({navigation}) => {
         />
 
        
-        <CustomButton label={'Tạo tài khoản'} onPress={() => {}} />
+        <CustomButton label={'Tạo tài khoản'} onPress={
+          // () => {}
+          handleClick
+        } />
 
         <Text style={{ textAlign: 'center', color: '#FFFFFF', marginBottom: 30, fontFamily: 'Mulish-Regular' }}>
                     Hoặc tiếp tục với
