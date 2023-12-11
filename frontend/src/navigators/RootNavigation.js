@@ -7,6 +7,10 @@ import LoginScreen from '../screens/login/LoginScreen';
 import RegisterScreen from '../screens/register/RegisterScreen';
 import Search from '../screens/search/Search';
 import EditProfile from '../screens/editprofilescreen/EditProfile'
+import AddPlayList from '../screens/addPlayList/AddPlayList';
+import DownloadedSong from '../screens/downloadedSong/DownloadedSong';
+
+
 const Stack = createNativeStackNavigator();
 
 const RootNavigation = () => {
@@ -26,6 +30,8 @@ const RootNavigation = () => {
             <Stack.Screen name="App" component={BottomTabNavigator} />
             <Stack.Screen name="Splash" component={Splash} />
             <Stack.Screen name="EditProfile" component={EditProfile} />
+            <Stack.Screen name="AddPlayList" component={AddPlayList} />
+            <Stack.Screen name="Downloaded" component={DownloadedSong} />
             <Stack.Screen name="Search" component={Search} options={{
                 presentation: 'modal',
                 animation: 'slide_from_bottom'
