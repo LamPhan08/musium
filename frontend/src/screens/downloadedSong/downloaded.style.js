@@ -31,7 +31,7 @@ export default styles = StyleSheet.create({
 
       label:{
         fontSize: 20,
-        flex: 2,
+        
         color: '#fff',
       }
 })

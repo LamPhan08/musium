@@ -61,7 +61,7 @@ const BottomTabNavigator = () => {
       screenOptions={{
         headerShown: false,
       }}
-      initialRouteName='Explore'
+      // initialRouteName='Explore'
       tabBar={({ state, descriptors, navigation }) => {
         return (
           <View>
@@ -145,7 +145,7 @@ const BottomTabNavigator = () => {
         )
       }}
     >
-      <Tab.Screen name='Explore' component={Home} options={{
+      {/* <Tab.Screen name='Explore' component={Home} options={{
         tabBarIcon: ({ focused }) => <AntDesign name='home' size={23} color={focused ? COLORS.white : COLORS.grey} />,
         title: 'Khám phá',
 
@@ -153,7 +153,7 @@ const BottomTabNavigator = () => {
       <Tab.Screen name='Favorites' component={Favorites} options={{
         tabBarIcon: ({ focused }) => <Ionicons name='heart-outline' size={23} color={focused ? COLORS.white : COLORS.grey} />,
         title: 'Yêu thích',
-      }} />
+      }} /> */}
       <Tab.Screen name='Profile' component={Profile} options={{
         tabBarIcon: ({ focused }) => <Ionicons name='person-outline' size={23} color={focused ? COLORS.white : COLORS.grey} />,
         title: 'Cá nhân'

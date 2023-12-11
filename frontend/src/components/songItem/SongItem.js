@@ -29,11 +29,17 @@ const SongItem = ({item}) => {
           flexDirection: "row",
           alignItems: "center",
           gap: 7,
-          marginHorizontal: 10,
+          marginHorizontal: 0,
         }}
       >
+        <TouchableOpacity>
         <AntDesign name="heart" size={24} color="#06A0B5" />
+        </TouchableOpacity>
+
+        <TouchableOpacity>
         <Entypo name="dots-three-vertical" size={24} color="#C0C0C0" />
+        </TouchableOpacity>
+        
       </View>
     </TouchableOpacity>
   );
