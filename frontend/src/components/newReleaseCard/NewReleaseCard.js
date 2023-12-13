@@ -5,16 +5,18 @@ import HandleDate from '../../../utils/handleDate'
 import Feather from 'react-native-vector-icons/Feather'
 import TrackPlayer from 'react-native-track-player'
 import { useDispatch } from 'react-redux'
-import { setSong, setSongList } from '../../redux/songSlice'
+import { setSong, setSongList, setPlayerState } from '../../redux/songSlice'
 
 const NewReleaseCard = ({ newReleaseData, newReleaseList, cardIndex }) => {
   const dispatch = useDispatch()
+  // console.log(newReleaseData)
 
   const handlePlayMusic = async (index) => {
     await TrackPlayer.setQueue(newReleaseList)
 
     dispatch(setSong(newReleaseList[cardIndex * 3 + index]))
     dispatch(setSongList(newReleaseList))
+    dispatch(setPlayerState('playing'))
 
     await TrackPlayer.skip(cardIndex * 3 + index)
 

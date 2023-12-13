@@ -42,7 +42,7 @@ const HomeNewReleaseTopTabNavigator = ({ newReleaseData }) => {
         borderRadius: 7,
         backgroundColor: COLORS.primary,
       }
-    }}>
+    }}> 
       <tabs.Screen name='all' component={AllNewRelease} initialParams={{ data: allNewReleaseData }} options={{ title: 'Tất cả' }} />
       <tabs.Screen name='vPop' component={VPopNewRelease} initialParams={{ data: vPopNewReleaseData }} options={{ title: 'Việt Nam' }} />
       <tabs.Screen name='others' component={OthersNewRelease} initialParams={{ data: othersNewReleaseData }} options={{ title: 'Quốc tế' }} />

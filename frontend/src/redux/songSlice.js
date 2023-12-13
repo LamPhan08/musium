@@ -2,10 +2,8 @@ import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
     songList: [],
-    isPlay: false,
-    currentTime: 0,
-    duration: 0,
-    song: {},
+    song: undefined,
+    playerState: ''
 }
 
 export const songSlice = createSlice({
@@ -19,16 +17,13 @@ export const songSlice = createSlice({
         setSongList: (state, action) => {
             state.songList = action.payload
         },
-        setPlay: (state) => {
-            state.isPlay = true
-        },
-        setPause: (state) => {
-            state.isPlay = false
-        },
-
+        setPlayerState: (state, action) => {
+            state.playerState = action.payload
+        }
+        
     }
 })
 
-export const {setSong, setSongList, setPlay, setPause} = songSlice.actions
+export const {setSong, setSongList, setPlayerState} = songSlice.actions
 
 export default songSlice.reducer

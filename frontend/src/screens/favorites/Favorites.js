@@ -10,6 +10,7 @@ import {
   FlatList,
   Image,
   Pressable,
+  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -26,7 +27,7 @@ const Favorites = () => {
   const navigation = useNavigation();
   const [input, setInput] = useState("");
   return (
-    <>
+    <SafeAreaView style={{flex: 1}}>
       <LinearGradient colors={["#121111", "#040306"]} style={{ flex: 1 }}>
         <ScrollView style={{ flex: 1, paddingTop: 20,}} showsVerticalScrollIndicator={false} decelerationRate={'fast'}>
           {/* <Pressable
@@ -136,7 +137,7 @@ const Favorites = () => {
           </View>
         </ScrollView>
       </LinearGradient>
-    </>
+    </SafeAreaView>
   )
 }
 

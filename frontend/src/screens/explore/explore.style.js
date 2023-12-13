@@ -4,7 +4,8 @@ import {COLORS} from '../../constants/colors'
 export default styles = StyleSheet.create({
     exploreContainer: {
         backgroundColor: COLORS.background,
-        paddingHorizontal: 15
+        paddingHorizontal: 15,
+        flex: 1
     },
 
     avatarAndSearchContainer: {

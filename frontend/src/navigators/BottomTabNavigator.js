@@ -14,7 +14,7 @@ import { Scaler, ZoomScaler } from '../../utils/zoomInOut';
 
 const Tab = createBottomTabNavigator();
 
-const BottomTabNavigator = () => {
+const BottomTabNavigator = ({navigation}) => {
   const { song } = useSelector(state => state.song)
   const [routeName, setRouteName] = useState('Explore')
 
@@ -61,11 +61,13 @@ const BottomTabNavigator = () => {
       screenOptions={{
         headerShown: false,
       }}
+      backBehavior='none'
       initialRouteName='Explore'
       tabBar={({ state, descriptors, navigation }) => {
+        
         return (
-          <View>
-            {Object.keys(song).length !== 0 ? <Player /> : null}
+          <View style={{backgroundColor: COLORS.bottomTabBar}}>
+            {song ? <Player navigation={navigation}/> : null}
 
             <View style={{ flexDirection: 'row', backgroundColor: COLORS.bottomTabBar, height: 60, alignItems: 'center',  }}>
               {state.routes.map((route, index) => {
@@ -101,6 +103,8 @@ const BottomTabNavigator = () => {
                   });
                   
                 };
+                
+                
 
                 return (
                   <TouchableOpacity
