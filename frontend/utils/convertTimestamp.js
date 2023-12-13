@@ -7,8 +7,8 @@ export default ConvertTimestamp = (timestamp) => {
     var year = date.getFullYear();
 
     // Định dạng chuỗi ngày tháng
-    var formattedDate = (day < 10 ? '0' : '') + day + '.' +
-                        (month < 10 ? '0' : '') + month + '.' +
+    var formattedDate = (day < 10 ? '0' : '') + day + '/' +
+                        (month < 10 ? '0' : '') + month + '/' +
                         year;
 
     return formattedDate;

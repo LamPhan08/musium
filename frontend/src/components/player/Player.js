@@ -1,37 +1,35 @@
 import React, { useState } from 'react'
-import { View, Text, Image, TouchableOpacity } from 'react-native'
+import { View, Text, Image, TouchableOpacity, Dimensions, ActivityIndicator } from 'react-native'
 import styles from './player.style'
-import { useDispatch, useSelector } from 'react-redux'
-import TrackPlayer, { useTrackPlayerEvents, Event } from 'react-native-track-player'
+import { useSelector } from 'react-redux'
+import TrackPlayer, { useProgress, usePlaybackState } from 'react-native-track-player'
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import { setSong } from '../../redux/songSlice'
 import soundWave from '../../../assets/images/soundWave.gif'
 import staticSoundWave from '../../../assets/images/staticSoundWave.png'
+import * as Progress from 'react-native-progress'
+import { COLORS } from '../../constants/colors'
 
-const Player = () => {
+
+const { width } = Dimensions.get('window')
+
+const Player = ({navigation}) => {
     const { song, songList } = useSelector(state => state.song)
-    const [playerState, setPlayerState] = useState()
-    const dispatch = useDispatch()
 
-    useTrackPlayerEvents([Event.PlaybackTrackChanged, Event.PlaybackState], async event => {
-        const trackIndex = await TrackPlayer.getCurrentTrack()
-        const trackObject = await TrackPlayer.getTrack(trackIndex)
+    const playbackState = usePlaybackState()
 
-        if (event.state === 'playing' || event.state === 'paused') {
-            setPlayerState(event.state)
-        }
+    const progress = useProgress()
 
-        dispatch(setSong(trackObject))
-
-    })
+    // console.log(playbackState.state)
 
 
     const handlePause = () => {
         TrackPlayer.pause()
+        // dispatch(setAnimationStart(false))
     }
 
     const handlePlay = () => {
         TrackPlayer.play()
+        // dispatch(setAnimationStart(true))
     }
 
     const handleSkipToNext = async () => {
@@ -44,10 +42,9 @@ const Player = () => {
             TrackPlayer.skipToNext()
         }
 
-        if (playerState !== 'playing') {
+        if (playbackState.state !== 'playing') {
             TrackPlayer.play()
         }
-
     }
 
     const handleSkipToPrevious = async () => {
@@ -60,46 +57,64 @@ const Player = () => {
             TrackPlayer.skipToPrevious()
         }
 
-        if (playerState !== 'playing') {
+        if (playbackState.state !== 'playing') {
             TrackPlayer.play()
         }
+    }
 
-
+    const handleOpenPlayerDetails = () => {
+        navigation.navigate('PlayerDetails')
     }
 
     return (
-        <View style={styles.playerContainer}>
-            <Image style={styles.playerThumbnail} source={{ uri: song.thumbnail }} />
+        <TouchableOpacity onPress={handleOpenPlayerDetails}>
+            <Progress.Bar
+                borderRadius={0}
+                borderWidth={0}
+                progress={progress.duration !== 0 ? progress.position / progress.duration : 0}
+                height={2}
+                width={width}
+                useNativeDriver={true}
+                unfilledColor={'#252525'}
+                color={COLORS.primary}
 
-            <View style={styles.songDetails}>
-                <View style={styles.titleWrapper}>
-                    <Image style={styles.soundWaveIcon} source={playerState === 'playing' ? soundWave : staticSoundWave} />
+            />
 
-                    <Text style={styles.songTitle} numberOfLines={1}>{song.title}</Text>
+            <View style={styles.playerContainer}>
+                <Image style={styles.playerThumbnail} source={{ uri: song.thumbnail }} />
+
+                <View style={styles.songDetails}>
+                    <View style={styles.titleWrapper}>
+                        <Image style={styles.soundWaveIcon} source={playbackState.state === 'playing' ? soundWave : staticSoundWave} />
+
+                        <Text style={styles.songTitle} numberOfLines={1}>{song.title}</Text>
+                    </View>
+
+                    <Text style={styles.songArtist} numberOfLines={1}>{song.artist}</Text>
                 </View>
 
-                <Text style={styles.songArtist} numberOfLines={1}>{song.artist}</Text>
-            </View>
-
-            <View style={styles.playerControlContainer}>
-                <TouchableOpacity onPress={handleSkipToPrevious}>
-                    <Ionicons name='play-skip-back' style={styles.controlIcon} />
-                </TouchableOpacity>
-
-                {playerState !== 'paused'
-                    ? <TouchableOpacity onPress={handlePause}>
-                        <Ionicons name='pause' style={styles.controlIcon} />
+                <View style={styles.playerControlContainer}>
+                    <TouchableOpacity onPress={handleSkipToPrevious}>
+                        <Ionicons name='play-skip-back' style={styles.controlIcon} />
                     </TouchableOpacity>
-                    : <TouchableOpacity onPress={handlePlay}>
-                        <Ionicons name='play' style={styles.controlIcon} />
-                    </TouchableOpacity>
-                }
 
-                <TouchableOpacity onPress={handleSkipToNext}>
-                    <Ionicons name='play-skip-forward' style={styles.controlIcon} />
-                </TouchableOpacity>
+                    {playbackState.state === 'loading'
+                        ? <ActivityIndicator size="small" color={COLORS.white} style={[styles.loadingAnimation, {width: 25}]}/>
+                        : (playbackState.state !== 'paused'
+                            ? <TouchableOpacity onPress={handlePause}>
+                                <Ionicons name='pause' style={styles.controlIcon} />
+                            </TouchableOpacity>
+                            : <TouchableOpacity onPress={handlePlay}>
+                                <Ionicons name='play' style={styles.controlIcon} />
+                            </TouchableOpacity>)
+                    }
+
+                    <TouchableOpacity onPress={handleSkipToNext}>
+                        <Ionicons name='play-skip-forward' style={styles.controlIcon} />
+                    </TouchableOpacity>
+                </View>
             </View>
-        </View>
+        </TouchableOpacity>
     )
 }
 

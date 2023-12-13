@@ -65,6 +65,8 @@ const Explore = ({ navigation }) => {
 
           </View>
         }
+
+        
       </ScrollView>
   )
 }
