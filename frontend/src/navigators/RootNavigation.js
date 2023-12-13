@@ -11,6 +11,10 @@ import PlayerDetails from '../screens/playerDetails/PlayerDetails';
 import { useDispatch } from 'react-redux';
 import { setSong, setPlayerState } from '../redux/songSlice';
 import TrackPlayer, { useTrackPlayerEvents, Event } from 'react-native-track-player';
+import AddPlayList from '../screens/addPlayList/AddPlayList';
+import DownloadedSong from '../screens/downloadedSong/DownloadedSong';
+
+
 
 const Stack = createNativeStackNavigator();
 
@@ -55,7 +59,7 @@ const RootNavigation = () => {
 
     return (
         <Stack.Navigator
-            initialRouteName='App'
+            initialRouteName='Splash'
             screenOptions={{
                 headerShown: false,
                 presentation: 'modal',
@@ -68,6 +72,8 @@ const RootNavigation = () => {
             <Stack.Screen name="App" component={BottomTabNavigator} />
             <Stack.Screen name="Splash" component={Splash} />
             <Stack.Screen name="EditProfile" component={EditProfile} />
+            <Stack.Screen name="AddPlayList" component={AddPlayList} />
+            <Stack.Screen name="Downloaded" component={DownloadedSong} />
             <Stack.Screen name="Search" component={Search} options={{
                 presentation: 'modal',
                 animation: 'slide_from_bottom'

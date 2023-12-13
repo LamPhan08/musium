@@ -19,8 +19,10 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import styles from './editProfile.style'
 
 const EditProfile = ({navigation}) => {
+  const [name,setName] = useState("John Doe")
+  const [password,setPassWord] = useState("password")
     return (
-    <LinearGradient colors={["#040306", "#040306"]} style={{ flex: 1 }}>
+    <LinearGradient colors={["#040306", "#040306"]} style={{ flex: 1 }}  >
         <View style={{flexDirection: "row", justifyContent:"center"}}>
         <TouchableOpacity
             onPress={() => navigation.goBack()}
@@ -58,12 +60,27 @@ const EditProfile = ({navigation}) => {
         </View>
 
         <View style={styles.action}>
-          <FontAwesome name="user-o" color="#333333" size={20} />
+          <FontAwesome name="user" color="#666666" size={20} />
           <TextInput
             placeholder="Tên của bạn"
             placeholderTextColor="#666666"
             autoCorrect={false}
             style={styles.textInput}
+            value={name}
+            onChangeText={text => setName(text)}
+          />
+        </View>
+
+        <View style={styles.action}>
+          <FontAwesome name="lock" color="#666666" size={20} />
+          <TextInput
+            secureTextEntry={true}
+            placeholder="Mật khẩu"
+            placeholderTextColor="#666666"
+            autoCorrect={false}
+            style={styles.textInput}
+            value={password}
+            onChangeText={text => setPassWord(text)}
           />
         </View>
         

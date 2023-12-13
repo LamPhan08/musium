@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     SafeAreaView,
     View,
@@ -23,9 +23,49 @@ import LinearGradient from 'react-native-linear-gradient';
 import logo from '../../../assets/images/logo.png'
 import { COLORS } from '../../constants/colors';
 
+// import { Link, useNavigate } from 'react-router-dom'
+
 const {width, height} = Dimensions.get('window')
 
 const LoginScreen = ({ navigation }) => {
+    const [email,setEmail] = useState(null);
+    const [password,setPassword] = useState(null)
+
+    // const navigate = useNavigate();
+    // const {dispatch} = useContext(AuthContext);
+
+    // const handleClick = async e => {
+    //     e.preventDefault();
+
+    //     dispatch({type: 'LOGIN_START'});
+
+    //     try {
+
+    //         const res = await fetch(`${BASE_URL}/auth/login`, {
+    //             method: 'post',
+    //             headers: {
+    //                 "content-type": "application/json",
+    //             },
+    //             email: 'include',
+    //             password: 'include',
+    //             body: JSON.stringify({email, password}),
+    //         });
+            
+    //         const result = await res.json();
+    //         if(!res.ok) {
+    //             alert(result.message);
+    //         }
+
+    //         console.log(result.data);
+
+    //         dispatch({type: 'LOGIN_SUCCESS', payload: result.data});
+    //         navigation.navigate('App')
+
+    //     } catch (err) {
+    //         dispatch({type: 'LOGIN_FAILURE', payload: err.message});
+    //     }
+    // }
+
     return (
         <LinearGradient colors={["#121111", "#040306" ]} style={{ flex: 1 }}>
         <SafeAreaView style={{ flex: 1, justifyContent: 'center' }}>
@@ -58,6 +98,11 @@ const LoginScreen = ({ navigation }) => {
                         />
                     }
                     keyboardType="email-address"
+                    value={email}
+                    onChangeText={text => {
+                        setEmail(text);
+                        console.warn(email)
+                    }}
                 />
 
                 <InputField
@@ -73,9 +118,14 @@ const LoginScreen = ({ navigation }) => {
                     inputType="password"
                     fieldButtonLabel={"Quên?"}
                     fieldButtonFunction={() => { }}
+                    value={password}
+                    onChangeText={text => setPassword(text)}
                 />
 
-                <CustomButton label={"Đăng nhập"} onPress={() => navigation.navigate('App')} />
+                <CustomButton label={"Đăng nhập"} onPress={
+                    () => navigation.navigate('App')
+                    // handleClick
+                } />
 
                 <Text style={{ textAlign: 'center', color: '#FFFFFF', marginBottom: 30, fontFamily: 'Mulish-Regular' }}>
                     Hoặc tiếp tục với

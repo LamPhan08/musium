@@ -4,7 +4,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Entypo from 'react-native-vector-icons/Entypo';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import React, { useState, useEffect, useContext, useRef } from "react";
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import {
   ActivityIndicator,
   FlatList,
@@ -61,7 +61,6 @@ const Favorites = () => {
                 style={{ fontWeight: "500", color: "black" }}
               />
 
-
             </Pressable>
           </Pressable>
 
@@ -98,8 +97,8 @@ const Favorites = () => {
             <View
               style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
             >
-              <MaterialCommunityIcons
-                name="cross-bolnisi"
+              <FontAwesome
+                name="random"
                 size={24}
                 color="#06A0B5"
               />
