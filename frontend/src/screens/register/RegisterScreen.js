@@ -8,6 +8,7 @@ import {
   Dimensions,
   Image,
   TouchableOpacity,
+  Keyboard,
 } from 'react-native';
 
 
@@ -33,12 +34,55 @@ const {width, height} = Dimensions.get('window')
 
 const RegisterScreen = ({navigation}) => {
 
-  const [email, setEmail] = useState('');
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+
+  const [inputs, setInputs] = React.useState({
+    email: '',
+    fullname: '',
+    password: '',
+    confirmPassword:'',
+  });
 
   const {dispatch} = useContext(AuthContext);
+
+  const [errors, setErrors] = React.useState({});
+
+  const validate = () => {
+    Keyboard.dismiss();
+    let isValid = true;
+
+    if (!inputs.email) {
+      handleError('Please input email', 'email');
+      isValid = false;
+    } else if (!inputs.email.match(/\S+@\S+\.\S+/)) {
+      handleError('Vui lòng điên email hợp lệ', 'email');
+      isValid = false;
+    }
+
+    if (!inputs.fullname) {
+      handleError('Bạn phải điền họ tên', 'fullname');
+      isValid = false;
+    }
+
+
+    if (!inputs.password) {
+      handleError('Bạn phải điền password ', 'password');
+      isValid = false;
+    } else if (inputs.password.length < 5) {
+      handleError('Password quá yếu', 'password');
+      isValid = false;
+    }
+
+    if(inputs.password !== inputs.confirmPassword )
+    {
+      handleError('Xác nhận password không chính xác', 'confirmPassword');
+      isValid = false;
+    }
+
+    if (isValid) {
+      handleClick();
+    }
+  };
+
 
   const handleClick = async e => {
       e.preventDefault();
@@ -70,6 +114,13 @@ const RegisterScreen = ({navigation}) => {
       }
   }
 
+  const handleOnchange = (text, input) => {
+    setInputs(prevState => ({...prevState, [input]: text}));
+  };
+  const handleError = (error, input) => {
+    setErrors(prevState => ({...prevState, [input]: error}));
+  };
+
   return (
     <LinearGradient colors={["#121111", "#040306" ]} style={{ flex: 1 }}>
     <SafeAreaView style={{flex: 1, justifyContent: 'center'}}>
@@ -86,7 +137,7 @@ const RegisterScreen = ({navigation}) => {
             fontSize: width * 0.06,
             fontWeight: '500',
             color: '#FFFFFF',
-            marginBottom: 50,
+            marginBottom: 30,
             fontFamily: 'Mulish-Bold'
           }}>
           Đăng ký tài khoản
@@ -148,8 +199,9 @@ const RegisterScreen = ({navigation}) => {
               style={{marginRight: 5}}
             />
           }
-          value={username}
-         onChangeText={text => setUsername(text)}
+          onChangeText={text => handleOnchange(text, 'fullname')}
+          onFocus={() => handleError(null, 'fullname')}
+          error={errors.fullname}
         />
 
         <InputField
@@ -163,8 +215,9 @@ const RegisterScreen = ({navigation}) => {
             />
           }
           keyboardType="email-address"
-          value={email}
-          onChangeText={text => setEmail(text)}
+          onChangeText={text => handleOnchange(text, 'email')}
+          onFocus={() => handleError(null, 'email')}
+          error={errors.email}
         />
 
         <InputField
@@ -178,8 +231,9 @@ const RegisterScreen = ({navigation}) => {
             />
           }
           inputType="password"
-          value={password}
-          onChangeText={text => setPassword(text)}
+          onChangeText={text => handleOnchange(text, 'password')}
+          onFocus={() => handleError(null, 'password')}
+          error={errors.password}
         />
 
         <InputField
@@ -193,14 +247,15 @@ const RegisterScreen = ({navigation}) => {
             />
           }
           inputType="password"
-          value={confirmPassword}
-          onChangeText={text => setConfirmPassword(text)}
+          onChangeText={text => handleOnchange(text, 'confirmPassword')}
+          onFocus={() => handleError(null, 'confirmPassword')}
+          error={errors.confirmPassword}
         />
 
        
         <CustomButton label={'Tạo tài khoản'} onPress={
           // () => {}
-          handleClick
+          validate
         } />
 
         <Text style={{ textAlign: 'center', color: '#FFFFFF', marginBottom: 30, fontFamily: 'Mulish-Regular' }}>
