@@ -30,10 +30,17 @@ import { COLORS } from '../../constants/colors';
 import {AuthContext} from './../../context/AuthContext.js';
 import {BASE_URL} from './../../utils/config.js';
 
+// import axios from 'axios';
+import { mongoAPI } from '../../axios/axios';
+
+
+import { useSelector } from 'react-redux';
+
 const {width, height} = Dimensions.get('window')
 
 const RegisterScreen = ({navigation}) => {
 
+  const {user} = useSelector(state => state.song)
 
   const [inputs, setInputs] = React.useState({
     email: '',
@@ -42,7 +49,11 @@ const RegisterScreen = ({navigation}) => {
     confirmPassword:'',
   });
 
-  const {dispatch} = useContext(AuthContext);
+  const username = inputs.fullname
+  const email = inputs.email
+  const password = inputs.password
+
+  // const {dispatch} = useContext(AuthContext);
 
   const [errors, setErrors] = React.useState({});
 
@@ -85,33 +96,23 @@ const RegisterScreen = ({navigation}) => {
 
 
   const handleClick = async e => {
-      e.preventDefault();
-
-      try {
-          const res = await fetch(`${BASE_URL}/auth/register`, {
-              method: 'post',
-              headers: {
-                  'content-type':'application/json'
-              },
-              body: JSON.stringify({
-                username,
-                email,
-                password
-              })
-          });
-          const result = await res.json();
-
-          if(!res.ok) {
-              alert(result.message);
+      // e.preventDefault();
+      const registerResponse = await mongoAPI.post(`/auth/register`, 
+          {
+            username,
+            email,
+            password,
           }
-
-          dispatch({type: 'REGISTER_SUCCESS'});
-          // navigate('/login');
-          navigation.navigate('Login')
-      } catch (err) {
-          alert(err.message);
-          console.log(err.message)
-      }
+      );
+      const loginResponse = await mongoAPI.post(`/auth/login`, 
+          {
+            email,
+            password
+          }
+      );
+      // console.log(user);
+      console.log(`${username} `+ ' ' + `${email}` + ' ' + `${password}`)
+      navigation.navigate('App')
   }
 
   const handleOnchange = (text, input) => {
