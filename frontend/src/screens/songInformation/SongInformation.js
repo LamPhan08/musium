@@ -6,7 +6,7 @@ import { getSongIn4 } from '../../api/getData'
 import Feather from 'react-native-vector-icons/Feather'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { COLORS } from '../../constants/colors'
-import ConvertTimestamp from '../../../utils/convertTimestamp'
+import ConvertTimestamp from '../../utils/convertTimestamp'
 
 const SongInformation = () => {
   const { song } = useSelector(state => state.song)

@@ -67,7 +67,7 @@ export default styles = StyleSheet.create({
     itemWrapper: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 10
+        gap: 5
     },
 
     icon: {

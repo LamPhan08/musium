@@ -23,8 +23,8 @@ export default styles = StyleSheet.create({
     },
 
     toolbarIcon: {
-        fontSize: 23,
-        color: COLORS.grey
+        fontSize: 22,
+        color: COLORS.white
     },
 
     title: {

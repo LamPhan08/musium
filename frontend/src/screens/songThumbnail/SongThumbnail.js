@@ -1,4 +1,4 @@
-import React, { useState, useRef, memo } from 'react'
+import React, { useState, useRef, memo, useEffect } from 'react'
 import { View, Text, Image, TouchableOpacity } from 'react-native'
 import { useSelector } from 'react-redux'
 import styles from './songThumbnail.style'
@@ -11,7 +11,7 @@ import { usePlaybackState } from 'react-native-track-player'
 
 const SongThumbnail = () => {
   const [isLiked, setIsLiked] = useState(false)
-  const { song } = useSelector(state => state.song)
+  const { song, playerState } = useSelector(state => state.song)
   const playbackState = usePlaybackState()
   const circleSoundRef = useRef()
 
@@ -23,34 +23,41 @@ const SongThumbnail = () => {
 
   }
 
-  // useEffect(() => {
-  //   if (playbackState.state === 'paused') {
-  //     circleSoundRef.current?.reset()
-  //   }
-  //   else {
-  //     circleSoundRef.current?.play()
-  //   }
-  // }, [playbackState.state])
+  // console.log(playbackState.state)
+
+  useEffect(() => {
+    if (playerState === 'playing') {
+      circleSoundRef.current?.play()
+
+    }
+    else {
+      circleSoundRef.current?.reset()
+    }
+  }, [playerState])
 
 
   return (
     <View style={styles.songThumbnailContainer}>
       <View style={styles.thumbnailWrapper}>
-      {/* <LottieView
+      <LottieView
         ref={circleSoundRef}
         style={styles.circleSoundAnimation}
         source={circleSoundAnimation}
         duration={8000}
         loop={true}
-        onAnimationLoaded={() => {
-          if (playbackState.state === 'playing') {
+        autoPlay={false}
+        onAnimationLoop={() => {
+          if (playerState === 'playing') {
             circleSoundRef.current.play()
           }
           else {
-            circleSoundRef.current.pause()
+            circleSoundRef.current.reset()
           }
         }}
-      /> */}
+        // onAnimationLoaded={() => {
+          
+        // }}
+      />
 
         <Image source={{uri: song.thumbnail}} style={styles.thumbnail}/>
       </View>

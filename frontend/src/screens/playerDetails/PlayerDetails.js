@@ -1,7 +1,8 @@
 import React, { useState, useRef, memo, useEffect } from 'react'
 import { View, Text, TouchableOpacity, ImageBackground, ActivityIndicator } from 'react-native'
 import PlayerDetailsTabView from '../../navigators/PlayerDetailsTabView'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import { setPlayerState } from '../../redux/songSlice'
 import styles from './playerDetails.style'
 import Entypo from 'react-native-vector-icons/Entypo'
 import Feather from 'react-native-vector-icons/Feather'
@@ -9,7 +10,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import Slider from '@react-native-community/slider';
 import TrackPlayer, { useProgress, usePlaybackState } from 'react-native-track-player'
-import formatDuration from '../../../utils/formatDuration'
+import formatDuration from '../../utils/formatDuration'
 import { COLORS } from '../../constants/colors'
 import LottieView from 'lottie-react-native'
 import playPauseAnimation from '../../../assets/images/PlayPauseAnimation.json'
@@ -19,6 +20,7 @@ const PlayerDetails = ({ navigation }) => {
   const [repeat, setRepeat] = useState(false)
   const [shuffle, setShuffle] = useState(false)
   const { song, songList, playerState } = useSelector(state => state.song)
+  const dispatch = useDispatch()
   const progress = useProgress()
   const playbackState = usePlaybackState()
   const animationRef = useRef()
@@ -54,7 +56,10 @@ const PlayerDetails = ({ navigation }) => {
       TrackPlayer.skipToPrevious()
     }
 
+    dispatch(setPlayerState('playing'))
+
     if (playbackState.state !== 'playing') {
+      
       TrackPlayer.play()
     }
   }
@@ -69,7 +74,10 @@ const PlayerDetails = ({ navigation }) => {
       TrackPlayer.skipToNext()
     }
 
+    dispatch(setPlayerState('playing'))
+
     if (playbackState.state !== 'playing') {
+      
       TrackPlayer.play()
     }
     
@@ -88,15 +96,18 @@ const PlayerDetails = ({ navigation }) => {
   }
 
   useEffect(() => {
-    if (playbackState.state === 'playing') {
+    if (playerState === 'playing') {
       // animationRef.current?.play(0, 65)
+      
 
       animationRef.current?.play(25, 26)
+      console.log('state playing')
     }
     else {
       animationRef.current?.play(60, 61)
+      console.log('state paused')
     }
-  }, [playbackState.state])
+  }, [playerState])
 
 
   return (
@@ -153,8 +164,21 @@ const PlayerDetails = ({ navigation }) => {
                     ref={animationRef}
                     style={styles.animationView}
                     source={playPauseAnimation}
-                    duration={500}
+                    duration={700}
                     loop={false}
+                    onAnimationLoaded={() => {
+                      if (playerState === 'playing') {
+                        // animationRef.current?.play(0, 65)
+                        
+                  
+                        animationRef.current?.play(25, 26)
+                        console.log('state playing')
+                      }
+                      else {
+                        animationRef.current?.play(60, 61)
+                        console.log('state paused')
+                      }
+                    }}
                   />
                 </TouchableOpacity>
               }

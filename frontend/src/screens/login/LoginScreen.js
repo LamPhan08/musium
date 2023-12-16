@@ -48,7 +48,7 @@ const LoginScreen = ({ navigation }) => {
             }
         );
         console.warn(`${email}` + ' ' + `${password}`)
-        navigation.navigate('App')
+        navigation.replace('App')
     }
 
     return (
@@ -107,10 +107,7 @@ const LoginScreen = ({ navigation }) => {
                     onChangeText={text => setPassword(text)}
                 />
 
-                <CustomButton label={"Đăng nhập"} onPress={
-                    // () => navigation.navigate('App')
-                    handleClick
-                } />
+                <CustomButton label={"Đăng nhập"} onPress={handleClick} />
 
                 <Text style={{ textAlign: 'center', color: '#FFFFFF', marginBottom: 30, fontFamily: 'Mulish-Regular' }}>
                     Hoặc tiếp tục với

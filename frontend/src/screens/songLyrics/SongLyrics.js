@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, memo } from 'react'
-import { View, Text, Image, FlatList, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
+import { View, Text, Image, FlatList, TouchableOpacity, TouchableHighlight } from 'react-native'
 import { getSongLyric } from '../../api/getData'
 import styles from './songLyrics.style'
 import { useSelector, useDispatch } from 'react-redux'

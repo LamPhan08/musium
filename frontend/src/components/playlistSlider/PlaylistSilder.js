@@ -3,8 +3,14 @@ import { View, Text, SafeAreaView, ScrollView, Image, TouchableOpacity } from 'r
 import styles from './playlistSlider.style'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
-const PlaylistSlider = ({ playlistData }) => {
-
+const PlaylistSlider = ({ navigation, playlistData }) => {
+  const handleOpenPlaylist = (playlistItem) => {
+    navigation.navigate('PlaylistDetails', {
+      playlistId: playlistItem.encodeId,
+      playlistTitle: playlistItem.title,
+      playlistThumbnail: playlistItem.thumbnailM
+    })
+  }
 
   return (
     <SafeAreaView style={styles.playlistsContainer}>
@@ -20,7 +26,7 @@ const PlaylistSlider = ({ playlistData }) => {
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{gap: 20}}>
               {item.items.map((playlistItem, index) => {
                 return (
-                  <TouchableOpacity style={styles.playlistPreviewWrapper} key={index}>
+                  <TouchableOpacity style={styles.playlistPreviewWrapper} key={index} onPress={() => handleOpenPlaylist(playlistItem)}>
                     <Image source={{ uri: playlistItem.thumbnailM }} style={styles.thumbnail} />
 
                     <Text style={(item.sectionId === 'h100' || item.sectionId === 'hAlbum') ? styles.playlistTitle : styles.playlistShortDescription} numberOfLines={2}>

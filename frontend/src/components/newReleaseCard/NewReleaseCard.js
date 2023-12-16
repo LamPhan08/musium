@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text, TouchableOpacity, Image } from 'react-native'
 import styles from './newReleaseCard.style'
-import HandleDate from '../../../utils/handleDate'
+import HandleDate from '../../utils/handleDate'
 import Feather from 'react-native-vector-icons/Feather'
 import TrackPlayer from 'react-native-track-player'
 import { useDispatch } from 'react-redux'

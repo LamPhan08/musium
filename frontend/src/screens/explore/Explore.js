@@ -33,7 +33,15 @@ const Explore = ({ navigation }) => {
   const top100AndHotAlbumData = homeData.filter(data => data.sectionId === 'h100' || data.sectionId === 'hAlbum')
   const newReleaseRankingData = homeData.find(data => data.sectionType === 'newReleaseChart')
 
-  return (
+  if (homeData.length === 0) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size='large' color={COLORS.primary} />
+      </View>
+    )
+  }
+  else {
+    return (
       <ScrollView style={styles.exploreContainer} showsVerticalScrollIndicator={false} decelerationRate={'fast'}>
         <View style={styles.avatarAndSearchContainer}>
           <Image source={avatar} style={styles.avatar} />
@@ -49,26 +57,23 @@ const Explore = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
-        {homeData.length === 0
-          ? <ActivityIndicator size='large' color={COLORS.primary} />
-          :
-          <View>
-            <Banner bannerDatas={bannerDatas} />
+        <View>
+          <Banner bannerDatas={bannerDatas} />
 
-            <HomeNewRelease newReleaseData={newReleaseData} />
+          <HomeNewRelease newReleaseData={newReleaseData} />
 
-            <PlaylistSlider playlistData={playlistData} />
+          <PlaylistSlider playlistData={playlistData} navigation={navigation} />
 
-            <NewReleaseRanking newReleaseRankingData={newReleaseRankingData} />
+          <NewReleaseRanking newReleaseRankingData={newReleaseRankingData} />
 
-            <PlaylistSlider playlistData={top100AndHotAlbumData} />
+          <PlaylistSlider playlistData={top100AndHotAlbumData} navigation={navigation} />
 
-          </View>
-        }
+        </View>
 
-        
+
       </ScrollView>
-  )
+    )
+  }
 }
 
 export default Explore

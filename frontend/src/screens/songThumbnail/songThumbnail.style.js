@@ -13,7 +13,8 @@ export default styles = StyleSheet.create({
     },
 
     thumbnailWrapper: {
-        alignItems: 'center', justifyContent: 'center'
+        alignItems: 'center', 
+        justifyContent: 'center'
     },
 
     circleSoundAnimation: {
@@ -22,11 +23,11 @@ export default styles = StyleSheet.create({
     },
 
     thumbnail: {
-        height: width * 0.75,
-        width: width * 0.75,
+        height: width * 0.6,
+        width: width * 0.6,
         resizeMode: 'contain',
-        borderRadius: 12,
-        // position: 'absolute',
+        borderRadius: 200,
+        position: 'absolute',
     },
 
     songDetailsWrapper: {

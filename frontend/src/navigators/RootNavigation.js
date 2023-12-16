@@ -5,7 +5,6 @@ import Splash from '../screens/splash/Splash';
 import OnboardingScreen from '../screens/OnboardingScreen';
 import LoginScreen from '../screens/login/LoginScreen';
 import RegisterScreen from '../screens/register/RegisterScreen';
-import Search from '../screens/search/Search';
 import EditProfile from '../screens/editprofilescreen/EditProfile'
 import PlayerDetails from '../screens/playerDetails/PlayerDetails';
 import { useDispatch } from 'react-redux';
@@ -59,7 +58,7 @@ const RootNavigation = () => {
 
     return (
         <Stack.Navigator
-            initialRouteName='Splash'
+            initialRouteName='App'
             screenOptions={{
                 headerShown: false,
                 presentation: 'modal',
@@ -74,10 +73,6 @@ const RootNavigation = () => {
             <Stack.Screen name="EditProfile" component={EditProfile} />
             <Stack.Screen name="AddPlayList" component={AddPlayList} />
             <Stack.Screen name="Downloaded" component={DownloadedSong} />
-            <Stack.Screen name="Search" component={Search} options={{
-                presentation: 'modal',
-                animation: 'slide_from_bottom'
-            }} />
             <Stack.Screen name='PlayerDetails' component={PlayerDetails} options={{
                 presentation: 'modal',
                 animation: 'slide_from_bottom'

@@ -1,7 +1,9 @@
 import axios from "axios";
 
 // const BASE_URL = "https://api-zingmp3-vercel.vercel.app/api"
-const BASE_URL = "http://192.168.1.13:5000/api"
+const BASE_URL = " https://9fd2-2405-4800-5b0e-115a-9db-127e-14f3-dfd5.ngrok-free.app/api"
+
+// const BASE_URL = "http://192.168.1.13:5000/api"
 
 //192.168.1.3
 
