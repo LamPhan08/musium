@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { FlatList, Dimensions, View } from 'react-native'
-import ChunkArray from '../../../../utils/chunkArray'
+import ChunkArray from '../../../utils/chunkArray'
 import NewReleaseCard from '../../../components/newReleaseCard/NewReleaseCard';
 import styles from '../allNewRelease/newRelease.style'
-import CheckSongHasMp3 from '../../../../utils/checkSongHasMp3';
+import CheckSongHasMp3 from '../../../utils/checkSongHasMp3';
 import LoadingDots from "react-native-loading-dots";
 import { COLORS } from '../../../constants/colors';
-import EditArrayForTrackPlayer from '../../../../utils/editArrayForTrackPlayer';
+import EditArrayForTrackPlayer from '../../../utils/editArrayForTrackPlayer';
 
 const { width } = Dimensions.get('window')
 
@@ -18,7 +18,7 @@ const OthersNewRelease = ({ route }) => {
   useEffect(() => {
     (
       async () => {
-        setOthersNewReleaseData(await CheckSongHasMp3(data))
+        setOthersNewReleaseData(await CheckSongHasMp3(data, ''))
       }
     )()
   }, [])

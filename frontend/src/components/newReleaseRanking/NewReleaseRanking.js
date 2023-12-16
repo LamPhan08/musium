@@ -2,16 +2,23 @@ import React, { useEffect, useRef, useState } from 'react'
 import { View, Text, SafeAreaView, TouchableOpacity, FlatList, Image, Dimensions } from 'react-native'
 import styles from './newReleaseRanking.style'
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import ConvertTimestamp from '../../../utils/convertTimestamp'
+import ConvertTimestamp from '../../utils/convertTimestamp'
 import { COLORS } from '../../constants/colors'
+import CheckSongHasMp3 from '../../utils/checkSongHasMp3'
+import EditArrayForTrackPlayer from '../../utils/editArrayForTrackPlayer'
+import TrackPlayer from 'react-native-track-player'
+import { useDispatch } from 'react-redux'
+import { setSongList } from '../../redux/songSlice'
 
-const {width} = Dimensions.get('window')
+const { width } = Dimensions.get('window')
 
 const viewConfigRef = { viewAreaCoveragePercentThreshold: 95 };
 
 const NewReleaseRanking = ({ newReleaseRankingData }) => {
-    // console.log(newReleaseRankingData)
+    const dispatch = useDispatch()
+
     let flatListRef = useRef();
+    const [newReleaseRankingList, setNewReleaseRankingList] = useState([])
     const [currentIndex, setCurrentIndex] = useState(0);
 
     const scrollToIndex = (index) => {
@@ -23,6 +30,26 @@ const NewReleaseRanking = ({ newReleaseRankingData }) => {
             setCurrentIndex(changed[0].index);
         }
     });
+
+    const handlePlayMusic = async (index) => {
+        const queue = EditArrayForTrackPlayer(newReleaseRankingList)
+
+        dispatch(setSongList(queue))
+
+        await TrackPlayer.setQueue(queue)
+
+        await TrackPlayer.skip(index)
+
+        TrackPlayer.play()
+    }
+
+    useEffect(() => {
+        (
+            async () => {
+                setNewReleaseRankingList(await CheckSongHasMp3(newReleaseRankingData.items, 'none'))
+            }
+        )()
+    }, [])
 
     useEffect(() => {
         let interval = setInterval(() => {
@@ -61,7 +88,7 @@ const NewReleaseRanking = ({ newReleaseRankingData }) => {
                 viewabilityConfig={viewConfigRef}
                 renderItem={({ item, index }) => {
                     return (
-                        <TouchableOpacity style={styles.newReleaseWrapper} key={index}>
+                        <TouchableOpacity style={styles.newReleaseWrapper} key={index} onPress={() => handlePlayMusic(index)}>
                             <Image source={{ uri: item.thumbnailM }} style={styles.thumbnail} />
 
                             <View style={styles.newReleaseDetails}>

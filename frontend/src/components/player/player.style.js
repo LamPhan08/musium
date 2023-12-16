@@ -39,7 +39,8 @@ export default styles = StyleSheet.create({
     songTitle: {
         color: COLORS.text,
         fontFamily: 'Mulish-Bold',
-        fontSize: 14
+        fontSize: 14,
+        flex: 1
     },
 
     songArtist: {
@@ -50,7 +51,7 @@ export default styles = StyleSheet.create({
 
     playerControlContainer: {
         flexDirection: 'row',
-        gap: 10
+        gap: 10,
     },
 
     controlIcon: {

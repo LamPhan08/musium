@@ -2,6 +2,13 @@ import { StyleSheet } from "react-native";
 import {COLORS} from '../../constants/colors'
 
 export default styles = StyleSheet.create({
+    loadingContainer: {
+        backgroundColor: COLORS.background,
+        alignItems: 'center',
+        justifyContent: 'center',
+        flex: 1
+    },
+    
     exploreContainer: {
         backgroundColor: COLORS.background,
         paddingHorizontal: 15,

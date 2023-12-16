@@ -123,7 +123,7 @@ const LoginScreen = ({ navigation }) => {
                 />
 
                 <CustomButton label={"Đăng nhập"} onPress={
-                    () => navigation.navigate('App')
+                    () => navigation.replace('App')
                     // handleClick
                 } />
 

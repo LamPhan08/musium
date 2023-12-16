@@ -1,20 +1,44 @@
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
+import { View, TouchableOpacity, Text, Animated, Easing } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Home from '../screens/explore/Explore';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Profile from '../screens/profile/Profile';
+import Favorites from '../screens/favorites/Favorites';
+import Explore from '../screens/explore/Explore';
+import Search from '../screens/search/Search';
+import PlaylistDetails from '../screens/playlistDetails/PlaylistDetails';
+import Player from '../components/player/Player';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import { COLORS } from '../constants/colors';
-import Favorites from '../screens/favorites/Favorites';
-import { View, TouchableOpacity, Text, Animated, Easing } from 'react-native';
-import Player from '../components/player/Player';
 import { useSelector } from 'react-redux';
-
-import { Scaler, ZoomScaler } from '../../utils/zoomInOut';
+import { ZoomScaler } from '../utils/zoomInOut';
 
 const Tab = createBottomTabNavigator();
+const TabStack = createNativeStackNavigator()
 
-const BottomTabNavigator = ({navigation}) => {
+const ExploreStack = () => {
+  return (
+    <TabStack.Navigator
+      initialRouteName='Explore'
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <TabStack.Screen name='Explore' component={Explore} />
+      <TabStack.Screen name="Search" component={Search} options={{
+        presentation: 'modal',
+        animation: 'slide_from_bottom'
+      }} />
+      <TabStack.Screen name="PlaylistDetails" component={PlaylistDetails} options={{
+        presentation: 'modal',
+        animation: 'slide_from_right'
+      }} />
+    </TabStack.Navigator>
+  )
+}
+
+const BottomTabNavigator = ({ navigation }) => {
   const { song } = useSelector(state => state.song)
   const [routeName, setRouteName] = useState('Explore')
 
@@ -52,6 +76,8 @@ const BottomTabNavigator = ({navigation}) => {
     ]).start()
   }
 
+
+
   useEffect(() => {
     animateTabOpen()
   }, [routeName])
@@ -60,24 +86,25 @@ const BottomTabNavigator = ({navigation}) => {
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
+        lazy: true,
       }}
       backBehavior='none'
       initialRouteName='Explore'
       tabBar={({ state, descriptors, navigation }) => {
-        
-        return (
-          <View style={{backgroundColor: COLORS.bottomTabBar}}>
-            {song ? <Player navigation={navigation}/> : null}
 
-            <View style={{ flexDirection: 'row', backgroundColor: COLORS.bottomTabBar, height: 60, alignItems: 'center',  }}>
+        return (
+          <View style={{ backgroundColor: COLORS.bottomTabBar }}>
+            {song ? <Player navigation={navigation} /> : null}
+
+            <View style={{ flexDirection: 'row', backgroundColor: 'rgba(0, 0, 0, 0.2)', height: 60, alignItems: 'center', }}>
               {state.routes.map((route, index) => {
                 const { options } = descriptors[route.key];
-                const label =
-                  options.tabBarLabel !== undefined
-                    ? options.tabBarLabel
-                    : options.title !== undefined
-                      ? options.title
-                      : route.name;
+                // const label =
+                //   options.tabBarLabel !== undefined
+                //     ? options.tabBarLabel
+                //     : options.title !== undefined
+                //       ? options.title
+                //       : route.name;
 
 
                 const isFocused = state.index === index;
@@ -90,7 +117,7 @@ const BottomTabNavigator = ({navigation}) => {
                   });
 
                   setRouteName(route.name)
-                  
+
                   if (!isFocused && !event.defaultPrevented) {
                     navigation.navigate(route.name, route.params);
                   }
@@ -101,10 +128,10 @@ const BottomTabNavigator = ({navigation}) => {
                     type: 'tabLongPress',
                     target: route.key,
                   });
-                  
+
                 };
-                
-                
+
+
 
                 return (
                   <TouchableOpacity
@@ -115,26 +142,26 @@ const BottomTabNavigator = ({navigation}) => {
                     key={index}
                     onPress={onPress}
                     onLongPress={onLongPress}
-                    style={{ flex: 1, alignItems: 'center', height: 60, justifyContent: 'center'}}
+                    style={{ flex: 1, alignItems: 'center', height: 60, justifyContent: 'center' }}
                   >
 
 
-                    {isFocused && 
-                      <Animated.View 
+                    {isFocused &&
+                      <Animated.View
                         style={{
-                          height: 50, 
-                          width: 50, 
+                          height: 50,
+                          width: 50,
                           position: 'absolute',
                           // top: 0,
-                          borderRadius: 100, 
-                          backgroundColor: isFocused ? COLORS.primary : null, 
-                          transform: [{scale: interpolateView}]
-                        }}/>
+                          borderRadius: 100,
+                          backgroundColor: isFocused ? COLORS.primary : null,
+                          transform: [{ scale: interpolateView }]
+                        }} />
                     }
 
-                    <Animated.View style={isFocused ? {transform: [{scale: interpolateIcon}]} : ''}>
+                    <Animated.View style={isFocused ? { transform: [{ scale: interpolateIcon }] } : ''}>
                       <ZoomScaler pose={isFocused ? "active" : "inactive"}>
-                      {options.tabBarIcon({ focused: isFocused})}
+                        {options.tabBarIcon({ focused: isFocused })}
                       </ZoomScaler>
                     </Animated.View>
 
@@ -149,7 +176,7 @@ const BottomTabNavigator = ({navigation}) => {
         )
       }}
     >
-      <Tab.Screen name='Explore' component={Home} options={{
+      <Tab.Screen name='ExploreStack' component={ExploreStack} options={{
         tabBarIcon: ({ focused }) => <AntDesign name='home' size={23} color={focused ? COLORS.white : COLORS.grey} />,
         title: 'Khám phá',
 

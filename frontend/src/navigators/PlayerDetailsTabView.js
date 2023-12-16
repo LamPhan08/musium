@@ -49,6 +49,7 @@ const PlayerDetailsTabView = ({ onChangeTitle }) => {
             onIndexChange={setIndex}
             renderScene={renderScene}
             lazy={true}
+            
             initialLayout={width}
             lazyPreloadDistance={1}
             pointerEvents='none'

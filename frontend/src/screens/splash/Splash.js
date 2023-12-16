@@ -6,7 +6,7 @@ import musium from '../../../assets/images/musium.png'
 
 const Splash = ({navigation}) => {
     setTimeout(() => {
-        navigation.navigate("Login")
+        navigation.replace("Login")
     }, 2000)
 
   return (
