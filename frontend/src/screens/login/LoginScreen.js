@@ -25,6 +25,11 @@ import { COLORS } from '../../constants/colors';
 
 // import { Link, useNavigate } from 'react-router-dom'
 
+import { mongoAPI } from '../../axios/axios';
+
+
+import { useSelector } from 'react-redux';
+
 const {width, height} = Dimensions.get('window')
 
 const LoginScreen = ({ navigation }) => {
@@ -34,37 +39,17 @@ const LoginScreen = ({ navigation }) => {
     // const navigate = useNavigate();
     // const {dispatch} = useContext(AuthContext);
 
-    // const handleClick = async e => {
-    //     e.preventDefault();
-
-    //     dispatch({type: 'LOGIN_START'});
-
-    //     try {
-
-    //         const res = await fetch(`${BASE_URL}/auth/login`, {
-    //             method: 'post',
-    //             headers: {
-    //                 "content-type": "application/json",
-    //             },
-    //             email: 'include',
-    //             password: 'include',
-    //             body: JSON.stringify({email, password}),
-    //         });
-            
-    //         const result = await res.json();
-    //         if(!res.ok) {
-    //             alert(result.message);
-    //         }
-
-    //         console.log(result.data);
-
-    //         dispatch({type: 'LOGIN_SUCCESS', payload: result.data});
-    //         navigation.navigate('App')
-
-    //     } catch (err) {
-    //         dispatch({type: 'LOGIN_FAILURE', payload: err.message});
-    //     }
-    // }
+    const handleClick = async e => {
+        e.preventDefault();
+        const loginResponse = await mongoAPI.post(`/auth/login`, 
+            {
+              email,
+              password
+            }
+        );
+        console.warn(`${email}` + ' ' + `${password}`)
+        navigation.replace('App')
+    }
 
     return (
         <LinearGradient colors={["#121111", "#040306" ]} style={{ flex: 1 }}>
@@ -122,10 +107,7 @@ const LoginScreen = ({ navigation }) => {
                     onChangeText={text => setPassword(text)}
                 />
 
-                <CustomButton label={"Đăng nhập"} onPress={
-                    () => navigation.replace('App')
-                    // handleClick
-                } />
+                <CustomButton label={"Đăng nhập"} onPress={handleClick} />
 
                 <Text style={{ textAlign: 'center', color: '#FFFFFF', marginBottom: 30, fontFamily: 'Mulish-Regular' }}>
                     Hoặc tiếp tục với
