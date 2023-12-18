@@ -30,6 +30,9 @@ import { mongoAPI } from '../../axios/axios';
 
 import { useSelector } from 'react-redux';
 
+import auth from '@react-native-firebase/auth';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+
 const {width, height} = Dimensions.get('window')
 
 const LoginScreen = ({ navigation }) => {
@@ -39,6 +42,30 @@ const LoginScreen = ({ navigation }) => {
     // const navigate = useNavigate();
     // const {dispatch} = useContext(AuthContext);
 
+    GoogleSignin.configure({
+        webClientId: '916968479424-8beoiql3s7il2ao2p085vqm4128ecs0c.apps.googleusercontent.com',
+    });
+
+    async function onGoogleButtonPress() {
+        // Check if your device supports Google Play
+        await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+        // Get the users ID token
+        const { idToken } = await GoogleSignin.signIn();
+      
+        // Create a Google credential with the token
+        const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+
+        // Sign-in the user with the credential
+        const userCredential = await auth().signInWithCredential(googleCredential);
+
+        // Extract user information
+        const user = userCredential.user;
+        console.log(user);
+      
+        // Sign-in the user with the credential
+        return auth().signInWithCredential(googleCredential);
+    }
+
     const handleClick = async e => {
         e.preventDefault();
         const loginResponse = await mongoAPI.post(`/auth/login`, 
@@ -47,7 +74,8 @@ const LoginScreen = ({ navigation }) => {
               password
             }
         );
-        console.warn(`${email}` + ' ' + `${password}`)
+        // console.warn(`${email}` + ' ' + `${password}`)
+        console.log("Login Response:", loginResponse.data);
         navigation.replace('App')
     }
 
@@ -86,7 +114,7 @@ const LoginScreen = ({ navigation }) => {
                     value={email}
                     onChangeText={text => {
                         setEmail(text);
-                        console.warn(email)
+                        // console.warn(email)
                     }}
                 />
 
@@ -121,7 +149,18 @@ const LoginScreen = ({ navigation }) => {
                         gap: 20
                     }}>
                     <TouchableOpacity
-                        onPress={() => { }}
+                        // onPress={() => { }}
+                        onPress={ () => onGoogleButtonPress()
+                            .then(() => 
+                              {
+                                console.log('Signed in with Google!');
+                                navigation.navigate('App');
+                              }
+                            )
+                            .catch((error) => {
+                                console.log(error.message);
+                            })
+                          }
                         style={{
                             borderColor: '#ddd',
                             borderWidth: 0.5,
