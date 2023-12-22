@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "916968479424",
+    "project_id": "musiumf",
+    "storage_bucket": "musiumf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:916968479424:android:df9f2235b36575ebc2eb25",
+        "android_client_info": {
+          "package_name": "com.musium"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "916968479424-7uhksnl763a21alpn96rpe1rlh6mitob.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.musium",
+            "certificate_hash": "e7c7d9312bd4e3fdd686d195277448c837ad2e3d"
+          }
+        },
+        {
+          "client_id": "916968479424-8beoiql3s7il2ao2p085vqm4128ecs0c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3NsRUZNe6jwCFUFmjZkBzMONNXAmDIxc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "916968479424-8beoiql3s7il2ao2p085vqm4128ecs0c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

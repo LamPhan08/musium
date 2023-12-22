@@ -12,6 +12,9 @@
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.21.0",
     "@react-native-community/slider": "^4.4.4",
+    "@react-native-firebase/app": "^18.7.3",
+    "@react-native-firebase/auth": "^18.7.3",
+    "@react-native-google-signin/google-signin": "^11.0.0",
     "@react-navigation/bottom-tabs": "^6.5.11",
     "@react-navigation/material-bottom-tabs": "^6.2.19",
     "@react-navigation/material-top-tabs": "^6.6.5",
@@ -25,6 +28,7 @@
     "react-loader-spinner": "^5.4.5",
     "react-native": "0.72.7",
     "react-native-gesture-handler": "^2.13.4",
+    "react-native-get-music-files": "^2.2.4",
     "react-native-image-crop-picker": "^0.38.0",
     "react-native-linear-gradient": "^2.8.3",
     "react-native-loading-dots": "^1.4.0",

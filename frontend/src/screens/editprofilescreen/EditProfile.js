@@ -25,7 +25,7 @@ const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
 const EditProfile = ({ navigation }) => {
   const [name, setName] = useState("John Doe")
   const [password, setPassWord] = useState("password")
-  const [img, setImg] = useState(avatar)
+  const [img, setImg] = useState('https://reactnative.dev/img/tiny_logo.png')
   const [isOpen, setOpen] = useState(false);
 
   const choosePhotoFromLibrary = () => {
@@ -90,7 +90,10 @@ const EditProfile = ({ navigation }) => {
 
             <Image
               style={styles.avatar}
-              source={img}
+              // source={img}
+              source={{
+                uri: img,
+              }}
             />
           </View>
         </TouchableOpacity>

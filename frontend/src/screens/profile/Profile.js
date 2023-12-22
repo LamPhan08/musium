@@ -1,12 +1,22 @@
 import React from 'react'
 import LinearGradient from 'react-native-linear-gradient';
-import { Image, ScrollView, Text, View, TouchableOpacity, Pressable } from "react-native";
+import { Image, ScrollView, Text, View, TouchableOpacity, Pressable, PermissionsAndroid, Linking } from "react-native";
 import avatar from '../../../assets/images/avatar.png'
 import styles from './profile.style'
 import FeatherIcon from 'react-native-vector-icons/Feather';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { tracks } from '../../../assets/data/tracks';
 import Feather from 'react-native-vector-icons/Feather';
 const Profile = ({ navigation }) => {
+
+  const requestPermission = async()=>{
+    const granted = await PermissionsAndroid.requestMultiple([
+      PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+      PermissionsAndroid.PERMISSIONS.READ_MEDIA_AUDIO,
+    ]);
+    console.log("granted", granted)
+    return granted
+  }
   return (
     <LinearGradient colors={["#040306", "#040306"]} style={{ flex: 1 }}>
       <ScrollView style={{ marginTop: 20 }}>
@@ -39,21 +49,40 @@ const Profile = ({ navigation }) => {
             <View style={styles.profileAction}>
               <Text style={styles.profileActionText}> Chỉnh sửa </Text>
 
-              <FeatherIcon color="#fff" name="edit" size={16} />
+              <FontAwesome color="#fff" name="edit" size={16} />
             </View>
           </TouchableOpacity>
         </View>
 
-            <Pressable 
-           onPress={()=>{
-            navigation.navigate("Downloaded")
-          }}
-            style={{ width: 130, height: 100, borderRadius: 5, backgroundColor:"#222222", margin:10, padding:15 }}>
-            <Feather  name="arrow-down-circle" size={30} color="#06A0B5" />
-                <Text style={{ marginTop:15, color: "white", fontSize: 17, fontWeight: "bold"}}>Đã tải</Text>
-            </Pressable>
 
-        <View style={{flexDirection: 'row', alignItems: "center"}}>
+        <View style={{ flexDirection: 'row', alignItems: "center" }}>
+          <Pressable
+            onPress={() => {
+              navigation.navigate("Downloaded")
+            }}
+            style={{ width: 130, height: 100, borderRadius: 5, backgroundColor: "#222222", margin: 10, padding: 15 }}>
+            <Feather name="arrow-down-circle" size={30} color="#06A0B5" />
+            <Text style={{ marginTop: 15, color: "white", fontSize: 15, fontWeight: "bold" }}>Đã tải</Text>
+          </Pressable>
+
+          <Pressable
+            onPress={async() => {
+              const permissionStatus = await requestPermission()
+              if(permissionStatus[PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE] === 'granted' || permissionStatus[PermissionsAndroid.PERMISSIONS.READ_MEDIA_AUDIO] === 'granted' )
+              {
+                navigation.navigate("LocalAudio")
+              }
+              
+            }}
+            style={{ width: 130, height: 100, borderRadius: 5, backgroundColor: "#222222", margin: 10, padding: 15 }}>
+            <FontAwesome name="folder" size={30} color="#D4AC0D" />
+            <Text style={{ marginTop: 10, color: "white", fontSize: 15, fontWeight: "bold" }}>Audio trong máy</Text>
+          </Pressable>
+        </View>
+
+
+
+        <View style={{ flexDirection: 'row', alignItems: "center" }}>
           <Text
             style={{
               color: "white",
@@ -66,12 +95,12 @@ const Profile = ({ navigation }) => {
           >
             Playlist của bạn
           </Text>
-              <TouchableOpacity onPress={()=>{
-                navigation.navigate("AddPlayList")
-              }}>
-              <FeatherIcon name="plus" color="#fff" size={30}/>
-              </TouchableOpacity>
-          
+          <TouchableOpacity onPress={() => {
+            navigation.navigate("AddPlayList")
+          }}>
+            <FeatherIcon name="plus" color="#fff" size={30} />
+          </TouchableOpacity>
+
         </View>
 
 
