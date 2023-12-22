@@ -1,6 +1,6 @@
 import { getSongMp3 } from "../api/getData"
 
-export default CheckSongHasMp3 = async (songArray, limit) => {
+export default CheckSongHasMp3 = async (songArray, limit, limitCount) => {
     let count = 0
     const newSongArray = []
 
@@ -17,7 +17,7 @@ export default CheckSongHasMp3 = async (songArray, limit) => {
             }
 
             if (limit !== 'none') {
-                if (count === 12) {
+                if (count === limitCount) {
                     break
                 }
             }

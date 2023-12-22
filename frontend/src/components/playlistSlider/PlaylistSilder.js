@@ -7,7 +7,6 @@ const PlaylistSlider = ({ navigation, playlistData }) => {
   const handleOpenPlaylist = (playlistItem) => {
     navigation.navigate('PlaylistDetails', {
       playlistId: playlistItem.encodeId,
-      playlistTitle: playlistItem.title,
       playlistThumbnail: playlistItem.thumbnailM
     })
   }

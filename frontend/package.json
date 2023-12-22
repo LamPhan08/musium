@@ -19,6 +19,7 @@
     "@react-navigation/native-stack": "^6.9.17",
     "@reduxjs/toolkit": "^1.9.7",
     "axios": "^1.6.2",
+    "lodash": "^4.17.21",
     "lottie-react-native": "^6.4.1",
     "react": "18.2.0",
     "react-loader-spinner": "^5.4.5",

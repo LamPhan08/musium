@@ -1,41 +1,40 @@
-import {StyleSheet} from 'react-native'
-import { COLORS } from '../../constants/colors'
+import { StyleSheet } from "react-native";
+import { COLORS } from "../../constants/colors";
 
 export default styles = StyleSheet.create({
-    songContainer: {
-        paddingVertical: 10,
-        borderRadius: 5,
+    playlistCard: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 12,
-        // backgroundColor: 'red'
+        paddingVertical: 10,
+        borderRadius: 5,
+        gap: 12
     },
 
-    songThumbnail: {
+    playlistThumbnail: {
         height: 60,
         width: 60,
         resizeMode: 'contain',
         borderRadius: 5
     },
 
-    songDetails: {
+    playlistIn4Wrapper: {
         flex: 1,
-        gap: 3,
+        gap: 5
     },
 
-    songTitle: {
+    playlistTitle: {
         fontSize: 15,
         fontFamily: 'Mulish-Bold',
         color: COLORS.text,
     },
 
-    songArtistsNames: {
+    playlistArtistsNames: {
         fontSize: 13,
         fontFamily: 'Mulish-Regular',
         color: COLORS.grey
     },
 
-    moreIcon: {
+    icon: {
         fontSize: 20,
         color: COLORS.grey,
     }

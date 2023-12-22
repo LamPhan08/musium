@@ -82,7 +82,6 @@ export default styles = StyleSheet.create({
     },
 
     songDetailsWrapper: {
-        marginTop: 20,
         gap: 10
     },
 

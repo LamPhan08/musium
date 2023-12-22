@@ -144,8 +144,6 @@ const BottomTabNavigator = ({ navigation }) => {
                     onLongPress={onLongPress}
                     style={{ flex: 1, alignItems: 'center', height: 60, justifyContent: 'center' }}
                   >
-
-
                     {isFocused &&
                       <Animated.View
                         style={{

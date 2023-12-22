@@ -18,7 +18,7 @@ const OthersNewRelease = ({ route }) => {
   useEffect(() => {
     (
       async () => {
-        setOthersNewReleaseData(await CheckSongHasMp3(data, ''))
+        setOthersNewReleaseData(await CheckSongHasMp3(data, '', 12))
       }
     )()
   }, [])
@@ -37,10 +37,10 @@ const OthersNewRelease = ({ route }) => {
         contentContainerStyle={{ gap: 10 }}
         snapToInterval={width * 0.8 + 10}
         decelerationRate='fast'
-        removeClippedSubviews={true}
-        initialNumToRender={2}
-        maxToRenderPerBatch={2}
-        windowSize={2}
+        // removeClippedSubviews={true}
+        // initialNumToRender={2}
+        // maxToRenderPerBatch={2}
+        // windowSize={2}
         renderItem={({ item, index }) => {
           return <NewReleaseCard newReleaseData={item} key={index} newReleaseList={EditArrayForTrackPlayer(othersNewReleaseData)} cardIndex={index} />
         }}

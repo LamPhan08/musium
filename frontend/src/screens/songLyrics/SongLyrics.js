@@ -4,7 +4,7 @@ import { getSongLyric } from '../../api/getData'
 import styles from './songLyrics.style'
 import { useSelector, useDispatch } from 'react-redux'
 import { setPlayerState } from '../../redux/songSlice'
-import TrackPlayer, {useProgress} from 'react-native-track-player'
+import TrackPlayer, { useProgress } from 'react-native-track-player'
 
 const SongLyrics = () => {
   const { song } = useSelector(state => state.song)
@@ -34,7 +34,7 @@ const SongLyrics = () => {
 
   const scrollToIndex = (index) => {
     lyricsFlatlistRef.current?.scrollToIndex({ animated: true, index: index });
-};
+  };
 
   const getItemLayout = (data, index) => ({
     length: 38,
@@ -62,7 +62,7 @@ const SongLyrics = () => {
         </ScrollView> */}
 
         <FlatList
-          style={{marginTop: 15}}
+          style={{ marginTop: 15 }}
           showsVerticalScrollIndicator={false}
           decelerationRate='fast'
           ref={(ref) => {
@@ -71,16 +71,25 @@ const SongLyrics = () => {
           initialNumToRender={10}
           data={songLyrics}
           getItemLayout={getItemLayout}
-          renderItem={({item, index}) => {
+          renderItem={({ item, index }) => {
             if (item.words[0].startTime / 1000 - 1.4 <= (progress.position)
               && (progress.position) <= item.words[item.words.length - 1].endTime / 1000 - 1.4) {
               scrollToIndex(index)
             }
 
-
             return (
               <TouchableOpacity key={index} onPress={() => handleSeek(item.words[0].startTime / 1000)} style={[styles.lyricBtn]}>
-                <Text style={[[styles.lyric, {backgroundColor: item.words[0].startTime/1000 - 1.4 < (progress.position) && (progress.position) < item.words[item.words.length - 1].endTime/1000 - 1.4 ? 'rgba(169, 169, 169, 0.3)' : 'transparent'}]]}>{item.words.map(word => word.data).join(' ')}</Text>
+                <Text style={[[
+                  styles.lyric,
+                  {
+                    backgroundColor: item.words[0].startTime / 1000 - 1.4 < (progress.position)
+                      && (progress.position) < item.words[item.words.length - 1].endTime / 1000 - 1.4
+                      ? 'rgba(169, 169, 169, 0.3)'
+                      : 'transparent'
+                  }]]}>
+
+                  {item.words.map(word => word.data).join(' ')}
+                </Text>
               </TouchableOpacity>
             )
           }}

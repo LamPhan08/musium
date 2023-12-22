@@ -49,7 +49,7 @@ const Explore = ({ navigation }) => {
           <View style={styles.nameContainer}>
             <Text style={styles.welcome}>Xin chào!</Text>
 
-            <Text style={styles.name}>John Doe</Text>
+            <Text style={styles.name}>LamPhan</Text>
           </View>
 
           <TouchableOpacity onPress={handleNavigateSearch}>
@@ -58,7 +58,7 @@ const Explore = ({ navigation }) => {
         </View>
 
         <View>
-          <Banner bannerDatas={bannerDatas} />
+          <Banner bannerDatas={bannerDatas} navigation={navigation}/>
 
           <HomeNewRelease newReleaseData={newReleaseData} />
 
@@ -66,8 +66,7 @@ const Explore = ({ navigation }) => {
 
           <NewReleaseRanking newReleaseRankingData={newReleaseRankingData} />
 
-          <PlaylistSlider playlistData={top100AndHotAlbumData} navigation={navigation} />
-
+          <PlaylistSlider playlistData={top100AndHotAlbumData} navigation={navigation}/>
         </View>
 
 

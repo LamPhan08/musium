@@ -14,10 +14,11 @@ import TrackPlayer from 'react-native-track-player'
 import { useDispatch } from 'react-redux'
 import { setSongList } from '../../redux/songSlice'
 
-const {width} = Dimensions.get('window')
+const { width } = Dimensions.get('window')
+// console.log(width * 0.65)
 
 const PlaylistDetails = ({ navigation, route }) => {
-  const { playlistId, playlistTitle, playlistThumbnail } = route.params
+  const { playlistId, playlistThumbnail } = route.params
   const [playlistData, setPlaylistData] = useState()
   const [playlistSong, setPlaylistSong] = useState()
   const [isLiked, setIsLiked] = useState(false)
@@ -29,7 +30,7 @@ const PlaylistDetails = ({ navigation, route }) => {
   const scrollY = useRef(new Animated.Value(0)).current;
 
   const opacity = scrollY.interpolate({
-    inputRange: [220, 500],
+    inputRange: [width * 0.5, 500],
     outputRange: [0, 1],
     extrapolate: 'clamp',
   });
@@ -47,7 +48,7 @@ const PlaylistDetails = ({ navigation, route }) => {
 
         setPlaylistData(result)
 
-        setPlaylistSong(await CheckSongHasMp3(result.song.items, 'none'))
+        setPlaylistSong(await CheckSongHasMp3(result.song.items, 'none', result.song.items.length))
       }
     )()
   }, [])
@@ -84,6 +85,8 @@ const PlaylistDetails = ({ navigation, route }) => {
     { useNativeDriver: false }
   )
 
+  // console.log(playlistData)
+
   return (
     <ImageBackground style={styles.playlistDetailsContainer} source={{ uri: playlistThumbnail }} resizeMode='cover' blurRadius={15}>
       <View style={styles.darkView}>
@@ -92,8 +95,8 @@ const PlaylistDetails = ({ navigation, route }) => {
             <Entypo name='chevron-thin-left' style={styles.headerIcon} />
           </TouchableOpacity>
 
-          <Animated.View style={[styles.animatedView, {opacity: opacity}]}>
-            <Text style={styles.playlistHeaderTitle}>{playlistTitle}</Text>
+          <Animated.View style={[styles.animatedView, { opacity: opacity }]}>
+            <Text style={styles.playlistHeaderTitle} numberOfLines={1}>{playlistData?.title}</Text>
 
             <TouchableOpacity style={styles.playHeaderButton} onPress={handleHeaderPlay}>
               <Ionicons name='play' style={styles.playBtnIcon} />
@@ -110,28 +113,33 @@ const PlaylistDetails = ({ navigation, route }) => {
             scrollEventThrottle={16}
           >
             <View style={styles.playlistIn4Wrapper}>
-              <Animated.Image source={{ uri: playlistData.thumbnailM }} style={[styles.playlistThumbnail, {width: imageSize, height: imageSize}]} />
+              <Animated.Image source={{ uri: playlistData.thumbnailM }} style={[styles.playlistThumbnail, { width: imageSize, height: imageSize }]} />
 
               <Text style={styles.playlistTitle}>{playlistData.title}</Text>
 
-              <View style={styles.artistsNamesWrapper}>
-                <Text style={styles.artistsPlaylist}>Playlist của </Text>
+              {playlistData.artists
+                &&
+                <View style={styles.artistsNamesWrapper}>
+                  <Text style={styles.artistsPlaylist}>Playlist của </Text>
 
-                {playlistData.artists.map((artist, index) => {
-                  return (
-                    <View key={index} style={styles.artistBtn} >
-                      <TouchableOpacity onPress={() => handleViewArtist(artist)}>
-                        <Text style={styles.artistName}>{artist.name}</Text>
-                      </TouchableOpacity>
+                  {playlistData.artists?.map((artist, index) => {
+                    return (
+                      <View key={index} style={styles.artistBtn} >
+                        <TouchableOpacity onPress={() => handleViewArtist(artist)}>
+                          <Text style={styles.artistName}>{artist.name}</Text>
+                        </TouchableOpacity>
 
-                      {index < playlistData.artists.length - 1 && <Text style={styles.artistName}>, </Text>}
-                    </View>
-                  )
-                })}
-              </View>
+                        {index < playlistData.artists.length - 1 && <Text style={styles.artistName}>, </Text>}
+                      </View>
+                    )
+                  })}
+                </View>
+              }
 
               <View style={styles.lastUpdateAndListen}>
-                <Text style={styles.playlistLastUpdate}>Cập nhật: {ConvertTimestamp(playlistData.contentLastUpdate)}</Text>
+                {playlistData.contentLastUpdate
+                  && <Text style={styles.playlistLastUpdate}>Cập nhật: {ConvertTimestamp(playlistData.contentLastUpdate)}</Text>
+                }
 
                 <View style={styles.listenWrapper}>
                   <Feather name='headphones' style={styles.headphoneIcon} />
@@ -147,7 +155,8 @@ const PlaylistDetails = ({ navigation, route }) => {
 
               {playlistData.description !== '' && <Text style={styles.playlistDescription}>{playlistData.description}</Text>}
 
-              <View style={styles.btnWrapper}>
+              {playlistSong.length !== 0
+                ? <View style={styles.btnWrapper}>
                 <Text style={styles.playlistSongTotal}>{playlistSong.length} bài</Text>
 
                 <TouchableOpacity onPress={handlePlay} style={styles.playBtn}>
@@ -163,6 +172,8 @@ const PlaylistDetails = ({ navigation, route }) => {
                   }
                 </TouchableOpacity>
               </View>
+              : <Text style={styles.noSongs}>Không có bài hát nào</Text>
+              }
             </View>
 
             <FlatList
@@ -175,7 +186,7 @@ const PlaylistDetails = ({ navigation, route }) => {
               scrollEnabled={false}
               renderItem={({ item, index }) => {
                 return (
-                  <SongCard song={item} key={index} playlistSongs={EditArrayForTrackPlayer(playlistSong)} index={index}/>
+                  <SongCard song={item} key={index} playlistSongs={EditArrayForTrackPlayer(playlistSong)} index={index} />
                 )
               }}
             />
