@@ -40,7 +40,8 @@ export default styles = StyleSheet.create({
     animatedView: {
         flexDirection: 'row',
         alignItems: 'center',
-        flex: 1
+        flex: 1,
+        gap: 12
     },  
 
     playlistHeaderTitle: {
@@ -186,5 +187,11 @@ export default styles = StyleSheet.create({
     songList: {
         marginTop: 10,
         paddingHorizontal: 15
+    },
+
+    noSongs: {
+        fontFamily: 'Mulish-Bold',
+        color: COLORS.text,
+        fontSize: 16
     }
 })

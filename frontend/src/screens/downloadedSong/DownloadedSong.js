@@ -10,8 +10,9 @@ import { tracks } from '../../../assets/data/tracks';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 
 const DownloadedSong = ({ navigation }) => {
-  const [findSong, setFindSong] = useState("")
-  const [clicked, setClicked] = useState(false);
+  const [searchText, setSearchText] = useState("")
+  const [focus, setFocus] = useState(false)
+
   return (
     <LinearGradient colors={["#040306", "#040306"]} style={{ flex: 1 }}  >
       <ScrollView>
@@ -30,12 +31,9 @@ const DownloadedSong = ({ navigation }) => {
           <Text style={styles.label}>Đã tải</Text>
         </View>
 
-        <SearchBar
-          searchPhrase={findSong}
-          setSearchPhrase={setFindSong}
-          clicked={clicked}
-          setClicked={setClicked}
-        />
+        <View style={{paddingHorizontal: 15}}>
+          <SearchBar searchText={searchText} setSearchText={setSearchText} setFocus={setFocus}/>
+        </View>
 
 
         <View style={{ flexDirection: 'row', alignItems: "center", justifyContent:"center" }}>

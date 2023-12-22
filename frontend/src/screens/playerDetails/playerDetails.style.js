@@ -124,7 +124,7 @@ export default styles = StyleSheet.create({
     },
 
     playlistIcon: {
-        fontSize: 26,
-        color: COLORS.grey
+        fontSize: 22,
+        color: COLORS.white
     }
 })

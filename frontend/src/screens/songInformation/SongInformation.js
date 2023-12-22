@@ -22,6 +22,8 @@ const SongInformation = () => {
     )()
   }, [song])
 
+  // console.log(songIn4)
+
 
   if (songIn4) {
     return (
@@ -39,13 +41,13 @@ const SongInformation = () => {
 
               <View style={styles.likeAndListenWrapper}>
                 <View style={styles.itemWrapper}>
-                  <Ionicons name='heart-outline' style={styles.icon}/>
+                  <Ionicons name='heart-outline' style={styles.icon} />
 
                   <Text style={styles.likeAndListen}>{songIn4.like}</Text>
                 </View>
 
                 <View style={styles.itemWrapper}>
-                  <Feather name='headphones' style={styles.icon}/>
+                  <Feather name='headphones' style={styles.icon} />
 
                   <Text style={styles.likeAndListen}>{songIn4.listen}</Text>
                 </View>
@@ -53,59 +55,82 @@ const SongInformation = () => {
             </View>
           </View>
 
-          <View style={styles.songDetailsWrapper}>
+          <View 
+          style={[
+            styles.songDetailsWrapper, 
+            {
+              marginTop: (!songIn4.composers && !songIn4.genres && songIn4.releaseDate === 0 && !songIn4.distributor) ? 0 : 20 
+            }]}
+          >
             {songIn4.composers !== undefined
               ? <View style={styles.detailsItem}>
-              <Text style={styles.detailsProperty}>Người sáng tác</Text>
+                <Text style={styles.detailsProperty}>Người sáng tác</Text>
 
-              <Text style={styles.detailsValue}>{songIn4.composers.map((item) => item.name).join(', ')}</Text>
-            </View>
-            : null
+                <Text style={styles.detailsValue}>{songIn4.composers.map((item) => item.name).join(', ')}</Text>
+              </View>
+              : null
             }
 
-            <View style={styles.detailsItem}>
-              <Text style={styles.detailsProperty}>Thể loại</Text>
+            {songIn4.genres
+              && <View style={styles.detailsItem}>
+                <Text style={styles.detailsProperty}>Thể loại</Text>
 
-              <Text style={styles.detailsValue}>{songIn4.genres.map((item) => item.name).join(', ')}</Text>
-            </View>
+                <Text style={styles.detailsValue}>{songIn4.genres.map((item) => item.name).join(', ')}</Text>
+              </View>
+            }
 
-            <View style={styles.detailsItem}>
+             {
+              songIn4.releaseDate !== 0 && <View style={styles.detailsItem}>
               <Text style={styles.detailsProperty}>Ngày phát hành</Text>
 
-              <Text style={styles.detailsValue}>{ConvertTimestamp(songIn4.releaseDate)}</Text>
+              <Text style={styles.detailsValue}>{ConvertTimestamp(songIn4.releaseDate).toString()}</Text>
             </View>
+             }
+            
 
-            <View style={styles.detailsItem}>
-              <Text style={styles.detailsProperty}>Nhà cung cấp</Text>
+            {/* {
+              songIn4.releaseDate && <View>
 
-              <Text style={styles.detailsValue}>{songIn4.distributor}</Text>
-            </View>
+              </View>
+            } */}
+
+            {songIn4.distributor
+              && <View style={styles.detailsItem}>
+                <Text style={styles.detailsProperty}>Nhà cung cấp</Text>
+
+                <Text style={styles.detailsValue}>{songIn4.distributor}</Text>
+              </View>
+            }
           </View>
         </View>
 
-        <Text style={styles.heading}>Thông tin nghệ sĩ</Text>
+        {songIn4.artists
+          && <View>
+            <Text style={styles.heading}>Thông tin nghệ sĩ</Text>
 
-        <View style={styles.artistIn4Wrapper}>
-        {songIn4.artists.map((item, index) => {
-          return (
-            <View style={styles.artistWrapper} key={index}>
-              <Image style={styles.artistThumbnail} source={{ uri: item.thumbnailM }} />
+            <View style={styles.artistIn4Wrapper}>
+              {songIn4.artists.map((item, index) => {
+                return (
+                  <View style={styles.artistWrapper} key={index}>
+                    <Image style={styles.artistThumbnail} source={{ uri: item.thumbnailM }} />
 
-              <View style={styles.artistDetailsWrapper}>
-                <View style={styles.artistNameWrapper}>
-                  <Text style={styles.artistName} numberOfLines={1}>{item.name}</Text>
+                    <View style={styles.artistDetailsWrapper}>
+                      <View style={styles.artistNameWrapper}>
+                        <Text style={styles.artistName} numberOfLines={1}>{item.name}</Text>
 
-                  <Text style={styles.totalFollow}>Số người theo dõi: {item.totalFollow}</Text>
-                </View>
+                        <Text style={styles.totalFollow}>Số người theo dõi: {item.totalFollow}</Text>
+                      </View>
 
-                <TouchableOpacity style={styles.seeMoreBtn}>
-                  <Text style={styles.btnText}>Xem thông tin</Text>
-                </TouchableOpacity>
-              </View>
+                      <TouchableOpacity style={styles.seeMoreBtn}>
+                        <Text style={styles.btnText}>Xem thông tin</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                )
+              })}
             </View>
-          )
-        })}
-        </View>
+          </View>
+        }
       </ScrollView>
     )
   }

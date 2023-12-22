@@ -26,14 +26,14 @@ const SongThumbnail = () => {
   // console.log(playbackState.state)
 
   useEffect(() => {
-    if (playerState === 'playing') {
+    if (playbackState.state === 'playing') {
       circleSoundRef.current?.play()
 
     }
     else {
       circleSoundRef.current?.reset()
     }
-  }, [playerState])
+  }, [playbackState.state])
 
 
   return (
@@ -74,12 +74,12 @@ const SongThumbnail = () => {
         <TouchableOpacity onPress={handleLike}>
           {isLiked
             ? <Ionicons name='heart' style={styles.icon} color={COLORS.primary} />
-            : <Ionicons name='heart-outline' style={styles.icon} color={COLORS.grey} />
+            : <Ionicons name='heart-outline' style={styles.icon} color={COLORS.white} />
           }
         </TouchableOpacity>
 
         <TouchableOpacity onPress={handleNavigateComment}>
-          <Ionicons name='chatbubble-ellipses-outline' style={styles.icon} color={COLORS.grey} />
+          <Ionicons name='chatbubble-ellipses-outline' style={styles.icon} color={COLORS.white} />
         </TouchableOpacity>
       </View>
     </View>

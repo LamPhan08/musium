@@ -46,7 +46,7 @@ const NewReleaseRanking = ({ newReleaseRankingData }) => {
     useEffect(() => {
         (
             async () => {
-                setNewReleaseRankingList(await CheckSongHasMp3(newReleaseRankingData.items, 'none'))
+                setNewReleaseRankingList(await CheckSongHasMp3(newReleaseRankingData.items, 'none', newReleaseRankingData.items.length))
             }
         )()
     }, [])

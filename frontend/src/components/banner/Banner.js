@@ -1,14 +1,24 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { View, Dimensions, Image, FlatList, TouchableOpacity, Text } from 'react-native'
+import { View, Image, FlatList, TouchableOpacity, Text, Modal, Pressable, ToastAndroid } from 'react-native'
+import { COLORS } from '../../constants/colors';
 import styles from './banner.style'
-
-const { width } = Dimensions.get('window')
+import { getSongIn4, getSongMp3 } from '../../api/getData';
+import Ionicons from 'react-native-vector-icons/Ionicons'
+import TrackPlayer from 'react-native-track-player';
+import { useDispatch } from 'react-redux';
+import { setSongList } from '../../redux/songSlice';
+import EditArrayForTrackPlayer from '../../utils/editArrayForTrackPlayer';
 
 const viewConfigRef = { viewAreaCoveragePercentThreshold: 95 };
 
-const Banner = ({ bannerDatas }) => {
+const Banner = ({ navigation, bannerDatas }) => {
+    // console.log(bannerDatas)
     let flatListRef = useRef();
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [openPopup, setOpenPopup] = useState(false);
+    const [currentBannerSongClick, setCurrentBannerSongClick] = useState()
+
+    const dispatch = useDispatch()
 
     const scrollToIndex = (index) => {
         flatListRef.current?.scrollToIndex({ animated: true, index: index });
@@ -19,6 +29,65 @@ const Banner = ({ bannerDatas }) => {
             setCurrentIndex(changed[0].index);
         }
     });
+
+    const handleClickBanner = async (banner) => {
+        // console.log(banner)
+        switch (banner.type) {
+            case 1: {
+                const songIn4 = await getSongIn4(banner.encodeId)
+                const songMp3 = await getSongMp3(banner.encodeId)
+
+                songIn4.url = songMp3["128"]
+
+                setCurrentBannerSongClick(songIn4)
+                setOpenPopup(!openPopup)
+
+                break;
+            }
+
+            case 3: {
+                navigation.navigate('PlaylistDetails', {
+                    playlistId: banner.encodeId,
+                    playlistThumbnail: banner.banner
+                })
+
+                break;
+            }
+
+            case 4: {
+                navigation.navigate('PlaylistDetails', {
+                    playlistId: banner.encodeId,
+                    playlistThumbnail: banner.banner
+                })
+
+                break;
+            }
+
+            default: {
+                return;
+            }
+        }
+    }
+
+    const handlePlaySong = async () => {
+        const queue = EditArrayForTrackPlayer([currentBannerSongClick])
+
+        dispatch(setSongList(queue))
+        
+        await TrackPlayer.setQueue(queue)
+
+        TrackPlayer.play()
+
+        setOpenPopup(!openPopup)
+    }
+
+    const handleAddFavoriteList = () => {
+        //Xử lý code để thêm vào danh sách yêu thích ở đây
+
+        ToastAndroid.show('Đã thêm vào danh sách yêu thích của bạn!', ToastAndroid.SHORT)
+
+        setOpenPopup(!openPopup)
+    }
 
     useEffect(() => {
         let interval = setInterval(() => {
@@ -43,10 +112,10 @@ const Banner = ({ bannerDatas }) => {
             <View style={styles.flatList}>
                 <FlatList
                     data={bannerDatas.items}
-                    renderItem={({item, index}) => {
+                    renderItem={({ item, index }) => {
                         return (
-                            <TouchableOpacity style={styles.bannerItem}>
-                                <Image source={{uri: item.banner}} style={styles.bannerImage} key={index} />
+                            <TouchableOpacity style={styles.bannerItem} key={index} onPress={() => handleClickBanner(item)}>
+                                <Image source={{ uri: item.banner }} style={styles.bannerImage} />
                             </TouchableOpacity>
                         )
                     }}
@@ -68,7 +137,7 @@ const Banner = ({ bannerDatas }) => {
                         style={[
                             styles.circle,
                             {
-                                backgroundColor: index == currentIndex ? '#fff' : 'grey',
+                                backgroundColor: index == currentIndex ? COLORS.white : COLORS.grey,
                                 width: index === currentIndex ? 15 : 6,
                                 height: 6
                             },
@@ -77,6 +146,43 @@ const Banner = ({ bannerDatas }) => {
                     />
                 ))}
             </View>
+
+            <Modal
+                animationType='fade'
+                visible={openPopup}
+                transparent={true}
+                onRequestClose={() => setOpenPopup(!openPopup)}
+            >
+                <Pressable style={styles.popupModal} onPress={() => setOpenPopup(!openPopup)} />
+
+                <View style={styles.optionWrapper}>
+                    <Image source={{ uri: currentBannerSongClick?.thumbnailM }} style={styles.bannerSongThumbnail} />
+
+                    <Text style={styles.bannerSongTitle}>{currentBannerSongClick?.title}</Text>
+
+                    <Text style={styles.bannerSongArtistsNames}>{currentBannerSongClick?.artistsNames}</Text>
+
+                    <TouchableOpacity style={[styles.btn, {backgroundColor: COLORS.primary}]} onPress={handlePlaySong}>
+                        <Ionicons name='play' style={styles.playSongBtnIcon} />
+
+                        <Text style={[styles.btnText, {color: COLORS.text,}]}>
+                            Phát bài hát
+                        </Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={[styles.btn, {borderColor: COLORS.primary, borderWidth: 1}]} onPress={handleAddFavoriteList}>
+                        <Text style={[styles.btnText, {color: COLORS.primary}]}>
+                            Thêm vào danh sách yêu thích
+                        </Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.backBtn} onPress={() => setOpenPopup(!openPopup)}>
+                        <Text style={styles.backBtnText}>
+                            Quay lại
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+            </Modal>
         </View>
     )
 }

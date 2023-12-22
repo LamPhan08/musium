@@ -46,10 +46,10 @@ const EditProfile = ({ navigation }) => {
       compressImageMaxHeight: 300,
       cropping: false,
       compressImageQuality: 0.7
-    }).then( image  => {
+    }).then(image => {
       console.log('image', image.path);
-     setImg(image.path);
-      console.log("test",img)
+      setImg(image.path);
+      console.log("test", img)
     });
   }
 
@@ -126,14 +126,14 @@ const EditProfile = ({ navigation }) => {
 
       {isOpen && (
         <>
-              <AnimatedPressable
-              style={styles.backdrop}
-              entering={FadeIn}
-              exiting={FadeOut}
-              onPress={toggleSheet}
-            />
+          <AnimatedPressable
+            style={styles.backdrop}
+            entering={FadeIn}
+            exiting={FadeOut}
+            onPress={toggleSheet}
+          />
           <Animated.View
-           style={styles.sheet}
+            style={styles.sheet}
             entering={SlideInDown}
             exiting={SlideOutDown}
           >

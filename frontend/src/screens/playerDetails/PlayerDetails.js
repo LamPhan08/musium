@@ -19,13 +19,12 @@ const PlayerDetails = ({ navigation }) => {
   const [title, setTitle] = useState('Đang phát')
   const [repeat, setRepeat] = useState(false)
   const [shuffle, setShuffle] = useState(false)
+  const [openPlaylist, setOpenPlaylist] = useState(false)
   const { song, songList, playerState } = useSelector(state => state.song)
   const dispatch = useDispatch()
   const progress = useProgress()
   const playbackState = usePlaybackState()
   const animationRef = useRef()
-
-
 
   const onTitleChange = (value) => {
     setTitle(value)
@@ -97,15 +96,10 @@ const PlayerDetails = ({ navigation }) => {
 
   useEffect(() => {
     if (playerState === 'playing') {
-      // animationRef.current?.play(0, 65)
-      
-
       animationRef.current?.play(25, 26)
-      console.log('state playing')
     }
     else {
       animationRef.current?.play(60, 61)
-      console.log('state paused')
     }
   }, [playerState])
 
@@ -127,7 +121,7 @@ const PlayerDetails = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
-        <PlayerDetailsTabView onChangeTitle={onTitleChange} />
+        <PlayerDetailsTabView onChangeTitle={onTitleChange} openPlaylist={openPlaylist} setOpenPlaylist={setOpenPlaylist}/>
 
         <View style={styles.playerControl}>
           <Slider
@@ -168,15 +162,10 @@ const PlayerDetails = ({ navigation }) => {
                     loop={false}
                     onAnimationLoaded={() => {
                       if (playerState === 'playing') {
-                        // animationRef.current?.play(0, 65)
-                        
-                  
                         animationRef.current?.play(25, 26)
-                        console.log('state playing')
                       }
                       else {
                         animationRef.current?.play(60, 61)
-                        console.log('state paused')
                       }
                     }}
                   />
@@ -202,7 +191,7 @@ const PlayerDetails = ({ navigation }) => {
               <Text style={styles.quality}>128 Kbps</Text>
             </View>
 
-            <TouchableOpacity style={styles.optionBtn}>
+            <TouchableOpacity style={[styles.optionBtn, {backgroundColor: openPlaylist ? 'rgba(169, 169, 169, 0.2)' : 'transparent'}]} onPress={() => setOpenPlaylist(!openPlaylist)}>
               <MaterialCommunityIcons name='playlist-music' style={styles.playlistIcon} />
             </TouchableOpacity>
           </View>

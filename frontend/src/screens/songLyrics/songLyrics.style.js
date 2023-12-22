@@ -57,14 +57,13 @@ export default styles = StyleSheet.create({
 
     lyricBtn: {
         paddingVertical: 5,
-        paddingHorizontal: 15,
         borderRadius: 8,
         // backgroundColor: 'rgba(169, 169, 169, 0.2)'
     },
 
     lyric: {
         fontFamily: 'Mulish-Bold',
-        fontSize: 16,
+        fontSize: 15,
         color: COLORS.text,
         paddingHorizontal: 15,
         paddingVertical: 5,

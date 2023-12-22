@@ -1,44 +1,46 @@
-import React from "react";
-import { StyleSheet, TextInput, View, Keyboard, Button } from "react-native";
-import  Feather from "react-native-vector-icons/Feather";
-import  Entypo from "react-native-vector-icons/Entypo";
+import React, { useState, useRef } from "react";
+import { StyleSheet, TextInput, View, Keyboard, TouchableOpacity } from "react-native";
+import Feather from "react-native-vector-icons/Feather";
+import Entypo from "react-native-vector-icons/Entypo";
+import Ionicons from 'react-native-vector-icons/Ionicons'
+import { COLORS } from "../../constants/colors";
 
 
-const SearchBar = (props) => {
+const SearchBar = ({ searchText, setSearchText, setFocus, handleFind }) => {
+  const inputRef = useRef()
+
+  const clearSearchText = () => {
+    setSearchText('')
+
+    inputRef.current.clear()
+    inputRef.current.focus()
+  }
+
   return (
-    <View style={styles.container}>
-      <View
-        style={
-          !props.clicked
-            ? styles.searchBar__unclicked
-            : styles.searchBar__clicked
-        }
-      >
-        <Feather
-          name="search"
-          size={18}
-          color="black"
-          style={{ marginLeft: 10 }}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Search"
-          value={props.searchPhrase}
-          onChangeText={props.setSearchPhrase}
-          onFocus={() => {
-            props.setClicked(true);
-          }}
-        />
-        
-        {props.clicked && (
-          <Entypo name="cross" size={20} color="black" style={{ padding: 1 }} onPress={() => {
-              props.setSearchPhrase("")
-              props.setClicked(false);
-              Keyboard.dismiss();
-             
-          }}/>
-        )}
-      </View>
+    <View style={styles.searchBarcontainer}>
+      <Ionicons
+        name="search"
+        style={styles.searchIcon}
+      />
+      <TextInput
+        ref={inputRef}
+        style={styles.input}
+        placeholder="Bạn muốn nghe gì?"
+        value={searchText}
+        onFocus={() => setFocus(false)}
+        placeholderTextColor={COLORS.grey}
+        onChangeText={text => setSearchText(text)}
+        cursorColor={COLORS.primary}
+        textAlignVertical='center'
+        returnKeyType="search"
+        onSubmitEditing={handleFind}
+      />
+
+      {searchText !== '' && 
+        <TouchableOpacity>
+          <Entypo name="cross" style={styles.crossIcon} onPress={clearSearchText} />
+        </TouchableOpacity>
+      }
     </View>
   );
 };
@@ -46,30 +48,31 @@ const SearchBar = (props) => {
 export default SearchBar;
 
 const styles = StyleSheet.create({
-  container: {
-    margin: 20,
+  searchBarcontainer: {
+    flexDirection: 'row',
+    borderRadius: 20,
     alignItems: "center",
-    width: "90%",
+    backgroundColor: COLORS.lightBlack,
+    paddingHorizontal: 10,
+    gap: 5,
+    flex: 1
   },
-  searchBar__unclicked: {
-    paddingRight:20,
-    flexDirection: "row",
-    width: "95%",
-    backgroundColor: "#d9dbda",
-    borderRadius: 25,
-    alignItems: "center",
-  },
-  searchBar__clicked: {
-    paddingRight:20,
-    flexDirection: "row",
-    width: "95%",
-    backgroundColor: "#d9dbda",
-    borderRadius: 25,
-    alignItems: "center",
-  },
-  input: {
+
+  searchIcon: {
     fontSize: 18,
-    marginLeft: 10,
-    width: "85%",
+    color: COLORS.grey
   },
+
+  input: {
+    fontFamily: 'Mulish-Regular',
+    color: COLORS.text,
+    flex: 1,
+    height: 40,
+    fontSize: 13,
+  },
+
+  crossIcon: {
+    fontSize: 22,
+    color: COLORS.grey,
+  }
 });
