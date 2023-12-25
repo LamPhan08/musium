@@ -4,9 +4,12 @@ import styles from './artistCard.style'
 import Entypo from 'react-native-vector-icons/Entypo'
 
 const ArtistCard = ({navigation, artist}) => {
-
+  
   const handleViewArtist = () => {
-
+    navigation.navigate('ArtistInformation', {
+      artistAlias: artist.alias,
+      artistName: artist.name
+    })
   }
 
   return (

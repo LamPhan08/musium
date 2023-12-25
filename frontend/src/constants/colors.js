@@ -11,5 +11,6 @@ export const COLORS = {
     top1: '#4a90e2',
     top2: '#1DC186',
     top3: '#E35050',
-    icon: '#B9ADA1'
+    icon: '#B9ADA1',
+    headerBlack: '#212121'
 }

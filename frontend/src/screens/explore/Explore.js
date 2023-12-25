@@ -7,7 +7,7 @@ import avatar from '../../../assets/images/avatar.png'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import styles from './explore.style'
 import { getHome } from '../../api/getData'
-import PlaylistSlider from '../../components/playlistSlider/PlaylistSilder'
+import PlaylistSlider from '../../components/homePlaylistSlider/HomePlaylistSilder'
 import NewReleaseRanking from '../../components/newReleaseRanking/NewReleaseRanking'
 
 const Explore = ({ navigation }) => {

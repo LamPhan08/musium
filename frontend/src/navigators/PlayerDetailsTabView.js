@@ -15,7 +15,7 @@ import TrackPlayer, { usePlaybackState } from 'react-native-track-player'
 
 const { width } = Dimensions.get('window')
 
-const PlayerDetailsTabView = ({ onChangeTitle, openPlaylist, setOpenPlaylist }) => {
+const PlayerDetailsTabView = ({ navigation, onChangeTitle, openPlaylist, setOpenPlaylist }) => {
     const [index, setIndex] = useState(1)
 
     const { songList, song } = useSelector(state => state.song)
@@ -32,7 +32,7 @@ const PlayerDetailsTabView = ({ onChangeTitle, openPlaylist, setOpenPlaylist }) 
     const renderScene = ({ route }) => {
         switch (route.key) {
             case 'SongInformation': {
-                return <SongInformation />
+                return <SongInformation navigation={navigation}/>
             }
 
             case 'SongThumbnail': {

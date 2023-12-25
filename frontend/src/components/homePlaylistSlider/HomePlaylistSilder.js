@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, Text, SafeAreaView, ScrollView, Image, TouchableOpacity } from 'react-native'
-import styles from './playlistSlider.style'
+import styles from './homePlaylistSlider.style'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
 const PlaylistSlider = ({ navigation, playlistData }) => {

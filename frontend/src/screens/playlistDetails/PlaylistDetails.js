@@ -77,7 +77,10 @@ const PlaylistDetails = ({ navigation, route }) => {
   }
 
   const handleViewArtist = (artist) => {
-
+    navigation.navigate('ArtistInformation', {
+      artistAlias: artist.alias,
+      artistName: artist.name
+    })
   }
 
   const handleScroll = Animated.event(

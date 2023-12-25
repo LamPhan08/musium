@@ -121,7 +121,7 @@ const PlayerDetails = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
-        <PlayerDetailsTabView onChangeTitle={onTitleChange} openPlaylist={openPlaylist} setOpenPlaylist={setOpenPlaylist}/>
+        <PlayerDetailsTabView navigation={navigation} onChangeTitle={onTitleChange} openPlaylist={openPlaylist} setOpenPlaylist={setOpenPlaylist}/>
 
         <View style={styles.playerControl}>
           <Slider

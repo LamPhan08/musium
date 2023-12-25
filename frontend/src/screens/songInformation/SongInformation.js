@@ -8,9 +8,16 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import { COLORS } from '../../constants/colors'
 import ConvertTimestamp from '../../utils/convertTimestamp'
 
-const SongInformation = () => {
+const SongInformation = ({navigation}) => {
   const { song } = useSelector(state => state.song)
   const [songIn4, setSongIn4] = useState()
+
+  const handleViewArtistIn4 = (artist) => {
+    navigation.navigate('ArtistInformation', {
+      artistAlias: artist.alias,
+      artistName: artist.name
+    })
+  } 
 
   useEffect(() => {
     (
@@ -109,19 +116,19 @@ const SongInformation = () => {
             <Text style={styles.heading}>Thông tin nghệ sĩ</Text>
 
             <View style={styles.artistIn4Wrapper}>
-              {songIn4.artists.map((item, index) => {
+              {songIn4.artists.map((artist, index) => {
                 return (
                   <View style={styles.artistWrapper} key={index}>
-                    <Image style={styles.artistThumbnail} source={{ uri: item.thumbnailM }} />
+                    <Image style={styles.artistThumbnail} source={{ uri: artist.thumbnailM }} />
 
                     <View style={styles.artistDetailsWrapper}>
                       <View style={styles.artistNameWrapper}>
-                        <Text style={styles.artistName} numberOfLines={1}>{item.name}</Text>
+                        <Text style={styles.artistName} numberOfLines={1}>{artist.name}</Text>
 
-                        <Text style={styles.totalFollow}>Số người theo dõi: {item.totalFollow}</Text>
+                        <Text style={styles.totalFollow}>Số người theo dõi: {artist.totalFollow.toLocaleString()}</Text>
                       </View>
 
-                      <TouchableOpacity style={styles.seeMoreBtn}>
+                      <TouchableOpacity style={styles.seeMoreBtn} onPress={() => handleViewArtistIn4(artist)}>
                         <Text style={styles.btnText}>Xem thông tin</Text>
                       </TouchableOpacity>
                     </View>

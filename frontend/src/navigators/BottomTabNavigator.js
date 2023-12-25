@@ -7,6 +7,7 @@ import Favorites from '../screens/favorites/Favorites';
 import Explore from '../screens/explore/Explore';
 import Search from '../screens/search/Search';
 import PlaylistDetails from '../screens/playlistDetails/PlaylistDetails';
+import ArtistInformation from '../screens/artistInformation/ArtistInformation';
 import Player from '../components/player/Player';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import AntDesign from 'react-native-vector-icons/AntDesign'
@@ -31,6 +32,10 @@ const ExploreStack = () => {
         animation: 'slide_from_bottom'
       }} />
       <TabStack.Screen name="PlaylistDetails" component={PlaylistDetails} options={{
+        presentation: 'modal',
+        animation: 'slide_from_right'
+      }} />
+      <TabStack.Screen name='ArtistInformation' component={ArtistInformation} options={{
         presentation: 'modal',
         animation: 'slide_from_right'
       }} />

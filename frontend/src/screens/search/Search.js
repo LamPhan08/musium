@@ -13,6 +13,7 @@ import { debounce } from 'lodash'
 import SearchTabView from '../../navigators/SearchTabView'
 
 const recommendData = [
+  // 'Những Lời Hứa Bỏ Quên',
   'Last Christmas',
   'We Wish You A Merry Christmas',
   'Thích Em Hơi Nhiều',
@@ -124,7 +125,7 @@ const Search = ({ navigation }) => {
                         <View>
                           <Text style={styles.heading}>Đề xuất</Text>
 
-                          <ArtistCard artist={searchResult.top} />
+                          <ArtistCard navigation={navigation} artist={searchResult.top} />
                         </View>
 
                         : (searchResult.top.objectType === 'song'
@@ -162,7 +163,7 @@ const Search = ({ navigation }) => {
                       {
                         searchResult.artists.slice(0, 3).map((artist, index) => {
                           return (
-                            <ArtistCard artist={artist} key={index} />
+                            <ArtistCard navigation={navigation} artist={artist} key={index} />
                           )
                         })
                       }

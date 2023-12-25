@@ -16,7 +16,6 @@ import AddPlayList from '../screens/addPlayList/AddPlayList';
 import DownloadedSong from '../screens/downloadedSong/DownloadedSong';
 
 
-
 const Stack = createNativeStackNavigator();
 
 const RootNavigation = () => {
@@ -60,7 +59,7 @@ const RootNavigation = () => {
 
     return (
         <Stack.Navigator
-            initialRouteName='Splash'
+            initialRouteName='App'
             screenOptions={{
                 headerShown: false,
                 presentation: 'modal',
@@ -81,6 +80,7 @@ const RootNavigation = () => {
                 presentation: 'modal',
                 animation: 'slide_from_bottom'
             }} />
+
 
         </Stack.Navigator>
     )

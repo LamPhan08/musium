@@ -41,6 +41,7 @@ export default function InputField({
             onFocus();
             setIsFocused(true);
           }}
+          autoCapitalize='none'
         />
       ) : (
         <TextInput
@@ -54,6 +55,7 @@ export default function InputField({
             onFocus();
             setIsFocused(true);
           }}
+          autoCapitalize='none'
         />
       )}
       <TouchableOpacity onPress={fieldButtonFunction}>
