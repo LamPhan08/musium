@@ -53,11 +53,11 @@ const DownloadedSong = ({ navigation }) => {
 
 
 
-        <View style={{ flexDirection: "row", justifyContent: "center" }}>
+        <View style={{ flexDirection: "row", justifyContent: "center", marginBottom:20 }}>
           <Text style={styles.label}>Đã tải</Text>
         </View>
 
-        <View style={{paddingHorizontal: 15}}>
+        <View style={{paddingHorizontal: 15, marginBottom:15}}>
           <SearchBar searchText={searchText} setSearchText={setSearchText} setFocus={setFocus}/>
         </View>
 
