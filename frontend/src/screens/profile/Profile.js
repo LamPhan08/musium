@@ -65,7 +65,7 @@ const Profile = ({ navigation }) => {
             <Text style={{ marginTop: 15, color: "white", fontSize: 15, fontWeight: "bold" }}>Đã tải</Text>
           </Pressable>
 
-          <Pressable
+          {/* <Pressable
             onPress={async() => {
               const permissionStatus = await requestPermission()
               if(permissionStatus[PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE] === 'granted' || permissionStatus[PermissionsAndroid.PERMISSIONS.READ_MEDIA_AUDIO] === 'granted' )
@@ -77,7 +77,7 @@ const Profile = ({ navigation }) => {
             style={{ width: 130, height: 100, borderRadius: 5, backgroundColor: "#222222", margin: 10, padding: 15 }}>
             <FontAwesome name="folder" size={30} color="#D4AC0D" />
             <Text style={{ marginTop: 10, color: "white", fontSize: 15, fontWeight: "bold" }}>Audio trong máy</Text>
-          </Pressable>
+          </Pressable> */}
         </View>
 
 

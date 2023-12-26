@@ -5,7 +5,8 @@ import {
     Text,
     TouchableOpacity,
     Image,
-    Dimensions
+    Dimensions,
+    Keyboard,
 } from 'react-native';
 
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -33,8 +34,14 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin';
 const { width, height } = Dimensions.get('window')
 
 const LoginScreen = ({ navigation }) => {
-    const [email, setEmail] = useState(null);
-    const [password, setPassword] = useState(null)
+    const [inputs, setInputs] = React.useState({
+        email: '',
+        password: '',
+      });
+      const email = inputs.email
+      const password = inputs.password
+      const [errors, setErrors] = React.useState({});
+
 
     // const navigate = useNavigate();
     // const {dispatch} = useContext(AuthContext);
@@ -76,6 +83,39 @@ const LoginScreen = ({ navigation }) => {
         navigation.replace('App')
     }
 
+    const handleOnchange = (text, input) => {
+        setInputs(prevState => ({...prevState, [input]: text}));
+      };
+      const handleError = (error, input) => {
+        setErrors(prevState => ({...prevState, [input]: error}));
+      };
+
+    const validate = () => {
+        Keyboard.dismiss();
+        let isValid = true;
+    
+        if (!inputs.email) {
+          handleError('Please input email', 'email');
+          isValid = false;
+        } else if (!inputs.email.match(/\S+@\S+\.\S+/)) {
+          handleError('Vui lòng điên email hợp lệ', 'email');
+          isValid = false;
+        }
+    
+        if (!inputs.password) {
+          handleError('Bạn phải điền password ', 'password');
+          isValid = false;
+        } else if (inputs.password.length < 5) {
+          handleError('Password quá yếu', 'password');
+          isValid = false;
+        }
+    
+        if (isValid) {
+          handleClick();
+        }
+      };
+
+
     return (
         <LinearGradient colors={["#121111", "#040306"]} style={{ flex: 1 }}>
             <SafeAreaView style={{ flex: 1, justifyContent: 'center' }}>
@@ -108,11 +148,10 @@ const LoginScreen = ({ navigation }) => {
                             />
                         }
                         keyboardType="email-address"
-                        value={email}
-                        onChangeText={text => {
-                            setEmail(text);
-                            // console.warn(email)
-                        }}
+                        onChangeText={text => handleOnchange(text, 'email')}
+                        onFocus={() => handleError(null, 'email')}
+                        error={errors.email}
+    
                     />
 
                     <InputField
@@ -127,9 +166,10 @@ const LoginScreen = ({ navigation }) => {
                         }
                         inputType="password"
                         fieldButtonLabel={"Quên?"}
-                        fieldButtonFunction={() => { }}
-                        value={password}
-                        onChangeText={text => setPassword(text)}
+                        onChangeText={text => handleOnchange(text, 'password')}
+                        onFocus={() => handleError(null, 'password')}
+                        error={errors.password}
+    
                     />
 
                     <CustomButton label={"Đăng nhập"} onPress={handleClick} />

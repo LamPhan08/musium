@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import SearchBar from '../../components/searchBar/SearchBar';
-import { Image, ScrollView, Text, View, TouchableOpacity, Pressable, TextInput } from "react-native";
+import { Image, ScrollView, Text, View, TouchableOpacity, Pressable, TextInput, FlatList } from "react-native";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
 import { getAll, getAlbums, searchSongs, SortSongFields, SortSongOrder } from "react-native-get-music-files";
+import StorageAudio from '../../components/storageAudio/StorageAudio';
 const LocalAudio = ({navigation}) => {
   const [findSong, setFindSong] = useState("")
   const [clicked, setClicked] = useState(false);
-
+  const [music, setMusic] = useState()
 
   useEffect(() => {
     const getMusicFiles = async () => {
@@ -22,8 +23,9 @@ const LocalAudio = ({navigation}) => {
           fileName: true,
           minimumSongDuration: 10000, // milliseconds
         });
-
-        console.log('All Music Files:', allMusic);
+        const songs = await allMusic.filter(song => song.url.endsWith('.mp3'))
+        console.log('All Music Files:', songs);
+        setMusic(songs)
       } catch (error) {
         console.error('Error getting music files:', error);
       }
@@ -74,7 +76,15 @@ const LocalAudio = ({navigation}) => {
 
 
         <View style={{ padding: 15 }}>
-            
+        <FlatList
+            showsVerticalScrollIndicator={false}
+            data={music}
+            renderItem={({ item }) => (
+              <StorageAudio
+                item={item}
+              />
+            )}
+          /> 
         </View>
     </LinearGradient>
   )
