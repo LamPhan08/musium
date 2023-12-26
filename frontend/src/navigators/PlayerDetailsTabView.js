@@ -11,12 +11,14 @@ import { useSelector } from 'react-redux'
 import whiteSoundWave from '../../assets/images/whiteSoundWave.gif'
 import whiteStaticSoundWave from '../../assets/images/whiteStaticSoundWave.png'
 import TrackPlayer, { usePlaybackState } from 'react-native-track-player'
-
+import OptionsBottomSheet from '../components/optionsBottomSheet/OptionsBottomSheet'
 
 const { width } = Dimensions.get('window')
 
 const PlayerDetailsTabView = ({ navigation, onChangeTitle, openPlaylist, setOpenPlaylist }) => {
     const [index, setIndex] = useState(1)
+    const [showBottomSheet, setShowBottomSheet] = useState(false)
+    const [bottomSheetSong, setBottomSheetSong] = useState()
 
     const { songList, song } = useSelector(state => state.song)
 
@@ -32,7 +34,7 @@ const PlayerDetailsTabView = ({ navigation, onChangeTitle, openPlaylist, setOpen
     const renderScene = ({ route }) => {
         switch (route.key) {
             case 'SongInformation': {
-                return <SongInformation navigation={navigation}/>
+                return <SongInformation navigation={navigation} />
             }
 
             case 'SongThumbnail': {
@@ -57,6 +59,11 @@ const PlayerDetailsTabView = ({ navigation, onChangeTitle, openPlaylist, setOpen
         }
     }
 
+    const handleShowBottomSheet = (item) => {
+        setBottomSheetSong(item)
+        setShowBottomSheet(!showBottomSheet)
+    }
+
     useEffect(() => {
         onChangeTitle(routes[index].title)
     }, [index, routes, onChangeTitle])
@@ -79,23 +86,25 @@ const PlayerDetailsTabView = ({ navigation, onChangeTitle, openPlaylist, setOpen
                     </View>
 
                     <FlatList
-                    data={songList}
-                    showsVerticalScrollIndicator={false}
-                    decelerationRate='fast'
-                    style={styles.playlistWrapper}
-                    initialNumToRender={20}
-                    maxToRenderPerBatch={5}
-                    updateCellsBatchingPeriod={100}
-                    windowSize={20}
-                    renderItem={({item, index}) => {
-                        return (
-                            <TouchableOpacity 
-                                style={[styles.songCard, 
-                                { backgroundColor: item.id === song.id 
-                                    ? 'rgba(169, 169, 169, 0.2)' 
-                                    : 'transparent' }]} 
-                                key={index}
-                                onPress={() => handlePlaySong(index)}
+                        data={songList}
+                        showsVerticalScrollIndicator={false}
+                        decelerationRate='fast'
+                        style={styles.playlistWrapper}
+                        initialNumToRender={20}
+                        maxToRenderPerBatch={5}
+                        updateCellsBatchingPeriod={100}
+                        windowSize={20}
+                        renderItem={({ item, index }) => {
+                            return (
+                                <TouchableOpacity
+                                    style={[styles.songCard,
+                                    {
+                                        backgroundColor: item.id === song.id
+                                            ? 'rgba(169, 169, 169, 0.2)'
+                                            : 'transparent'
+                                    }]}
+                                    key={index}
+                                    onPress={() => handlePlaySong(index)}
                                 >
                                     <Image source={{ uri: item.thumbnail }} style={styles.songThumbnail} />
 
@@ -116,48 +125,63 @@ const PlayerDetailsTabView = ({ navigation, onChangeTitle, openPlaylist, setOpen
                                         <Text style={styles.songArtistsNames} numberOfLines={1}>{item.artist}</Text>
                                     </View>
 
-                                    <TouchableOpacity>
+                                    <TouchableOpacity onPress={() => handleShowBottomSheet(item)}>
                                         <Feather name='more-vertical' style={styles.moreIcon} />
                                     </TouchableOpacity>
+
+
                                 </TouchableOpacity>
-                        )
-                    }}
+                            )
+                        }}
                     />
+
+                    {bottomSheetSong &&
+                        <OptionsBottomSheet
+                        openBottomSheet={showBottomSheet}
+                        setOpenBottomSheet={setShowBottomSheet}
+                        song={{
+                            title: bottomSheetSong.title,
+                            url: bottomSheetSong.url,
+                            artistsNames: bottomSheetSong.artist,
+                            thumbnailM: bottomSheetSong.thumbnail
+                        }}
+                    />
+                    }
                 </View>
 
                 : <TabView
-                style={styles.tabView}
-                navigationState={{ index, routes }}
-                onIndexChange={setIndex}
-                renderScene={renderScene}
-                lazy={true}
-                initialLayout={width}
-                lazyPreloadDistance={1}
-                pointerEvents='none'
-                renderTabBar={props => {
-                    return (
-                        <TabBar
-                            {...props}
-                            style={{
-                                height: 5,
-                                alignSelf: 'center',
-                                borderRadius: 20,
-                                backgroundColor: 'rgba(169, 169, 169, 0.3)',
-                                width: 60,
-                            }}
-                            indicatorStyle={{
-                                height: null,
-                                top: 0,
-                                bottom: 0,
-                                borderRadius: 20,
-                                backgroundColor: COLORS.white,
-                            }}
-                            renderLabel={() => { }}
-                            pressColor='transparent'
-                        />
-                    )
-                }}
-            />
+                    style={styles.tabView}
+                    navigationState={{ index, routes }}
+                    onIndexChange={setIndex}
+                    renderScene={renderScene}
+                    lazy={true}
+                    initialLayout={width}
+                    lazyPreloadDistance={1}
+                    pointerEvents='none'
+                    renderTabBar={props => {
+                        return (
+                            <TabBar
+                                {...props}
+                                style={{
+                                    height: 5,
+                                    alignSelf: 'center',
+                                    borderRadius: 20,
+                                    backgroundColor: 'rgba(169, 169, 169, 0.3)',
+                                    width: 60,
+                                }}
+                                indicatorStyle={{
+                                    height: null,
+                                    top: 0,
+                                    bottom: 0,
+                                    borderRadius: 20,
+                                    backgroundColor: COLORS.white,
+                                }}
+                                renderLabel={() => { }}
+                                pressColor='transparent'
+                            />
+                        )
+                    }}
+                />
             }
         </View>
     )

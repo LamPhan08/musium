@@ -33,6 +33,7 @@ router.post('/register',
 
             await newUser.save();
 
+
             res.status(200).json({
                 success: true,
                 message: "Created successfully!"

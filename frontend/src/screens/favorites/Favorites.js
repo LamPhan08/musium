@@ -22,13 +22,13 @@ import LinearGradient from 'react-native-linear-gradient';
 import { tracks } from '../../../assets/data/tracks';
 import SongItem from '../../components/songItem/SongItem';
 import { COLORS } from '../../constants/colors';
+import SearchBar from '../../components/searchBar/SearchBar';
 
 const Favorites = () => {
   const navigation = useNavigation();
   const [input, setInput] = useState("");
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <LinearGradient colors={["#121111", "#040306"]} style={{ flex: 1 }}>
+    <SafeAreaView style={{flex: 1, backgroundColor: COLORS.background}}>
         <ScrollView style={{ flex: 1, paddingTop: 20,}} showsVerticalScrollIndicator={false} decelerationRate={'fast'}>
           {/* <Pressable
             onPress={() => navigation.goBack()}
@@ -37,7 +37,7 @@ const Favorites = () => {
             <Ionicons name="arrow-back" size={24} color="white" />
           </Pressable> */}
 
-          <Pressable style={{
+          {/* <Pressable style={{
             marginHorizontal: 10,
             flexDirection: "row",
             alignItems: "center",
@@ -62,9 +62,11 @@ const Favorites = () => {
               />
 
             </Pressable>
-          </Pressable>
+          </Pressable> */}
 
-          <View style={{ marginHorizontal: 10 }}>
+          <SearchBar/>
+
+          <View >
             <Text style={{ fontSize: 18, fontFamily: 'Mulish-ExtraBold', color: "white" }}>
               Bài hát đã thích
             </Text>
@@ -78,7 +80,6 @@ const Favorites = () => {
               flexDirection: "row",
               alignItems: "center",
               justifyContent: "space-between",
-              marginHorizontal: 10,
             }}
           >
             <Pressable
@@ -136,7 +137,6 @@ const Favorites = () => {
           })}
           </View>
         </ScrollView>
-      </LinearGradient>
     </SafeAreaView>
   )
 }

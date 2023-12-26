@@ -100,12 +100,12 @@ const Player = ({navigation}) => {
 
                     {playbackState.state === 'loading'
                         ? <ActivityIndicator size="small" color={COLORS.white} style={[styles.loadingAnimation, {width: 25}]}/>
-                        : (playbackState.state !== 'paused'
-                            ? <TouchableOpacity onPress={handlePause}>
-                                <Ionicons name='pause' style={styles.controlIcon} />
-                            </TouchableOpacity>
-                            : <TouchableOpacity onPress={handlePlay}>
+                        : (playbackState.state === 'paused' || playbackState.state === 'ended'
+                            ? <TouchableOpacity onPress={handlePlay}>
                                 <Ionicons name='play' style={styles.controlIcon} />
+                            </TouchableOpacity>
+                            : <TouchableOpacity onPress={handlePause} >
+                                <Ionicons name='pause' style={styles.controlIcon} />
                             </TouchableOpacity>)
                     }
 

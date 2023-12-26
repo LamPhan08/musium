@@ -14,13 +14,16 @@ import formatDuration from '../../utils/formatDuration'
 import { COLORS } from '../../constants/colors'
 import LottieView from 'lottie-react-native'
 import playPauseAnimation from '../../../assets/images/PlayPauseAnimation.json'
+import OptionsBottomSheet from '../../components/optionsBottomSheet/OptionsBottomSheet'
 
 const PlayerDetails = ({ navigation }) => {
   const [title, setTitle] = useState('Đang phát')
   const [repeat, setRepeat] = useState(false)
   const [shuffle, setShuffle] = useState(false)
   const [openPlaylist, setOpenPlaylist] = useState(false)
+  const [showBottomSheet, setShowBottomSheet] = useState(false)
   const { song, songList, playerState } = useSelector(state => state.song)
+
   const dispatch = useDispatch()
   const progress = useProgress()
   const playbackState = usePlaybackState()
@@ -58,7 +61,7 @@ const PlayerDetails = ({ navigation }) => {
     dispatch(setPlayerState('playing'))
 
     if (playbackState.state !== 'playing') {
-      
+
       TrackPlayer.play()
     }
   }
@@ -76,10 +79,10 @@ const PlayerDetails = ({ navigation }) => {
     dispatch(setPlayerState('playing'))
 
     if (playbackState.state !== 'playing') {
-      
+
       TrackPlayer.play()
     }
-    
+
   }
 
   const handleSeek = (timestamp) => {
@@ -116,12 +119,23 @@ const PlayerDetails = ({ navigation }) => {
             {title}
           </Text>
 
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => setShowBottomSheet(!showBottomSheet)}>
             <Feather name='more-vertical' style={styles.toolbarIcon} />
           </TouchableOpacity>
         </View>
 
-        <PlayerDetailsTabView navigation={navigation} onChangeTitle={onTitleChange} openPlaylist={openPlaylist} setOpenPlaylist={setOpenPlaylist}/>
+        <OptionsBottomSheet
+          openBottomSheet={showBottomSheet}
+          setOpenBottomSheet={setShowBottomSheet}
+          song={{
+            title: song?.title,
+            thumbnailM: song?.thumbnail,
+            url: song?.url,
+            artistsNames: song?.artist
+          }}
+        />
+
+        <PlayerDetailsTabView navigation={navigation} onChangeTitle={onTitleChange} openPlaylist={openPlaylist} setOpenPlaylist={setOpenPlaylist} />
 
         <View style={styles.playerControl}>
           <Slider
@@ -142,7 +156,7 @@ const PlayerDetails = ({ navigation }) => {
           </View>
 
           <View style={styles.controlWrapper}>
-            <TouchableOpacity style={[styles.optionBtn ,{backgroundColor: repeat ? 'rgba(169, 169, 169, 0.2)' : 'transparent'}]} onPress={handleRepeat}>
+            <TouchableOpacity style={[styles.optionBtn, { backgroundColor: repeat ? 'rgba(169, 169, 169, 0.2)' : 'transparent' }]} onPress={handleRepeat}>
               <Feather name='repeat' style={styles.toolbarIcon} />
             </TouchableOpacity>
 
@@ -177,7 +191,7 @@ const PlayerDetails = ({ navigation }) => {
               </TouchableOpacity>
             </View>
 
-            <TouchableOpacity style={[styles.optionBtn ,{backgroundColor: shuffle ? 'rgba(169, 169, 169, 0.2)' : 'transparent'}]} onPress={handleShuffle}>
+            <TouchableOpacity style={[styles.optionBtn, { backgroundColor: shuffle ? 'rgba(169, 169, 169, 0.2)' : 'transparent' }]} onPress={handleShuffle}>
               <Feather name='shuffle' style={styles.toolbarIcon} />
             </TouchableOpacity>
           </View>
@@ -191,7 +205,7 @@ const PlayerDetails = ({ navigation }) => {
               <Text style={styles.quality}>128 Kbps</Text>
             </View>
 
-            <TouchableOpacity style={[styles.optionBtn, {backgroundColor: openPlaylist ? 'rgba(169, 169, 169, 0.2)' : 'transparent'}]} onPress={() => setOpenPlaylist(!openPlaylist)}>
+            <TouchableOpacity style={[styles.optionBtn, { backgroundColor: openPlaylist ? 'rgba(169, 169, 169, 0.2)' : 'transparent' }]} onPress={() => setOpenPlaylist(!openPlaylist)}>
               <MaterialCommunityIcons name='playlist-music' style={styles.playlistIcon} />
             </TouchableOpacity>
           </View>

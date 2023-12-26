@@ -55,7 +55,7 @@ export default styles = StyleSheet.create({
     },
 
     moreIcon: {
-        fontSize: 20,
+        fontSize: 25,
         color: COLORS.grey
     }
 

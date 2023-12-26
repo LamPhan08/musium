@@ -44,7 +44,8 @@
     "react-native-tab-view": "^3.5.2",
     "react-native-track-player": "^4.0.1",
     "react-native-vector-icons": "^10.0.2",
-    "react-redux": "^8.1.3"
+    "react-redux": "^8.1.3",
+    "rn-fetch-blob": "^0.12.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
