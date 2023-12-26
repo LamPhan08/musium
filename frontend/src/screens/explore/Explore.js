@@ -9,6 +9,7 @@ import styles from './explore.style'
 import { getHome } from '../../api/getData'
 import PlaylistSlider from '../../components/homePlaylistSlider/HomePlaylistSilder'
 import NewReleaseRanking from '../../components/newReleaseRanking/NewReleaseRanking'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const Explore = ({ navigation }) => {
   const [homeData, setHomeData] = useState([])

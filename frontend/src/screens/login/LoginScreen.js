@@ -31,6 +31,8 @@ import { mongoAPI } from '../../axios/axios';
 import auth from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const { width, height } = Dimensions.get('window')
 
 const LoginScreen = ({ navigation }) => {
@@ -80,6 +82,11 @@ const LoginScreen = ({ navigation }) => {
         );
         // console.warn(`${email}` + ' ' + `${password}`)
         console.log("Login Response:", loginResponse.data);
+        // Assuming your login response contains user data, adjust the following code accordingly
+        const userData = loginResponse.data;
+
+        // Store user data in AsyncStorage
+        await AsyncStorage.setItem('userData', JSON.stringify(userData));
         navigation.replace('App')
     }
 

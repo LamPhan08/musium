@@ -8,6 +8,9 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { tracks } from '../../../assets/data/tracks';
 import Feather from 'react-native-vector-icons/Feather';
 import ModalPlayList from '../../components/modalPlayList/ModalPlayList';
+import { Button } from 'react-native-paper';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const Profile = ({ navigation }) => {
   const [isModelVisible, setModelVisible] = useState(false)
   const requestPermission = async()=>{
@@ -18,6 +21,21 @@ const Profile = ({ navigation }) => {
     console.log("granted", granted)
     return granted
   }
+
+  // Function to handle logout
+  const handleLogout = async () => {
+    try {
+      // Clear user data from AsyncStorage
+      await AsyncStorage.removeItem('userData');
+      console.log('removed user data from storage and proceed to login screen')
+
+      // Navigate to the "Login" screen
+      navigation.replace('Login');
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
+  };
+
   return (
     <LinearGradient colors={["#040306", "#040306"]} style={{ flex: 1 }}>
       <ScrollView style={{ marginTop: 20 }}>
@@ -40,6 +58,12 @@ const Profile = ({ navigation }) => {
           </View>
         </View>
 
+        <Button
+          title="Learn More"
+          color='white'
+          style={{backgroundColor:"lightblue"}}
+          onPress={handleLogout}
+        />
 
         <View style={styles.profile}>
           <TouchableOpacity
