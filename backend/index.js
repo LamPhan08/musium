@@ -6,6 +6,7 @@ const app = express()
 const cors = require("cors")
 const mongoose = require('mongoose')
 const authRoute = require('./server/routes/auth')
+const favoritesRoute = require('./server/routes/favoriteSongsRouter')
 const cookieParser = require('cookie-parser')
 const port = process.env.PORT || 3000
 
@@ -36,15 +37,16 @@ const ZingMp3Router = require("./server/routes/ZingRouter")
 app.use("/api", cors({ origin: '*' }), ZingMp3Router)
 
 // Page Error
-app.get("*", (req, res) => {
-    res.send("Nhập Sai Đường Dẫn! Vui Lòng Nhập Lại >.<")
-});
+// app.get("*", (req, res) => {
+//     res.send("Nhập Sai Đường Dẫn! Vui Lòng Nhập Lại >.<")
+// });
 
 // middleware
 app.use(express.json());
 app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use('/api/v1/auth', authRoute)
+app.use('/api/v1', favoritesRoute)
 
 app.listen(port, () => {
     connect()

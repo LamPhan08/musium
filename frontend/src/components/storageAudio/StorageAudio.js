@@ -5,16 +5,23 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { COLORS } from "../../constants/colors";
 import logo from '../../../assets/images/logo.png'
+import TrackPlayer from "react-native-track-player";
 
 const presableRippleConfig = {
   color: COLORS.primary
 }
 const StorageAudio = ({item}) => {
  const image = item.cover
+ const playMusic = async () => {
+  await TrackPlayer.setQueue([item])
+
+  TrackPlayer.play()
+ }
+
     return (
       <TouchableOpacity
       android_ripple={presableRippleConfig}
-      onPress={() => console.log('Playing track: ', item.id)}
+      onPress={() => playMusic()}
       style={styles.container}
       >
         {image ? <Image source={image} style={styles.image} /> : <Image source={logo} style={styles.image} /> }

@@ -58,6 +58,7 @@ const Profile = ({ navigation }) => {
         <View style={{ flexDirection: 'row', alignItems: "center" }}>
           <Pressable
             onPress={() => {
+              requestPermission()
               navigation.navigate("Downloaded")
             }}
             style={{ width: 130, height: 100, borderRadius: 5, backgroundColor: "#222222", margin: 10, padding: 15 }}>

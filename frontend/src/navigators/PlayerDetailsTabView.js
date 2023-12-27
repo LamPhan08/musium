@@ -140,6 +140,7 @@ const PlayerDetailsTabView = ({ navigation, onChangeTitle, openPlaylist, setOpen
                         openBottomSheet={showBottomSheet}
                         setOpenBottomSheet={setShowBottomSheet}
                         song={{
+                            encodeId: bottomSheetSong.id,
                             title: bottomSheetSong.title,
                             url: bottomSheetSong.url,
                             artistsNames: bottomSheetSong.artist,
@@ -275,7 +276,7 @@ const styles = StyleSheet.create({
     },
 
     moreIcon: {
-        fontSize: 20,
+        fontSize: 25,
         color: COLORS.grey
     }
 })

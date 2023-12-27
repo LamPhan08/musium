@@ -10,37 +10,37 @@ import { tracks } from '../../../assets/data/tracks';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { getAll, getAlbums, searchSongs, SortSongFields, SortSongOrder } from "react-native-get-music-files";
 import StorageAudio from '../../components/storageAudio/StorageAudio';
+import RNFetchBlob from 'rn-fetch-blob';
 
 const DownloadedSong = ({ navigation }) => {
   const [searchText, setSearchText] = useState("")
   const [focus, setFocus] = useState(false)
   const [music, setMusic] = useState([])
   useEffect(() => {
-      const getMusicFiles = async () => {
-        try {
-          const allMusic = await getAll({
-            id: true,
-            artist: true,
-            duration: true, // additional options
-            cover: true,
-            genre: true,
-            title: true,
-            fileName: true,
-            minimumSongDuration: 10000, // milliseconds
-          });
-          const songs = await allMusic.filter(song => song.url.endsWith('.mp3'))
-          console.log('All Music Files:', songs);
-          setMusic(songs)
-        } catch (error) {
-          console.error('Error getting music files:', error);
-        }
-      };
-      getMusicFiles();
-      }, []);
+    const getMusicFiles = async () => {
+      try {
+        const allMusic = await getAll({
+          limit: 100,
+          offset: 0,
+          coverQuality: 50,
+          minSongDuration: 1000,
+          sortBy: SortSongFields.TITLE,
+          sortOrder: SortSongOrder.DESC,
+        });
+        // console.log(allMusic)
+        const songs = await allMusic.filter(song => song.url.endsWith('.mp3'))
+        // console.log('All Music Files:', song s);
+        setMusic(songs)
+      } catch (error) {
+        console.error('Error getting music files:', error);
+      }
+    };
+    getMusicFiles();
+  }, []);
 
 
   return (
-    <LinearGradient colors={["#040306", "#040306"]} style={{ flex: 1 }}  >
+    <LinearGradient colors={["#040306", "#040306"]} style={{ flex: 1 }} >
       <ScrollView>
         <View style={{ flexDirection: "row", justifyContent: "center", padding: 5 }}>
           <TouchableOpacity
@@ -57,12 +57,12 @@ const DownloadedSong = ({ navigation }) => {
           <Text style={styles.label}>Đã tải</Text>
         </View>
 
-        <View style={{paddingHorizontal: 15}}>
-          <SearchBar searchText={searchText} setSearchText={setSearchText} setFocus={setFocus}/>
+        <View style={{ paddingHorizontal: 15 }}>
+          <SearchBar searchText={searchText} setSearchText={setSearchText} setFocus={setFocus} />
         </View>
 
 
-        <View style={{ flexDirection: 'row', alignItems: "center", justifyContent:"center" }}>
+        <View style={{ flexDirection: 'row', alignItems: "center", justifyContent: "center" }}>
           <Text
             style={{
               color: "white",
@@ -77,15 +77,17 @@ const DownloadedSong = ({ navigation }) => {
           </Text>
 
           <TouchableOpacity
-          style={{marginHorizontal: 40,
-            marginTop: 15,}}>
-          
-          <FontAwesome
-                name="random"
-                size={24}
-                color="#06A0B5"
-              />
-              </TouchableOpacity>
+            style={{
+              marginHorizontal: 40,
+              marginTop: 15,
+            }}>
+
+            <FontAwesome
+              name="random"
+              size={24}
+              color="#06A0B5"
+            />
+          </TouchableOpacity>
         </View>
 
 
