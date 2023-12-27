@@ -4,7 +4,12 @@ const initialState = {
     songList: [],
     song: undefined,
     playerState: '',
-    user: null
+    user: {
+        avatar: '',
+        username: 'LamPhan',
+        email: 'nhatlampr@gmail.com',
+        _id: '65850c2875a796b2352337bd'
+    }
 }
 
 export const songSlice = createSlice({
@@ -14,7 +19,7 @@ export const songSlice = createSlice({
         setSong: (state, action) => {
             state.song = action.payload
         },
-
+        
         setSongList: (state, action) => {
             state.songList = action.payload
         },

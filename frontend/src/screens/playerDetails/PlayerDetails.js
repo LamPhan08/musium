@@ -124,16 +124,19 @@ const PlayerDetails = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
-        <OptionsBottomSheet
+        {showBottomSheet &&
+          <OptionsBottomSheet
           openBottomSheet={showBottomSheet}
           setOpenBottomSheet={setShowBottomSheet}
           song={{
+            encodeId: song?.id,
             title: song?.title,
             thumbnailM: song?.thumbnail,
             url: song?.url,
             artistsNames: song?.artist
           }}
         />
+        }
 
         <PlayerDetailsTabView navigation={navigation} onChangeTitle={onTitleChange} openPlaylist={openPlaylist} setOpenPlaylist={setOpenPlaylist} />
 

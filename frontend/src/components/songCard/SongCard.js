@@ -37,7 +37,9 @@ const SongCard = ({ song, index, playlistSongs }) => {
         <Feather name='more-vertical' style={styles.moreIcon} />
       </TouchableOpacity>
 
-      <OptionsBottomSheet song={song} openBottomSheet={showBottomSheet} setOpenBottomSheet={setShowBottomSheet}/>
+      {showBottomSheet &&
+        <OptionsBottomSheet song={song} openBottomSheet={showBottomSheet} setOpenBottomSheet={setShowBottomSheet}/>
+      }
     </TouchableOpacity>
   )
 }

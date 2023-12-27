@@ -111,8 +111,11 @@ const RegisterScreen = ({navigation}) => {
           }
       );
       // console.log(user);
-      console.log(`${username} `+ ' ' + `${email}` + ' ' + `${password}`)
-      navigation.navigate('App')
+      // console.log(`${username} `+ ' ' + `${email}` + ' ' + `${password}`)
+          // console.log('registerResponse:', registerResponse)
+          // console.log('loginResponse:', loginResponse)
+
+      // navigation.navigate('App')
   }
 
   const handleOnchange = (text, input) => {
