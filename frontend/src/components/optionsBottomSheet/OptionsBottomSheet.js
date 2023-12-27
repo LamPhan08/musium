@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, Text, TouchableOpacity, Pressable, Modal, Image, ToastAndroid } from 'react-native'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -6,25 +6,30 @@ import styles from './optionsBottomSheet.style'
 import { COLORS } from '../../constants/colors'
 import { getWriteExternalStoragePermission } from '../../utils/getPermission'
 import RNFetchBlob from 'rn-fetch-blob'
-import { err } from 'react-native-svg'
+import { addSongToFavorites, getFavoriteSongs, removeSongFromFavorites } from '../../api/favoriteSongs'
+import { useSelector } from 'react-redux'
 
 const OptionsBottomSheet = ({ song, openBottomSheet, setOpenBottomSheet }) => {
-  const [isLoved, setIsLoved] = useState(true)
+  const [isLoved, setIsLoved] = useState(false)
 
-  const handleAdd = () => {
-    setIsLoved(!isLoved)
+  const {user} = useSelector(state => state.song)
 
+  const handleAdd = async () => {
     ToastAndroid.show(`Đã thêm ${song.title} vào danh sách yêu thích của bạn!`, ToastAndroid.BOTTOM)
 
     setOpenBottomSheet(!openBottomSheet)
+
+    await addSongToFavorites(user._id, song);
   }
 
-  const handleRemove = () => {
+  const handleRemove = async () => {
     setIsLoved(!isLoved)
 
     ToastAndroid.show(`Đã gỡ ${song.title} khỏi danh sách yêu thích của bạn!`, ToastAndroid.BOTTOM)
 
     setOpenBottomSheet(!openBottomSheet)
+
+    await removeSongFromFavorites(user._id, song.encodeId)
   }
 
   const handleDownload = async () => {
@@ -46,6 +51,18 @@ const OptionsBottomSheet = ({ song, openBottomSheet, setOpenBottomSheet }) => {
 
     setOpenBottomSheet(!openBottomSheet)
   }
+
+  useEffect(() => {
+    (
+      async () => {
+        const result = await getFavoriteSongs(user._id)
+
+        const check = result.songs.some(item => item.encodeId === song.encodeId)
+
+        setIsLoved(check)
+      }
+    ) ()
+  }, [])
 
   return (
     <Modal transparent={true} visible={openBottomSheet} animationType='slide'>
@@ -70,7 +87,7 @@ const OptionsBottomSheet = ({ song, openBottomSheet, setOpenBottomSheet }) => {
           <TouchableOpacity style={styles.optionBtn} onPress={handleDownload}>
             <MaterialCommunityIcons name='progress-download' style={styles.icon} color={COLORS.white} />
 
-            <Text style={styles.optionText}>Tải về</Text>
+            <Text style={styles.optionText}>Tải bài hát</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.optionBtn} onPress={isLoved ? handleRemove : handleAdd}>

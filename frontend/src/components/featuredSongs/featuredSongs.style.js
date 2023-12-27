@@ -19,5 +19,10 @@ export default styles = StyleSheet.create({
         paddingVertical: 5,
         borderRadius: 20,
         backgroundColor: COLORS.lightBlack
+    },
+
+    btnText: {
+        color: COLORS.text,
+        fontFamily: 'Mulish-Regular'
     }
 })
