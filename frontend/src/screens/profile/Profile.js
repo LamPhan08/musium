@@ -1,14 +1,18 @@
-import React from 'react'
+import React, { useState } from 'react'
 import LinearGradient from 'react-native-linear-gradient';
-import { Image, ScrollView, Text, View, TouchableOpacity, Pressable, PermissionsAndroid, Linking } from "react-native";
+import { Image, ScrollView, Text, View, TouchableOpacity, Pressable, PermissionsAndroid, Modal } from "react-native";
 import avatar from '../../../assets/images/avatar.png'
 import styles from './profile.style'
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { tracks } from '../../../assets/data/tracks';
 import Feather from 'react-native-vector-icons/Feather';
-const Profile = ({ navigation }) => {
+import ModalPlayList from '../../components/modalPlayList/ModalPlayList';
+import { Button } from 'react-native-paper';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
+const Profile = ({ navigation }) => {
+  const [isModelVisible, setModelVisible] = useState(false)
   const requestPermission = async()=>{
     const granted = await PermissionsAndroid.requestMultiple([
       PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
@@ -17,6 +21,21 @@ const Profile = ({ navigation }) => {
     console.log("granted", granted)
     return granted
   }
+
+  // Function to handle logout
+  const handleLogout = async () => {
+    try {
+      // Clear user data from AsyncStorage
+      await AsyncStorage.removeItem('userData');
+      console.log('removed user data from storage and proceed to login screen')
+
+      // Navigate to the "Login" screen
+      navigation.replace('Login');
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
+  };
+
   return (
     <LinearGradient colors={["#040306", "#040306"]} style={{ flex: 1 }}>
       <ScrollView style={{ marginTop: 20 }}>
@@ -39,6 +58,12 @@ const Profile = ({ navigation }) => {
           </View>
         </View>
 
+        <Button
+          title="Learn More"
+          color='white'
+          style={{backgroundColor:"lightblue"}}
+          onPress={handleLogout}
+        />
 
         <View style={styles.profile}>
           <TouchableOpacity
@@ -57,9 +82,12 @@ const Profile = ({ navigation }) => {
 
         <View style={{ flexDirection: 'row', alignItems: "center" }}>
           <Pressable
-            onPress={() => {
-              requestPermission()
-              navigation.navigate("Downloaded")
+            onPress={async() => {
+              const permissionStatus = await requestPermission()
+              if(permissionStatus[PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE] === 'granted' || permissionStatus[PermissionsAndroid.PERMISSIONS.READ_MEDIA_AUDIO] === 'granted' )
+              {
+                navigation.navigate("Downloaded")
+              }
             }}
             style={{ width: 130, height: 100, borderRadius: 5, backgroundColor: "#222222", margin: 10, padding: 15 }}>
             <Feather name="arrow-down-circle" size={30} color="#06A0B5" />
@@ -97,10 +125,21 @@ const Profile = ({ navigation }) => {
             Playlist của bạn
           </Text>
           <TouchableOpacity onPress={() => {
-            navigation.navigate("AddPlayList")
+            // navigation.navigate("AddPlayList")
+            setModelVisible(true)
           }}>
             <FeatherIcon name="plus" color="#fff" size={30} />
           </TouchableOpacity>
+
+          <Modal
+          transparent={true}
+          animationType='fade'
+          visible={isModelVisible}
+          onRequestClose={()=> setModelVisible(false)}
+          >
+              <ModalPlayList 
+              changeModalVisible={()=>setModelVisible(false)}/>
+          </Modal>
 
         </View>
 

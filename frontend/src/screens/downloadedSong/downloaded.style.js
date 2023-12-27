@@ -30,7 +30,7 @@ export default styles = StyleSheet.create({
       },
 
       label:{
-        fontSize: 20,
+        fontSize: 25,
         
         color: '#fff',
       }
