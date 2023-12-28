@@ -21,10 +21,14 @@ const OptionsBottomSheet = ({ song, openBottomSheet, setOpenBottomSheet, loadDat
     setOpenBottomSheet(!openBottomSheet)
 
     await addSongToFavorites(user._id, song);
+
+    if (loadData) {
+      loadData()
+    }
   }
 
   const handleRemove = async () => {
-    setIsLoved(!isLoved)
+    // setIsLoved(!isLoved)
 
     ToastAndroid.show(`Đã gỡ ${song.title} khỏi danh sách yêu thích của bạn!`, ToastAndroid.BOTTOM)
 

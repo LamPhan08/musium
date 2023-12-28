@@ -9,7 +9,8 @@ const initialState = {
         username: '',
         email: '',
         _id: ''
-    }
+    },
+    shuffledSongList: [],
 }
 
 export const songSlice = createSlice({
@@ -30,10 +31,13 @@ export const songSlice = createSlice({
             state.user._id = action.payload._id
             state.user.username = action.payload.username
             state.user.email = action.payload.email
+        },
+        setShuffledSongList: (state, action) => {
+            state.shuffledSongList = action.payload
         }
     }
 })
 
-export const {setSong, setSongList, setPlayerState, setUser} = songSlice.actions
+export const {setSong, setSongList, setPlayerState, setUser, setShuffledSongList} = songSlice.actions
 
 export default songSlice.reducer

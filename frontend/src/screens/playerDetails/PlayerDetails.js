@@ -2,29 +2,34 @@ import React, { useState, useRef, memo, useEffect } from 'react'
 import { View, Text, TouchableOpacity, ImageBackground, ActivityIndicator } from 'react-native'
 import PlayerDetailsTabView from '../../navigators/PlayerDetailsTabView'
 import { useSelector, useDispatch } from 'react-redux'
-import { setPlayerState } from '../../redux/songSlice'
+import { setPlayerState, setShuffledSongList } from '../../redux/songSlice'
 import styles from './playerDetails.style'
 import Entypo from 'react-native-vector-icons/Entypo'
 import Feather from 'react-native-vector-icons/Feather'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import Slider from '@react-native-community/slider';
-import TrackPlayer, { useProgress, usePlaybackState } from 'react-native-track-player'
+import TrackPlayer, { useProgress, usePlaybackState, RepeatMode } from 'react-native-track-player'
 import formatDuration from '../../utils/formatDuration'
 import { COLORS } from '../../constants/colors'
 import LottieView from 'lottie-react-native'
 import playPauseAnimation from '../../../assets/images/PlayPauseAnimation.json'
 import OptionsBottomSheet from '../../components/optionsBottomSheet/OptionsBottomSheet'
+import { getFavoriteSongs } from '../../api/favoriteSongs'
+import { Shuffle } from '../../utils/shuffle'
 
 const PlayerDetails = ({ navigation }) => {
+  const { song, songList, playerState, user, shuffledSongList } = useSelector(state => state.song)
+
   const [title, setTitle] = useState('Đang phát')
   const [repeat, setRepeat] = useState(false)
-  const [shuffle, setShuffle] = useState(false)
+  const [shuffle, setShuffle] = useState(shuffledSongList.length !== 0 ? true : false)
   const [openPlaylist, setOpenPlaylist] = useState(false)
   const [showBottomSheet, setShowBottomSheet] = useState(false)
-  const { song, songList, playerState } = useSelector(state => state.song)
-
+  const [isLiked, setIsLiked] = useState(false)
+  
   const dispatch = useDispatch()
+
   const progress = useProgress()
   const playbackState = usePlaybackState()
   const animationRef = useRef()
@@ -45,6 +50,11 @@ const PlayerDetails = ({ navigation }) => {
       animationRef.current?.play(35, 60)
 
       TrackPlayer.pause()
+    }
+    else if (playbackState.state === 'ended') {
+      animationRef.current?.play(0, 25)
+
+      TrackPlayer.seekTo(0)
     }
   }
 
@@ -89,12 +99,62 @@ const PlayerDetails = ({ navigation }) => {
     TrackPlayer.seekTo(timestamp)
   }
 
-  const handleShuffle = () => {
-    setShuffle(!shuffle)
+  // console.log(shuffledSongList)
+  const handleShuffle = async () => {
+    // setShuffle(!shuffle)
+    if (shuffle) {
+      const indexInNewQueue = songList.findIndex(track => track.id === song.id)
+      const currentProgress = progress.position;
+
+      await TrackPlayer.setQueue(songList)
+
+      await TrackPlayer.skip(indexInNewQueue)
+
+      TrackPlayer.seekTo(currentProgress)
+
+      dispatch(setShuffledSongList([]))
+
+      setShuffle(false)
+    }
+    else {
+      const shuffledList = Shuffle(await TrackPlayer.getQueue())
+
+      const indexInNewQueue = shuffledList.findIndex(track => track.id === song.id)
+      const currentProgress = progress.position;
+
+      await TrackPlayer.setQueue(shuffledList)
+
+      await TrackPlayer.skip(indexInNewQueue)
+
+      TrackPlayer.seekTo(currentProgress)
+
+      dispatch(setShuffledSongList(shuffledList))
+
+      setShuffle(true)
+    }
   }
 
   const handleRepeat = () => {
-    setRepeat(!repeat)
+    if (repeat) {
+      TrackPlayer.setRepeatMode(RepeatMode.Off);
+
+      setRepeat(false)
+    }
+    else {
+      TrackPlayer.setRepeatMode(RepeatMode.Queue);
+
+      setRepeat(true)
+    }
+  }
+
+  const loadData = async () => {
+    const result = await getFavoriteSongs(user._id)
+
+    if (result.songs.length !== 0) {
+      const check = result.songs.some(item => item.encodeId === song.id)
+
+      setIsLiked(check)
+    }
   }
 
   useEffect(() => {
@@ -106,6 +166,9 @@ const PlayerDetails = ({ navigation }) => {
     }
   }, [playerState])
 
+  useEffect(() => {
+    loadData()
+  }, [])
 
   return (
     <ImageBackground style={styles.playerDetailsContainer} source={{ uri: song.thumbnail }} resizeMode='cover' blurRadius={15}>
@@ -126,19 +189,27 @@ const PlayerDetails = ({ navigation }) => {
 
         {showBottomSheet &&
           <OptionsBottomSheet
-          openBottomSheet={showBottomSheet}
-          setOpenBottomSheet={setShowBottomSheet}
-          song={{
-            encodeId: song?.id,
-            title: song?.title,
-            thumbnailM: song?.thumbnail,
-            url: song?.url,
-            artistsNames: song?.artist
-          }}
-        />
+            openBottomSheet={showBottomSheet}
+            setOpenBottomSheet={setShowBottomSheet}
+            song={{
+              encodeId: song?.id,
+              title: song?.title,
+              thumbnailM: song?.thumbnail,
+              url: song?.url,
+              artistsNames: song?.artist
+            }}
+            loadData={loadData}
+          />
         }
 
-        <PlayerDetailsTabView navigation={navigation} onChangeTitle={onTitleChange} openPlaylist={openPlaylist} setOpenPlaylist={setOpenPlaylist} />
+        <PlayerDetailsTabView
+          navigation={navigation}
+          onChangeTitle={onTitleChange}
+          openPlaylist={openPlaylist}
+          setOpenPlaylist={setOpenPlaylist}
+          isLiked={isLiked}
+          setIsLiked={setIsLiked}
+        />
 
         <View style={styles.playerControl}>
           <Slider
@@ -194,8 +265,8 @@ const PlayerDetails = ({ navigation }) => {
               </TouchableOpacity>
             </View>
 
-            <TouchableOpacity style={[styles.optionBtn, { backgroundColor: shuffle ? 'rgba(169, 169, 169, 0.2)' : 'transparent' }]} onPress={handleShuffle}>
-              <Feather name='shuffle' style={styles.toolbarIcon} />
+            <TouchableOpacity style={[styles.optionBtn, { backgroundColor: shuffle ? 'rgba(169, 169, 169, 0.2)' : 'transparent' }]} onPress={handleShuffle} disabled={songList.length <= 1 ? true : false}>
+              <Feather name='shuffle' style={styles.toolbarIcon}/>
             </TouchableOpacity>
           </View>
 

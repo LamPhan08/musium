@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Dimensions, View, StyleSheet, Text, TouchableOpacity, Image, FlatList } from 'react-native'
 import { TabView, TabBar } from 'react-native-tab-view'
 import SongInformation from '../screens/songInformation/SongInformation'
@@ -15,12 +15,15 @@ import OptionsBottomSheet from '../components/optionsBottomSheet/OptionsBottomSh
 
 const { width } = Dimensions.get('window')
 
-const PlayerDetailsTabView = ({ navigation, onChangeTitle, openPlaylist, setOpenPlaylist }) => {
+const PlayerDetailsTabView = ({ navigation, onChangeTitle, openPlaylist, setOpenPlaylist, isLiked, setIsLiked }) => {
     const [index, setIndex] = useState(1)
     const [showBottomSheet, setShowBottomSheet] = useState(false)
     const [bottomSheetSong, setBottomSheetSong] = useState()
+    const [scroll, setScroll] = useState(false)
 
-    const { songList, song } = useSelector(state => state.song)
+    const songFlatlistRef = useRef()
+
+    const { songList, song, shuffledSongList } = useSelector(state => state.song)
 
     const playbackState = usePlaybackState()
 
@@ -38,7 +41,7 @@ const PlayerDetailsTabView = ({ navigation, onChangeTitle, openPlaylist, setOpen
             }
 
             case 'SongThumbnail': {
-                return <SongThumbnail />
+                return <SongThumbnail isLiked={isLiked} setIsLiked={setIsLiked}/>
             }
 
             case 'SongLyrics': {
@@ -52,6 +55,7 @@ const PlayerDetailsTabView = ({ navigation, onChangeTitle, openPlaylist, setOpen
     }
 
     const handlePlaySong = async (index) => {
+        
         await TrackPlayer.skip(index)
 
         if (playbackState.state === 'paused') {
@@ -63,6 +67,17 @@ const PlayerDetailsTabView = ({ navigation, onChangeTitle, openPlaylist, setOpen
         setBottomSheetSong(item)
         setShowBottomSheet(!showBottomSheet)
     }
+
+    const getItemLayout = (data, index) => ({
+        length: 70,
+        offset: 70 * index,
+        index
+    })    
+
+    const scrollToIndex = (index) => {
+        songFlatlistRef.current?.scrollToIndex({ animated: true, index: index });
+        setScroll(true)
+      };
 
     useEffect(() => {
         onChangeTitle(routes[index].title)
@@ -86,7 +101,14 @@ const PlayerDetailsTabView = ({ navigation, onChangeTitle, openPlaylist, setOpen
                     </View>
 
                     <FlatList
-                        data={songList}
+                        ref={(ref) => {
+                            songFlatlistRef.current = ref
+                        }}
+                        getItemLayout={getItemLayout}
+                        data={shuffledSongList.length !== 0
+                            ? shuffledSongList
+                            : songList
+                        }
                         showsVerticalScrollIndicator={false}
                         decelerationRate='fast'
                         style={styles.playlistWrapper}
@@ -95,6 +117,10 @@ const PlayerDetailsTabView = ({ navigation, onChangeTitle, openPlaylist, setOpen
                         updateCellsBatchingPeriod={100}
                         windowSize={20}
                         renderItem={({ item, index }) => {
+                            // if (item.id === song.id && scroll) {
+                            //     scrollToIndex(index)
+                            // }
+
                             return (
                                 <TouchableOpacity
                                     style={[styles.songCard,
@@ -128,8 +154,6 @@ const PlayerDetailsTabView = ({ navigation, onChangeTitle, openPlaylist, setOpen
                                     <TouchableOpacity onPress={() => handleShowBottomSheet(item)}>
                                         <Feather name='more-vertical' style={styles.moreIcon} />
                                     </TouchableOpacity>
-
-
                                 </TouchableOpacity>
                             )
                         }}

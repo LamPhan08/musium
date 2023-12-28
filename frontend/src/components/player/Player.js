@@ -24,12 +24,16 @@ const Player = ({navigation}) => {
 
     const handlePause = () => {
         TrackPlayer.pause()
-        // dispatch(setAnimationStart(false))
+        
     }
 
     const handlePlay = () => {
-        TrackPlayer.play()
-        // dispatch(setAnimationStart(true))
+        if (playbackState.state === 'paused') {
+            TrackPlayer.play()
+        } 
+        else {
+            TrackPlayer.seekTo(0)
+        }
     }
 
     const handleSkipToNext = async () => {
@@ -65,6 +69,8 @@ const Player = ({navigation}) => {
     const handleOpenPlayerDetails = () => {
         navigation.navigate('PlayerDetails')
     }
+
+    // console.log(playbackState.state)
 
     return (
         <TouchableOpacity onPress={handleOpenPlayerDetails}>

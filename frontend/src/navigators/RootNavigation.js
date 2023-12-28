@@ -33,7 +33,7 @@ const RootNavigation = () => {
             trackObject = await TrackPlayer.getTrack(trackIndex)
         }
 
-        if (event.state === 'playing' || event.state === 'paused' ) {
+        if (event.state === 'playing' || event.state === 'paused' || event.state === 'ended') {
             dispatch(setPlayerState(event.state))
         }
 
