@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setSong, setSongList, setPlayerState } from '../../redux/songSlice'
 import OptionsBottomSheet from '../optionsBottomSheet/OptionsBottomSheet'
 
-const SongCard = ({ song, index, playlistSongs }) => {
+const SongCard = ({ song, index, playlistSongs, loadData, notShowMenuBtn }) => {
   const [showBottomSheet, setShowBottomSheet] = useState(false)
   const dispatch = useDispatch()
 
@@ -33,12 +33,14 @@ const SongCard = ({ song, index, playlistSongs }) => {
           <Text style={styles.songArtistsNames} numberOfLines={1}>{song.artistsNames}</Text>
       </View>
 
-      <TouchableOpacity onPress={() => setShowBottomSheet(!showBottomSheet)}>
+      {!notShowMenuBtn &&
+        <TouchableOpacity onPress={() => setShowBottomSheet(!showBottomSheet)}>
         <Feather name='more-vertical' style={styles.moreIcon} />
       </TouchableOpacity>
+      }
 
       {showBottomSheet &&
-        <OptionsBottomSheet song={song} openBottomSheet={showBottomSheet} setOpenBottomSheet={setShowBottomSheet}/>
+        <OptionsBottomSheet song={song} openBottomSheet={showBottomSheet} setOpenBottomSheet={setShowBottomSheet} loadData={loadData ? loadData : undefined}/>
       }
     </TouchableOpacity>
   )

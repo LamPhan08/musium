@@ -1,6 +1,7 @@
 import { mongoAPI } from "../axios/axios"
 
 export const addSongToFavorites = async (userId, song) => {
+    // console.log(song)
     try {
         await mongoAPI.post('/addToFavorites', {
             userId,

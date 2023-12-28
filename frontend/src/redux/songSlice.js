@@ -6,9 +6,9 @@ const initialState = {
     playerState: '',
     user: {
         avatar: '',
-        username: 'LamPhan',
-        email: 'nhatlampr@gmail.com',
-        _id: '65850c2875a796b2352337bd'
+        username: '',
+        email: '',
+        _id: ''
     }
 }
 
@@ -27,7 +27,9 @@ export const songSlice = createSlice({
             state.playerState = action.payload
         },
         setUser: (state, action) => {
-            state.user = action.payload
+            state.user._id = action.payload._id
+            state.user.username = action.payload.username
+            state.user.email = action.payload.email
         }
     }
 })

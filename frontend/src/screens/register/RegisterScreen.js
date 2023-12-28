@@ -65,7 +65,7 @@ const RegisterScreen = ({navigation}) => {
       handleError('Please input email', 'email');
       isValid = false;
     } else if (!inputs.email.match(/\S+@\S+\.\S+/)) {
-      handleError('Vui lòng điên email hợp lệ', 'email');
+      handleError('Vui lòng điền email hợp lệ', 'email');
       isValid = false;
     }
 

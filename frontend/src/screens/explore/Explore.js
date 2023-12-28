@@ -9,10 +9,11 @@ import styles from './explore.style'
 import { getHome } from '../../api/getData'
 import PlaylistSlider from '../../components/homePlaylistSlider/HomePlaylistSilder'
 import NewReleaseRanking from '../../components/newReleaseRanking/NewReleaseRanking'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useSelector } from 'react-redux'
 
 const Explore = ({ navigation }) => {
   const [homeData, setHomeData] = useState([])
+  const {user} = useSelector(state => state.song)
 
   const handleNavigateSearch = () => {
     navigation.navigate('Search')
@@ -45,12 +46,12 @@ const Explore = ({ navigation }) => {
     return (
       <ScrollView style={styles.exploreContainer} showsVerticalScrollIndicator={false} decelerationRate={'fast'}>
         <View style={styles.avatarAndSearchContainer}>
-          <Image source={avatar} style={styles.avatar} />
+          <Image source={avatar} style={styles.avatar}/>
 
           <View style={styles.nameContainer}>
             <Text style={styles.welcome}>Xin chào!</Text>
 
-            <Text style={styles.name}>LamPhan</Text>
+            <Text style={styles.name}>{user.username}</Text>
           </View>
 
           <TouchableOpacity onPress={handleNavigateSearch}>

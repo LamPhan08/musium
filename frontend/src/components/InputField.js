@@ -63,7 +63,7 @@ export default function InputField({
       </TouchableOpacity>
     </View>
         {error && (
-        <Text style={{marginBottom: 20, color: "red", fontSize: 12}}>
+        <Text style={{marginBottom: 20, color: "red", fontSize: 12, fontFamily: 'Mulish-Regular'}}>
           {error}
         </Text>
       )}

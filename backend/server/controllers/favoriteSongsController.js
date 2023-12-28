@@ -70,7 +70,7 @@ const getFavoriteSongs = async (req, res) => {
         let favoriteSongs = await FavoriteSongs.findOne({userId})
 
         if (!favoriteSongs) {
-            return res.json([])
+            return res.json({})
         }
 
         res.json(favoriteSongs)

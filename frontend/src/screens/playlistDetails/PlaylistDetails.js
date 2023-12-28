@@ -175,7 +175,7 @@ const PlaylistDetails = ({ navigation, route }) => {
                   }
                 </TouchableOpacity>
               </View>
-              : <Text style={styles.noSongs}>Không có bài hát nào</Text>
+              : <Text style={styles.noSongs}>Không có bài hát nào!</Text>
               }
             </View>
 

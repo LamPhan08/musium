@@ -32,6 +32,8 @@ import auth from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../../redux/songSlice';
 
 const { width, height } = Dimensions.get('window')
 
@@ -39,10 +41,12 @@ const LoginScreen = ({ navigation }) => {
     const [inputs, setInputs] = React.useState({
         email: '',
         password: '',
-      });
-      const email = inputs.email
-      const password = inputs.password
-      const [errors, setErrors] = React.useState({});
+    });
+    const email = inputs.email
+    const password = inputs.password
+    const [errors, setErrors] = React.useState({});
+
+    const dispatch = useDispatch()
 
 
     // const navigate = useNavigate();
@@ -87,40 +91,43 @@ const LoginScreen = ({ navigation }) => {
 
         // Store user data in AsyncStorage
         await AsyncStorage.setItem('userData', JSON.stringify(userData));
+
+        dispatch(setUser(userData.data))
+
         navigation.replace('App')
     }
 
     const handleOnchange = (text, input) => {
-        setInputs(prevState => ({...prevState, [input]: text}));
-      };
-      const handleError = (error, input) => {
-        setErrors(prevState => ({...prevState, [input]: error}));
-      };
+        setInputs(prevState => ({ ...prevState, [input]: text }));
+    };
+    const handleError = (error, input) => {
+        setErrors(prevState => ({ ...prevState, [input]: error }));
+    };
 
     const validate = () => {
         Keyboard.dismiss();
         let isValid = true;
-    
+
         if (!inputs.email) {
-          handleError('Please input email', 'email');
-          isValid = false;
+            handleError('Please input email', 'email');
+            isValid = false;
         } else if (!inputs.email.match(/\S+@\S+\.\S+/)) {
-          handleError('Vui lòng điên email hợp lệ', 'email');
-          isValid = false;
+            handleError('Vui lòng điên email hợp lệ', 'email');
+            isValid = false;
         }
-    
+
         if (!inputs.password) {
-          handleError('Bạn phải điền password ', 'password');
-          isValid = false;
+            handleError('Bạn phải điền password ', 'password');
+            isValid = false;
         } else if (inputs.password.length < 5) {
-          handleError('Password quá yếu', 'password');
-          isValid = false;
+            handleError('Password quá yếu', 'password');
+            isValid = false;
         }
-    
+
         if (isValid) {
-          handleClick();
+            handleClick();
         }
-      };
+    };
 
 
     return (
@@ -158,7 +165,7 @@ const LoginScreen = ({ navigation }) => {
                         onChangeText={text => handleOnchange(text, 'email')}
                         onFocus={() => handleError(null, 'email')}
                         error={errors.email}
-    
+
                     />
 
                     <InputField
@@ -176,7 +183,7 @@ const LoginScreen = ({ navigation }) => {
                         onChangeText={text => handleOnchange(text, 'password')}
                         onFocus={() => handleError(null, 'password')}
                         error={errors.password}
-    
+
                     />
 
                     <CustomButton label={"Đăng nhập"} onPress={handleClick} />

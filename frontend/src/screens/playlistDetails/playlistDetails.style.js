@@ -161,7 +161,7 @@ export default styles = StyleSheet.create({
         flex: 1,
         fontFamily: 'Mulish-Bold',
         color: COLORS.text,
-        fontSize: 13
+        fontSize: 14
     },
 
     icon: {

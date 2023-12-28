@@ -9,10 +9,11 @@ import RNFetchBlob from 'rn-fetch-blob'
 import { addSongToFavorites, getFavoriteSongs, removeSongFromFavorites } from '../../api/favoriteSongs'
 import { useSelector } from 'react-redux'
 
-const OptionsBottomSheet = ({ song, openBottomSheet, setOpenBottomSheet }) => {
+const OptionsBottomSheet = ({ song, openBottomSheet, setOpenBottomSheet, loadData }) => {
   const [isLoved, setIsLoved] = useState(false)
 
   const {user} = useSelector(state => state.song)
+  // console.log(song)
 
   const handleAdd = async () => {
     ToastAndroid.show(`Đã thêm ${song.title} vào danh sách yêu thích của bạn!`, ToastAndroid.BOTTOM)
@@ -30,6 +31,10 @@ const OptionsBottomSheet = ({ song, openBottomSheet, setOpenBottomSheet }) => {
     setOpenBottomSheet(!openBottomSheet)
 
     await removeSongFromFavorites(user._id, song.encodeId)
+
+    if (loadData) {
+      loadData()
+    }
   }
 
   const handleDownload = async () => {
@@ -56,10 +61,13 @@ const OptionsBottomSheet = ({ song, openBottomSheet, setOpenBottomSheet }) => {
     (
       async () => {
         const result = await getFavoriteSongs(user._id)
-
-        const check = result.songs.some(item => item.encodeId === song.encodeId)
-
-        setIsLoved(check)
+        
+        if (result.songs.length !== 0) {
+          const check = result.songs.some(item => item.encodeId === song.encodeId)
+          
+          setIsLoved(check)
+        }
+        
       }
     ) ()
   }, [])

@@ -8,6 +8,7 @@ import Explore from '../screens/explore/Explore';
 import Search from '../screens/search/Search';
 import PlaylistDetails from '../screens/playlistDetails/PlaylistDetails';
 import ArtistInformation from '../screens/artistInformation/ArtistInformation';
+import SearchFavoriteSongs from '../screens/searchFavoriteSongs/SearchFavoriteSongs';
 import Player from '../components/player/Player';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import AntDesign from 'react-native-vector-icons/AntDesign'
@@ -38,6 +39,23 @@ const ExploreStack = () => {
       <TabStack.Screen name='ArtistInformation' component={ArtistInformation} options={{
         presentation: 'modal',
         animation: 'slide_from_right'
+      }} />
+    </TabStack.Navigator>
+  )
+}
+
+const FavoritesStack = () => {
+  return (
+    <TabStack.Navigator
+      initialRouteName='Favorites'
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <TabStack.Screen name='Favorites' component={Favorites} />
+      <TabStack.Screen name="SearchFavoriteSongs" component={SearchFavoriteSongs} options={{
+        presentation: 'modal',
+        animation: 'slide_from_bottom'
       }} />
     </TabStack.Navigator>
   )
@@ -184,7 +202,7 @@ const BottomTabNavigator = ({ navigation }) => {
         title: 'Khám phá',
 
       }} />
-      <Tab.Screen name='Favorites' component={Favorites} options={{
+      <Tab.Screen name='FavoritesStack' component={FavoritesStack} options={{
         tabBarIcon: ({ focused }) => <Ionicons name='heart-outline' size={23} color={focused ? COLORS.white : COLORS.grey} />,
         title: 'Yêu thích',
       }} />
