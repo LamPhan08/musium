@@ -19,6 +19,26 @@ const Explore = ({ navigation }) => {
     navigation.navigate('Search')
   }
 
+  const checkUserLoggedIn = async () => {
+    try {
+      // Retrieve user data from AsyncStorage
+      const userDataString = await AsyncStorage.getItem('userData');
+  
+      // If user data is present, parse it and return the "data" property
+      if (userDataString) {
+        const userData = JSON.parse(userDataString);
+        return userData.data;
+      } else {
+        // If no user data, return null
+        return null;
+      }
+    } catch (error) {
+      console.error('Error retrieving user data from AsyncStorage:', error);
+      // Handle the error (e.g., display an error message)
+      return null;
+    }
+  };
+
   useEffect(() => {
     (
       async () => {
@@ -51,7 +71,7 @@ const Explore = ({ navigation }) => {
           <View style={styles.nameContainer}>
             <Text style={styles.welcome}>Xin chào!</Text>
 
-            <Text style={styles.name}>{user.username}</Text>
+            <Text style={styles.name}>Username</Text>
           </View>
 
           <TouchableOpacity onPress={handleNavigateSearch}>

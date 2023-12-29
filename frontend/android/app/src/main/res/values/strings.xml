@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">musium</string>
+    <string name="facebook_app_id">7027635253984334</string>
+    <string name="fb_login_protocol_scheme">fb1234</string>
+    <string name="facebook_client_token">d556203a45383d6844ccfb65cedf3f9f</string>
 </resources>

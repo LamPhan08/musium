@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 // import bcrypt from 'bcryptjs';
 
 // user registration
-export const register = async (req, res) => {
+const register = async (req, res) => {
     try {
 
         /* hashing password (drawback: cannot see password in db => leave this snippet in comment)
@@ -42,7 +42,7 @@ export const register = async (req, res) => {
 };
 
 // user login
-export const login = async (req, res) => {
+const login = async (req, res) => {
 
     const email = req.body.email;
 
@@ -118,3 +118,5 @@ export const login = async (req, res) => {
             });
     }
 };
+
+module.exports = {register, login}

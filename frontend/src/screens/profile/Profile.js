@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import LinearGradient from 'react-native-linear-gradient';
-import { Image, ScrollView, Text, View, TouchableOpacity, Pressable, PermissionsAndroid, Modal } from "react-native";
+import { Image, ScrollView, Text, View, TouchableOpacity, Pressable, PermissionsAndroid, Modal, Button } from "react-native";
 import avatar from '../../../assets/images/avatar.png'
 import styles from './profile.style'
 import FeatherIcon from 'react-native-vector-icons/Feather';
@@ -8,7 +8,6 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { tracks } from '../../../assets/data/tracks';
 import Feather from 'react-native-vector-icons/Feather';
 import ModalPlayList from '../../components/modalPlayList/ModalPlayList';
-import { Button } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Profile = ({ navigation }) => {
@@ -58,12 +57,24 @@ const Profile = ({ navigation }) => {
           </View>
         </View>
 
-        <Button
-          title="Learn More"
-          color='white'
-          style={{backgroundColor:"lightblue"}}
-          onPress={handleLogout}
-        />
+        <TouchableOpacity
+        onPress={handleLogout}
+        style={{
+          backgroundColor: '#06A0B5',
+          padding: 20,
+          borderRadius: 10,
+          marginBottom: 30,
+        }}>
+        <Text
+          style={{
+            textAlign: 'center',
+            fontSize: 16,
+            color: '#fff',
+            fontFamily: 'Mulish-ExtraBold'
+          }}>
+          Logout
+        </Text>
+      </TouchableOpacity>
 
         <View style={styles.profile}>
           <TouchableOpacity
