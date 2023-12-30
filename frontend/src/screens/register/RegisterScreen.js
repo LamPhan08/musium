@@ -33,12 +33,22 @@ import {BASE_URL} from './../../utils/config.js';
 // import axios from 'axios';
 import { mongoAPI } from '../../axios/axios';
 
+import auth from '@react-native-firebase/auth';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+
+import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../../redux/songSlice';
+
 
 import { useSelector } from 'react-redux';
 
 const {width, height} = Dimensions.get('window')
 
 const RegisterScreen = ({navigation}) => {
+  const [facebookLoginInProgress, setFacebookLoginInProgress] = useState(false);
 
   const {user} = useSelector(state => state.song)
 
@@ -53,9 +63,91 @@ const RegisterScreen = ({navigation}) => {
   const email = inputs.email
   const password = inputs.password
 
+  const dispatch = useDispatch()
+
   // const {dispatch} = useContext(AuthContext);
 
   const [errors, setErrors] = React.useState({});
+
+  GoogleSignin.configure({
+    webClientId: '916968479424-8beoiql3s7il2ao2p085vqm4128ecs0c.apps.googleusercontent.com',
+    // webClientId: '768264570933-ec9atg4laq8l9vgcjdqq731id97cd72t.apps.googleusercontent.com'
+  });
+
+  async function onGoogleButtonPress() {
+    // Check if your device supports Google Play
+    await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+    // Get the users ID token
+    const { idToken } = await GoogleSignin.signIn();
+
+    // Create a Google credential with the token
+    const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+
+    // Sign-in the user with the credential
+    const userCredential = await auth().signInWithCredential(googleCredential);
+
+    // Extract user information
+    const user = userCredential.user;
+    console.log(user);
+
+    const registerResponse = await mongoAPI.post(`/auth/register`, 
+          {
+            username: user.displayName,
+            email: user.email,
+            password: '123456',
+          }
+    );
+
+    // Sign-in the user with the credential
+    return auth().signInWithCredential(googleCredential);
+  }
+  async function onFacebookButtonPress() {
+    try {
+        // Attempt login with permissions
+        const result = await LoginManager.logInWithPermissions([
+            'email'
+        ]);
+    
+        if (result.grantedPermissions === "") {
+            // throw 'User cancelled the login process';
+            console.log("No permission granted")
+        }
+
+        if (result.isCancelled) {
+        // throw 'User cancelled the login process';
+            console.log("Clicked cancel")
+            // navigation.navigate('Login')
+        }
+    
+        // Once signed in, get the users AccessToken
+        const data = await AccessToken.getCurrentAccessToken();
+    
+        if (!data) {
+        throw 'Something went wrong obtaining access token';
+        }
+    
+        // Create a Firebase credential with the AccessToken
+        const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
+
+        const userCredential = await auth().signInWithCredential(facebookCredential);
+        // Extract user information
+        const user = userCredential.user;
+        console.log(user);
+
+        const registerResponse = await mongoAPI.post(`/auth/register`, 
+            {
+              username: user.displayName,
+              email: user.email,
+              password: '123456',
+            }
+        );
+    
+        // Sign-in the user with the credential
+        return auth().signInWithCredential(facebookCredential);
+    } catch (error) {
+        console.log(error.message)
+    }
+  }
 
   const validate = () => {
     Keyboard.dismiss();
@@ -116,6 +208,16 @@ const RegisterScreen = ({navigation}) => {
           // console.log('loginResponse:', loginResponse)
 
       // navigation.navigate('App')
+      console.log("Login Response:", loginResponse.data);
+        // Assuming your login response contains user data, adjust the following code accordingly
+        const userData = loginResponse.data;
+
+        // Store user data in AsyncStorage
+        await AsyncStorage.setItem('userData', JSON.stringify(userData));
+
+        dispatch(setUser(userData.data))
+
+        navigation.replace('App')
   }
 
   const handleOnchange = (text, input) => {
@@ -274,7 +376,19 @@ const RegisterScreen = ({navigation}) => {
                         marginBottom: 30,
                     }}>
                     <TouchableOpacity
-                        onPress={() => { }}
+                        // onPress={() => { }}
+                        onPress={
+                            () => onGoogleButtonPress()
+                            .then(() => {
+                                console.log('Signed up with Google!');
+                                navigation.navigate('App');
+                            }
+                            )
+                            .catch((error) => {
+                                console.log(error.message);
+                            })
+                            // signInWithGoogle
+                        }
                         style={{
                             borderColor: '#ddd',
                             borderWidth: 0.5,
@@ -285,7 +399,29 @@ const RegisterScreen = ({navigation}) => {
                         <GoogleSVG height={24} width={24} />
                     </TouchableOpacity>
                     <TouchableOpacity
-                        onPress={() => { }}
+                        // onPress={() => { }}
+                        onPress={() => 
+                          // onFacebookButtonPress().
+                          // then(() => 
+                          //     {
+                          //         console.log('Signed in with Facebook!');
+                          //         navigation.navigate('App')
+                          //     })
+                          // .catch(() => console.log("Sign in with facebook failed"))
+                          {
+                              setFacebookLoginInProgress(true);
+                              onFacebookButtonPress()
+                                  .then(() => {
+                                      console.log('Signed in with Facebook!');
+                                      // Conditionally navigate only if Facebook login is not in progress
+                                      if (!facebookLoginInProgress) {
+                                          navigation.navigate('App');
+                                      }
+                                  })
+                                  .catch(() => console.log('Sign in with Facebook failed'))
+                                  .finally(() => setFacebookLoginInProgress(false));
+                          }
+                      }
                         style={{
                             borderColor: '#ddd',
                             borderWidth: 0.5,

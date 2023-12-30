@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     SafeAreaView,
     View,
@@ -29,15 +29,20 @@ import { COLORS } from '../../constants/colors';
 import { mongoAPI } from '../../axios/axios';
 
 import auth from '@react-native-firebase/auth';
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../../redux/songSlice';
 
+// import com.facebook.FacebookSdk;
+import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
+
 const { width, height } = Dimensions.get('window')
 
 const LoginScreen = ({ navigation }) => {
+    const [facebookLoginInProgress, setFacebookLoginInProgress] = useState(false);
+
     const [inputs, setInputs] = React.useState({
         email: '',
         password: '',
@@ -54,7 +59,16 @@ const LoginScreen = ({ navigation }) => {
 
     GoogleSignin.configure({
         webClientId: '916968479424-8beoiql3s7il2ao2p085vqm4128ecs0c.apps.googleusercontent.com',
+        // webClientId: '768264570933-ec9atg4laq8l9vgcjdqq731id97cd72t.apps.googleusercontent.com'
     });
+
+    // useEffect(() => {
+    //     // Initialize GoogleSignin
+    //     GoogleSignin.configure({
+    //       webClientId: '768264570933-ec9atg4laq8l9vgcjdqq731id97cd72t.apps.googleusercontent.com',
+    //       offlineAccess: true,
+    //     });
+    // }, []);
 
     async function onGoogleButtonPress() {
         // Check if your device supports Google Play
@@ -74,6 +88,64 @@ const LoginScreen = ({ navigation }) => {
 
         // Sign-in the user with the credential
         return auth().signInWithCredential(googleCredential);
+    }
+    // const signInWithGoogle = async () => {
+    //     try {
+    //       await GoogleSignin.hasPlayServices();
+    //       const userInfo = await GoogleSignin.signIn();
+    //       console.log('User Info:', userInfo);
+    //       // Handle the successful login here
+    //     } catch (error) {
+    //       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+    //         console.log('User cancelled the login process');
+    //       } else if (error.code === statusCodes.IN_PROGRESS) {
+    //         console.log('Signin in progress');
+    //       } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+    //         console.log('Play services not available or outdated');
+    //       } else {
+    //         console.log('Something went wrong:', error);
+    //       }
+    //     }
+    //   };
+
+    async function onFacebookButtonPress() {
+        try {
+            // Attempt login with permissions
+            const result = await LoginManager.logInWithPermissions([
+                'email'
+            ]);
+        
+            if (result.grantedPermissions === "") {
+                // throw 'User cancelled the login process';
+                console.log("No permission granted")
+            }
+
+            if (result.isCancelled) {
+            // throw 'User cancelled the login process';
+                console.log("Clicked cancel")
+                // navigation.navigate('Login')
+            }
+        
+            // Once signed in, get the users AccessToken
+            const data = await AccessToken.getCurrentAccessToken();
+        
+            if (!data) {
+            throw 'Something went wrong obtaining access token';
+            }
+        
+            // Create a Firebase credential with the AccessToken
+            const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
+
+            const userCredential = await auth().signInWithCredential(facebookCredential);
+            // Extract user information
+            const user = userCredential.user;
+            console.log(user);
+        
+            // Sign-in the user with the credential
+            return auth().signInWithCredential(facebookCredential);
+        } catch (error) {
+            console.log(error.message)
+        }
     }
 
     const handleClick = async e => {
@@ -201,7 +273,8 @@ const LoginScreen = ({ navigation }) => {
                         }}>
                         <TouchableOpacity
                             // onPress={() => { }}
-                            onPress={() => onGoogleButtonPress()
+                            onPress={
+                                () => onGoogleButtonPress()
                                 .then(() => {
                                     console.log('Signed in with Google!');
                                     navigation.navigate('App');
@@ -210,6 +283,7 @@ const LoginScreen = ({ navigation }) => {
                                 .catch((error) => {
                                     console.log(error.message);
                                 })
+                                // signInWithGoogle
                             }
                             style={{
                                 borderColor: '#ddd',
@@ -221,7 +295,29 @@ const LoginScreen = ({ navigation }) => {
                             <GoogleSVG height={24} width={24} />
                         </TouchableOpacity>
                         <TouchableOpacity
-                            onPress={() => { }}
+                            // onPress={() => { }}
+                            onPress={() => 
+                                // onFacebookButtonPress().
+                                // then(() => 
+                                //     {
+                                //         console.log('Signed in with Facebook!');
+                                //         navigation.navigate('App')
+                                //     })
+                                // .catch(() => console.log("Sign in with facebook failed"))
+                                {
+                                    setFacebookLoginInProgress(true);
+                                    onFacebookButtonPress()
+                                        .then(() => {
+                                            console.log('Signed in with Facebook!');
+                                            // Conditionally navigate only if Facebook login is not in progress
+                                            if (!facebookLoginInProgress) {
+                                                navigation.navigate('App');
+                                            }
+                                        })
+                                        .catch(() => console.log('Sign in with Facebook failed'))
+                                        .finally(() => setFacebookLoginInProgress(false));
+                                }
+                            }
                             style={{
                                 borderColor: '#ddd',
                                 borderWidth: 0.5,
