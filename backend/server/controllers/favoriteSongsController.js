@@ -3,7 +3,6 @@ const FavoriteSongs = require('../models/FavoriteSongs')
 const addToFavorites = async (req, res) => {
     try {
         const {userId, song} = req.body;
-        console.log(userId, song)
 
         let favoriteSongs = await FavoriteSongs.findOne({userId})
 
@@ -70,7 +69,7 @@ const getFavoriteSongs = async (req, res) => {
         let favoriteSongs = await FavoriteSongs.findOne({userId})
 
         if (!favoriteSongs) {
-            return res.json({})
+            return res.json([])
         }
 
         res.json(favoriteSongs)

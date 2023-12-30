@@ -13,8 +13,10 @@ import Player from '../components/player/Player';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import { COLORS } from '../constants/colors';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { ZoomScaler } from '../utils/zoomInOut';
+import { useFocusEffect } from '@react-navigation/native';
+import { setBottomTabRouteName } from '../redux/songSlice';
 
 const Tab = createBottomTabNavigator();
 const TabStack = createNativeStackNavigator()
@@ -62,8 +64,8 @@ const FavoritesStack = () => {
 }
 
 const BottomTabNavigator = ({ navigation }) => {
-  const { song } = useSelector(state => state.song)
-  const [routeName, setRouteName] = useState('Explore')
+  const { song, bottomTabRouteName } = useSelector(state => state.song)
+  const dispatch = useDispatch();
 
   const animateScale = new Animated.Value(0)
   const animateIcon = new Animated.Value(0)
@@ -101,9 +103,12 @@ const BottomTabNavigator = ({ navigation }) => {
 
 
 
+  // useEffect(() => {
+  //   animateTabOpen()
+  // }, [routeName])
   useEffect(() => {
-    animateTabOpen()
-  }, [routeName])
+    animateTabOpen();
+  }, [bottomTabRouteName])
 
   return (
     <Tab.Navigator
@@ -112,7 +117,7 @@ const BottomTabNavigator = ({ navigation }) => {
         lazy: true,
       }}
       backBehavior='none'
-      initialRouteName='Explore'
+      initialRouteName='Profile'
       tabBar={({ state, descriptors, navigation }) => {
 
         return (
@@ -139,7 +144,7 @@ const BottomTabNavigator = ({ navigation }) => {
                     canPreventDefault: true,
                   });
 
-                  setRouteName(route.name)
+                  dispatch(setBottomTabRouteName(route.name))
 
                   if (!isFocused && !event.defaultPrevented) {
                     navigation.navigate(route.name, route.params);

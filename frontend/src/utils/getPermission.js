@@ -1,16 +1,13 @@
 import { PermissionsAndroid, ToastAndroid } from "react-native"
 
-export const getWriteExternalStoragePermission = async () => {
+export const getPermissions = async () => {
     try {
-        const granted = await PermissionsAndroid.request(
-            PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE
-        );
+        const granted = await PermissionsAndroid.requestMultiple([
+            PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+            PermissionsAndroid.PERMISSIONS.READ_MEDIA_AUDIO,
+          ]);
 
-        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-            return true;
-        }
-
-        return false;
+        return granted
     }
     catch (err) {
         ToastAndroid.show('Có lỗi xảy ra!', ToastAndroid.BOTTOM);

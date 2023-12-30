@@ -11,6 +11,7 @@ const initialState = {
         _id: ''
     },
     shuffledSongList: [],
+    bottomTabRouteName: 'Explore'
 }
 
 export const songSlice = createSlice({
@@ -34,10 +35,13 @@ export const songSlice = createSlice({
         },
         setShuffledSongList: (state, action) => {
             state.shuffledSongList = action.payload
+        },
+        setBottomTabRouteName: (state, action) => {
+            state.bottomTabRouteName = action.payload
         }
     }
 })
 
-export const {setSong, setSongList, setPlayerState, setUser, setShuffledSongList} = songSlice.actions
+export const {setSong, setSongList, setPlayerState, setUser, setShuffledSongList, setBottomTabRouteName} = songSlice.actions
 
 export default songSlice.reducer

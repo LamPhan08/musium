@@ -9,11 +9,14 @@ import styles from './explore.style'
 import { getHome } from '../../api/getData'
 import PlaylistSlider from '../../components/homePlaylistSlider/HomePlaylistSilder'
 import NewReleaseRanking from '../../components/newReleaseRanking/NewReleaseRanking'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import { setBottomTabRouteName } from '../../redux/songSlice'
+import { getExploreData } from '../../api/explore'
 
 const Explore = ({ navigation }) => {
   const [homeData, setHomeData] = useState([])
-  const {user} = useSelector(state => state.song)
+  const { user } = useSelector(state => state.song)
+  const dispatch = useDispatch()
 
   const handleNavigateSearch = () => {
     navigation.navigate('Search')
@@ -42,9 +45,15 @@ const Explore = ({ navigation }) => {
   useEffect(() => {
     (
       async () => {
-        const data = await getHome()
+        // //Lấy data mới nhất
+        // const data = await getHome()
 
-        setHomeData(data.items)
+        // setHomeData(data.items)
+
+        //Lấy data từ mongodb
+        const result = await getExploreData()
+
+        setHomeData(result.data.items)
       }
     )()
   }, [])
@@ -66,7 +75,13 @@ const Explore = ({ navigation }) => {
     return (
       <ScrollView style={styles.exploreContainer} showsVerticalScrollIndicator={false} decelerationRate={'fast'}>
         <View style={styles.avatarAndSearchContainer}>
-          <Image source={avatar} style={styles.avatar}/>
+          <TouchableOpacity
+            onPress={() => {
+              dispatch(setBottomTabRouteName('Profile'))
+              navigation.navigate('Profile')
+            }}>
+            <Image source={avatar} style={styles.avatar} />
+          </TouchableOpacity>
 
           <View style={styles.nameContainer}>
             <Text style={styles.welcome}>Xin chào!</Text>
@@ -80,7 +95,7 @@ const Explore = ({ navigation }) => {
         </View>
 
         <View>
-          <Banner bannerDatas={bannerDatas} navigation={navigation}/>
+          <Banner bannerDatas={bannerDatas} navigation={navigation} />
 
           <HomeNewRelease newReleaseData={newReleaseData} />
 
@@ -88,7 +103,7 @@ const Explore = ({ navigation }) => {
 
           <NewReleaseRanking newReleaseRankingData={newReleaseRankingData} />
 
-          <PlaylistSlider playlistData={top100AndHotAlbumData} navigation={navigation}/>
+          <PlaylistSlider playlistData={top100AndHotAlbumData} navigation={navigation} />
         </View>
 
 
