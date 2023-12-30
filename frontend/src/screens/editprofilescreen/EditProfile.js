@@ -1,4 +1,3 @@
-
 import React, { useEffect, useContext, useState } from 'react';
 import {
   View,
@@ -20,41 +19,114 @@ import styles from './editProfile.style'
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import Animated, { SlideInDown, SlideOutDown, FadeIn, FadeOut } from "react-native-reanimated";
 import ImagePicker from 'react-native-image-crop-picker'
+import { useSelector, useDispatch } from 'react-redux';
+import { mongoAPI } from '../../axios/axios';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
+
+const cloud_name = 'db3qu4bzj';
+const cloud_preset = 'musium'
 const EditProfile = ({ navigation }) => {
-  const [name, setName] = useState("John Doe")
-  const [password, setPassWord] = useState("password")
   const [img, setImg] = useState('https://reactnative.dev/img/tiny_logo.png')
   const [isOpen, setOpen] = useState(false);
+  const { user } = useSelector(state => state.song);
+  const [formData, setFormData] = useState({
+    name: '',
+    // password: '',
+    photo: 'https://reactnative.dev/img/tiny_logo.png'
+  })
 
-  const choosePhotoFromLibrary = () => {
+  const [imgSource, setImgSource] = useState({
+    uri:"",
+    type:'',
+    name:"",
+  })
+
+  const handleInputChange = (text, fieldName) => {
+    // Create a new object by spreading the existing formData
+    // and updating only the specified field
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [fieldName]: text,
+    }));
+  };
+
+  
+  
+    const handleSubmit = async e => {
+      const updateRespone = await mongoAPI.put(`/user/updateprofile/${user._id}`,
+            {
+                username: formData.name,
+                photo: formData.photo
+            }
+      )
+      console.log("name", formData.name)
+      console.log("photo", formData.photo)
+      console.log("Update Response:", updateRespone.data);
+    }
+
+  const choosePhotoFromLibrary =  () => {
     ImagePicker.openPicker({
       width: 300,
       height: 300,
       cropping: false,
       compressImageQuality: 0.7
-    }).then(image => {
+    }).then(async image => {
       console.log('image', image);
-      setImg(image.path);
+      const uri = image.path
+      const type = image.mime
+      const name = `test.${image.path.split(".")[1]}`
+      const source = {uri,type,name}
+       await onUpload(source)
+      // setFormData({ ...formData, photo: img })
+      toggleSheet()
     });
   }
 
-  const takePhotoFromCamera = () => {
+  const takePhotoFromCamera = async () => {
     ImagePicker.openCamera({
       compressImageMaxWidth: 300,
       compressImageMaxHeight: 300,
       cropping: false,
       compressImageQuality: 0.7
-    }).then(image => {
-      console.log('image', image.path);
-      setImg(image.path);
-      console.log("test", img)
+    }).then(async image => {
+      console.log('image', image);
+      const uri = image.path
+      const type = image.mime
+      const name = `test.${image.path.split(".")[1]}`
+      const source = {uri,type,name}
+       await onUpload(source)
+      // setFormData({ ...formData, photo: img })
+      toggleSheet()
     });
   }
 
   const toggleSheet = () => {
     setOpen(!isOpen);
+  };
+
+  const onUpload = async (element) => {
+    
+    // if (element.type === "image/jpeg" || element.type === "image/png") {
+      try {
+        const data = new FormData();
+      data.append("file", element);
+      data.append("upload_preset", "musium");
+      data.append("cloud_name","db3qu4bzj");
+      fetch(`https://api.cloudinary.com/v1_1/db3qu4bzj/image/upload`, {
+        method: "POST",
+        body: data,
+      })
+        .then((res) => res.json())
+        .then((data) => setFormData({ ...formData, photo: data.url.toString() })) //setImg(data.url.toString()));
+      } catch (error) {
+        console.log(error)
+      }
+      
+    // } else {
+      
+    //   console.error("Please select an image in jpeg or png format");
+    // }
   };
 
   return (
@@ -69,6 +141,7 @@ const EditProfile = ({ navigation }) => {
 
         <Text style={styles.label}> Chỉnh sửa hồ sơ</Text>
         <TouchableOpacity
+          onPress={handleSubmit}
           style={{ flex: 0.5 }}>
           <Text style={styles.label}>
             Lưu
@@ -92,7 +165,7 @@ const EditProfile = ({ navigation }) => {
               style={styles.avatar}
               // source={img}
               source={{
-                uri: img,
+                uri: formData.photo,
               }}
             />
           </View>
@@ -106,12 +179,12 @@ const EditProfile = ({ navigation }) => {
           placeholderTextColor="#666666"
           autoCorrect={false}
           style={styles.textInput}
-          value={name}
-          onChangeText={text => setName(text)}
+          value={formData.name}
+          onChangeText={(text) => handleInputChange(text, 'name')}
         />
       </View>
 
-      <View style={styles.action}>
+      {/* <View style={styles.action}>
         <FontAwesome name="lock" color="#666666" size={20} />
         <TextInput
           secureTextEntry={true}
@@ -119,10 +192,10 @@ const EditProfile = ({ navigation }) => {
           placeholderTextColor="#666666"
           autoCorrect={false}
           style={styles.textInput}
-          value={password}
-          onChangeText={text => setPassWord(text)}
+          value={formData.password}
+          onChangeText={(text) => handleInputChange(text, 'password')}
         />
-      </View>
+      </View> */}
 
       {isOpen && (
         <>

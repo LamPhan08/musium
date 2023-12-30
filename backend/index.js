@@ -6,6 +6,7 @@ const app = express()
 const cors = require("cors")
 const mongoose = require('mongoose')
 const authRoute = require('./server/routes/auth')
+const userRoute = require('./server/routes/userRouter')
 const favoritesRoute = require('./server/routes/favoriteSongsRouter')
 const exploreRoute = require('./server/routes/exploreRouter')
 const playlistRoute = require('./server/routes/playlistRouter')
@@ -48,6 +49,7 @@ app.use(express.json());
 app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use('/api/v1/auth', authRoute)
+app.use('/api/v1/user', userRoute)
 app.use('/api/v1', favoritesRoute)
 app.use('/api/v1', exploreRoute)
 app.use('/api/v1', playlistRoute)
