@@ -77,10 +77,12 @@ const Profile = ({ navigation }) => {
             decelerationRate='fast'
           >
             <View style={styles.userWrapper}>
+              <TouchableOpacity onPress={handleLogout}>
               <Image
                 style={styles.avatar}
                 source={avatar}
               />
+              </TouchableOpacity>
               <View style={styles.usernameWrapper}>
                 <Text style={styles.username} numberOfLines={1}>
                   {user.username}
@@ -152,7 +154,7 @@ const Profile = ({ navigation }) => {
   
               {playlists.map((playlist, index) => {
                 return (
-                  <ProfilePlaylistCard key={index} navigation={navigation} playlist={playlist}/>
+                  <ProfilePlaylistCard key={index} navigation={navigation} playlist={playlist} userId={user._id}/>
                 )
               })}
             </View>

@@ -59,9 +59,12 @@ const Favorites = ({ navigation }) => {
     outputRange: ['transparent', COLORS.headerBlack],
     extrapolate: 'clamp'
   })
+  // console.log(user)
 
   const loadData = async () => {
     const result = await getFavoriteSongs(user._id);
+
+    // console.log(result)
 
     if (result.length !== 0) {
       setFavoriteSongs(await CheckSongHasMp3(result.songs));

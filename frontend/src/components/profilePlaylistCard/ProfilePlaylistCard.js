@@ -4,9 +4,9 @@ import styles from './profilePlaylistCard.style'
 import logo from '../../../assets/images/logo.png'
 import { COLORS } from '../../constants/colors'
 
-const ProfilePlaylistCard = ({navigation, playlist}) => {
+const ProfilePlaylistCard = ({navigation, playlist, userId}) => {
   return (
-    <TouchableOpacity style={styles.playlistCard}>
+    <TouchableOpacity style={styles.playlistCard} onPress={() => navigation.navigate('UserPlaylistDetails', {playlist: playlist, userId: userId})}>
       <Image
         source={playlist.songs.length !== 0
           ? {uri: playlist.songs[0].thumbnailM}

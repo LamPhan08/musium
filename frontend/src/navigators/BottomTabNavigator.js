@@ -9,13 +9,13 @@ import Search from '../screens/search/Search';
 import PlaylistDetails from '../screens/playlistDetails/PlaylistDetails';
 import ArtistInformation from '../screens/artistInformation/ArtistInformation';
 import SearchFavoriteSongs from '../screens/searchFavoriteSongs/SearchFavoriteSongs';
+import UserPlaylistDetails from '../screens/userPlaylistDetails/UserPlaylistDetails';
 import Player from '../components/player/Player';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import { COLORS } from '../constants/colors';
 import { useSelector, useDispatch } from 'react-redux';
 import { ZoomScaler } from '../utils/zoomInOut';
-import { useFocusEffect } from '@react-navigation/native';
 import { setBottomTabRouteName } from '../redux/songSlice';
 
 const Tab = createBottomTabNavigator();
@@ -58,6 +58,23 @@ const FavoritesStack = () => {
       <TabStack.Screen name="SearchFavoriteSongs" component={SearchFavoriteSongs} options={{
         presentation: 'modal',
         animation: 'slide_from_bottom'
+      }} />
+    </TabStack.Navigator>
+  )
+}
+
+const ProfileStack = () => {
+  return (
+    <TabStack.Navigator
+      initialRouteName='Profile'
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <TabStack.Screen name='Profile' component={Profile} />
+      <TabStack.Screen name="UserPlaylistDetails" component={UserPlaylistDetails} options={{
+        presentation: 'modal',
+        animation: 'slide_from_right'
       }} />
     </TabStack.Navigator>
   )
@@ -117,7 +134,7 @@ const BottomTabNavigator = ({ navigation }) => {
         lazy: true,
       }}
       backBehavior='none'
-      initialRouteName='Profile'
+      initialRouteName='ProfileStack'
       tabBar={({ state, descriptors, navigation }) => {
 
         return (
@@ -211,7 +228,7 @@ const BottomTabNavigator = ({ navigation }) => {
         tabBarIcon: ({ focused }) => <Ionicons name='heart-outline' size={23} color={focused ? COLORS.white : COLORS.grey} />,
         title: 'Yêu thích',
       }} />
-      <Tab.Screen name='Profile' component={Profile} options={{
+      <Tab.Screen name='ProfileStack' component={ProfileStack} options={{
         tabBarIcon: ({ focused }) => <Ionicons name='person-outline' size={23} color={focused ? COLORS.white : COLORS.grey} />,
         title: 'Cá nhân'
       }} />

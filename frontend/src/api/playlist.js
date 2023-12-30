@@ -9,7 +9,7 @@ export const createPlaylist = async (userId, title, username) => {
         })
     }
     catch (err) {
-        console.log(err)
+        console.log(err.response.data)
     }
 }
 
@@ -27,3 +27,19 @@ export const getUserPlaylists = async (userId) => {
         console.log(err)
     }
 }
+
+export const deletePlaylist = async (userId, playlistId) => {
+    try {
+        await mongoAPI.delete('/deletePlaylist', {
+            data: {
+                userId: userId,
+                playlistId: playlistId
+            }
+        })
+
+    }
+    catch (err) {
+        console.log(err)
+    }
+}
+

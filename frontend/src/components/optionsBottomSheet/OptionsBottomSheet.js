@@ -4,7 +4,6 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import styles from './optionsBottomSheet.style'
 import { COLORS } from '../../constants/colors'
-import { getWriteExternalStoragePermission } from '../../utils/getPermission'
 import RNFetchBlob from 'rn-fetch-blob'
 import { addSongToFavorites, getFavoriteSongs, removeSongFromFavorites } from '../../api/favoriteSongs'
 import { useSelector } from 'react-redux'
@@ -76,7 +75,11 @@ const OptionsBottomSheet = ({ song, openBottomSheet, setOpenBottomSheet, loadDat
   }, [])
 
   return (
-    <Modal transparent={true} visible={openBottomSheet} animationType='slide'>
+    <Modal 
+    transparent={true} 
+    visible={openBottomSheet} 
+    animationType='slide'
+    onRequestClose={() => setOpenBottomSheet(!openBottomSheet)}>
       <Pressable
         style={styles.backdrop}
         onPress={() => setOpenBottomSheet(!openBottomSheet)}
@@ -114,7 +117,7 @@ const OptionsBottomSheet = ({ song, openBottomSheet, setOpenBottomSheet, loadDat
           <TouchableOpacity style={styles.optionBtn}>
             <MaterialCommunityIcons name='music-note-plus' style={styles.icon} color={COLORS.white} />
 
-            <Text style={styles.optionText}>Thêm vào playlist</Text>
+            <Text style={styles.optionText}>Thêm vào Playlist</Text>
           </TouchableOpacity>
         </View>
       </View>

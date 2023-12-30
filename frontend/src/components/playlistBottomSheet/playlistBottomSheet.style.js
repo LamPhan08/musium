@@ -1,5 +1,5 @@
-import {StyleSheet} from 'react-native'
-import { COLORS } from '../../constants/colors'
+import { StyleSheet } from "react-native";
+import { COLORS } from "../../constants/colors";
 
 export default styles = StyleSheet.create({
     backdrop: {
@@ -20,7 +20,7 @@ export default styles = StyleSheet.create({
         zIndex: 999
     },
 
-    songIn4Wrapper: {
+    playlistIn4Wrapper: {
         flexDirection: 'row',
         alignItems: 'center',
         gap: 10,
@@ -29,10 +29,11 @@ export default styles = StyleSheet.create({
         paddingBottom: 20
     },
 
-    songThumbnail: {
+    playlistThumbnail: {
         height: 60,
         width: 60,
-        borderRadius: 5
+        borderRadius: 5,
+        backgroundColor: COLORS.lightBlack
     },
 
     songTitleArtistWrapper: {
@@ -40,13 +41,13 @@ export default styles = StyleSheet.create({
         gap: 5
     },
 
-    songTitle: {
+    playlistTitle: {
         fontSize: 14,
         fontFamily: 'Mulish-Bold',
         color: COLORS.text
     },
 
-    songArtistsNames: {
+    playlistSongTotal: {
         fontSize: 12,
         fontFamily: 'Mulish-Regular',
         color: COLORS.grey
@@ -59,7 +60,7 @@ export default styles = StyleSheet.create({
         gap: 15
     },
 
-    icon: {
+    playlistIcon: {
         fontSize: 25,
         color: COLORS.white
     },
