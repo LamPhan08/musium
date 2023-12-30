@@ -63,7 +63,7 @@ const Favorites = ({ navigation }) => {
   const loadData = async () => {
     const result = await getFavoriteSongs(user._id);
 
-    if (Object.keys(result).length !== 0) {
+    if (result.length !== 0) {
       setFavoriteSongs(await CheckSongHasMp3(result.songs));
     }
     else {

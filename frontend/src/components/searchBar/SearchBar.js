@@ -4,7 +4,7 @@ import Feather from "react-native-vector-icons/Feather";
 import Entypo from "react-native-vector-icons/Entypo";
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { COLORS } from "../../constants/colors";
-
+import styles from './searchBar.style'
 
 const SearchBar = ({ searchText, setSearchText, setFocus, handleFind }) => {
   const inputRef = useRef()
@@ -20,7 +20,7 @@ const SearchBar = ({ searchText, setSearchText, setFocus, handleFind }) => {
     <View style={styles.searchBarcontainer}>
       <Ionicons
         name="search"
-        style={styles.searchIcon}
+        style={styles.searchIcon} 
       />
       <TextInput
         ref={inputRef}
@@ -46,33 +46,3 @@ const SearchBar = ({ searchText, setSearchText, setFocus, handleFind }) => {
 };
 
 export default SearchBar;
-
-const styles = StyleSheet.create({
-  searchBarcontainer: {
-    flexDirection: 'row',
-    borderRadius: 20,
-    alignItems: "center",
-    backgroundColor: COLORS.lightBlack,
-    paddingHorizontal: 10,
-    gap: 5,
-    flex: 1
-  },
-
-  searchIcon: {
-    fontSize: 18,
-    color: COLORS.grey
-  },
-
-  input: {
-    fontFamily: 'Mulish-Regular',
-    color: COLORS.text,
-    flex: 1,
-    height: 40,
-    fontSize: 13,
-  },
-
-  crossIcon: {
-    fontSize: 22,
-    color: COLORS.grey,
-  }
-});

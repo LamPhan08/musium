@@ -59,7 +59,7 @@ export default styles = StyleSheet.create({
     backgroundColor: COLORS.lightBlack,
     borderRadius: 12,
     alignItems: 'center',
-    // justifyContent: 'center',
+    justifyContent: 'center',
     position: 'absolute',
     top: height / 2 - (height * 0.5) / 2,
     left: width / 2 - (width * 0.8) / 2,

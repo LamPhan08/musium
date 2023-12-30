@@ -1,25 +1,36 @@
-import React, { useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import LinearGradient from 'react-native-linear-gradient';
-import { Image, ScrollView, Text, View, TouchableOpacity, Pressable, PermissionsAndroid, Modal } from "react-native";
+import { Image, ScrollView, Text, View, TouchableOpacity, PermissionsAndroid, ToastAndroid, SafeAreaView, ActivityIndicator } from "react-native";
 import avatar from '../../../assets/images/avatar.png'
 import styles from './profile.style'
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { tracks } from '../../../assets/data/tracks';
 import Feather from 'react-native-vector-icons/Feather';
-import ModalPlayList from '../../components/modalPlayList/ModalPlayList';
-import { Button } from 'react-native-paper';
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { COLORS } from '../../constants/colors';
+import { useSelector, useDispatch } from 'react-redux';
+import { setBottomTabRouteName } from '../../redux/songSlice';
+import ModalAddPlayList from '../../components/modalAddPlayList/ModalAddPlayList';
+import ProfilePlaylistCard from '../../components/profilePlaylistCard/ProfilePlaylistCard';
+import { getPermissions } from '../../utils/getPermission';
+import { getUserPlaylists } from '../../api/playlist';
+import { useFocusEffect } from '@react-navigation/native';
 
 const Profile = ({ navigation }) => {
-  const [isModelVisible, setModelVisible] = useState(false)
-  const requestPermission = async()=>{
-    const granted = await PermissionsAndroid.requestMultiple([
-      PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-      PermissionsAndroid.PERMISSIONS.READ_MEDIA_AUDIO,
-    ]);
-    console.log("granted", granted)
-    return granted
+  const { user } = useSelector(state => state.song);
+  const dispatch = useDispatch();
+  const [showPopup, setShowPopup] = useState(false)
+  const [playlists, setPlaylists] = useState();
+
+  const handleNavigateDownloadedSongs = async () => {
+    const granted = await getPermissions();
+
+    if (granted[PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE] === 'granted' || granted[PermissionsAndroid.PERMISSIONS.READ_MEDIA_AUDIO] === 'granted') {
+      navigation.navigate("Downloaded")
+    }
+    else {
+      ToastAndroid.show('Bạn chưa cấp quyền!', ToastAndroid.BOTTOM)
+    }
   }
 
   // Function to handle logout
@@ -36,136 +47,128 @@ const Profile = ({ navigation }) => {
     }
   };
 
-  return (
-    <LinearGradient colors={["#040306", "#040306"]} style={{ flex: 1 }}>
-      <ScrollView style={{ marginTop: 20 }}>
-        <View style={{ padding: 12 }}>
-          <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
-            <Image
-              style={styles.avatar}
-              source={avatar}
-            />
-            <View>
-              <Text
-                style={{ color: "white", fontSize: 16, fontWeight: "bold" }}
-              >
-                John Doe
-              </Text>
-              <Text style={{ color: "gray", fontSize: 16, fontWeight: "bold" }}>
-                johndoe@gmail.com
-              </Text>
-            </View>
-          </View>
-        </View>
+  const loadData = async () => {
+    const result = await getUserPlaylists(user._id);
 
-        <Button
-          title="Learn More"
-          color='white'
-          style={{backgroundColor:"lightblue"}}
-          onPress={handleLogout}
-        />
+    if (result.length !== 0) {
+      setPlaylists(result.playlists)
+    }
+    else {
+      setPlaylists([])
+    }
+  }
 
-        <View style={styles.profile}>
-          <TouchableOpacity
-            onPress={() => {
-              // handle onPress
-              navigation.navigate("EditProfile")
-            }}>
-            <View style={styles.profileAction}>
-              <Text style={styles.profileActionText}> Chỉnh sửa </Text>
-
-              <FontAwesome color="#fff" name="edit" size={16} />
-            </View>
-          </TouchableOpacity>
-        </View>
-
-
-        <View style={{ flexDirection: 'row', alignItems: "center" }}>
-          <Pressable
-            onPress={async() => {
-              const permissionStatus = await requestPermission()
-              if(permissionStatus[PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE] === 'granted' || permissionStatus[PermissionsAndroid.PERMISSIONS.READ_MEDIA_AUDIO] === 'granted' )
-              {
-                navigation.navigate("Downloaded")
-              }
-            }}
-            style={{ width: 130, height: 100, borderRadius: 5, backgroundColor: "#222222", margin: 10, padding: 15 }}>
-            <Feather name="arrow-down-circle" size={30} color="#06A0B5" />
-            <Text style={{ marginTop: 15, color: "white", fontSize: 15, fontWeight: "bold" }}>Đã tải</Text>
-          </Pressable>
-
-          {/* <Pressable
-            onPress={async() => {
-              const permissionStatus = await requestPermission()
-              if(permissionStatus[PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE] === 'granted' || permissionStatus[PermissionsAndroid.PERMISSIONS.READ_MEDIA_AUDIO] === 'granted' )
-              {
-                navigation.navigate("LocalAudio")
-              }
-              
-            }}
-            style={{ width: 130, height: 100, borderRadius: 5, backgroundColor: "#222222", margin: 10, padding: 15 }}>
-            <FontAwesome name="folder" size={30} color="#D4AC0D" />
-            <Text style={{ marginTop: 10, color: "white", fontSize: 15, fontWeight: "bold" }}>Audio trong máy</Text>
-          </Pressable> */}
-        </View>
-
-
-
-        <View style={{ flexDirection: 'row', alignItems: "center" }}>
-          <Text
-            style={{
-              color: "white",
-              fontSize: 20,
-              fontWeight: "500",
-              marginHorizontal: 12,
-              marginTop: 10,
-              flex: 1
-            }}
-          >
-            Playlist của bạn
-          </Text>
-          <TouchableOpacity onPress={() => {
-            // navigation.navigate("AddPlayList")
-            setModelVisible(true)
-          }}>
-            <FeatherIcon name="plus" color="#fff" size={30} />
-          </TouchableOpacity>
-
-          <Modal
-          transparent={true}
-          animationType='fade'
-          visible={isModelVisible}
-          onRequestClose={()=> setModelVisible(false)}
-          >
-              <ModalPlayList 
-              changeModalVisible={()=>setModelVisible(false)}/>
-          </Modal>
-
-        </View>
-
-
-        <View style={{ padding: 15 }}>
-          {tracks.map((item, index) => (
-            <View style={{ flexDirection: "row", alignItems: "center", gap: 8, marginVertical: 10 }} key={index}>
-              <Image
-                source={{
-                  uri:
-                    item?.album?.images[0]?.url ||
-                    "https://images.pexels.com/photos/3944091/pexels-photo-3944091.jpeg?auto=compress&cs=tinysrgb&w=800",
-                }}
-                style={{ width: 50, height: 50, borderRadius: 4 }}
-              />
-              <View>
-                <Text style={{ color: "white" }}>{item?.name}</Text>
-
-              </View>
-            </View>
-          ))}
-        </View>
-
-      </ScrollView>
-    </LinearGradient>
+  useFocusEffect(
+    useCallback(() => {
+      loadData();
+    }, [])
   )
+
+  if (playlists) {
+    return (
+      <LinearGradient
+        colors={[COLORS.primary, COLORS.background]}
+        style={styles.profileContainer}
+        locations={[0, 0.35]}
+      >
+        <View style={styles.darkenView}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            decelerationRate='fast'
+          >
+            <View style={styles.userWrapper}>
+              <Image
+                style={styles.avatar}
+                source={avatar}
+              />
+              <View style={styles.usernameWrapper}>
+                <Text style={styles.username} numberOfLines={1}>
+                  {user.username}
+                </Text>
+  
+                <Text style={styles.hello}>Xin chào!</Text>
+              </View>
+  
+              <TouchableOpacity
+                onPress={() => {
+                  // handle onPress
+                  navigation.navigate("EditProfile")
+                }}
+                style={styles.editProfileBtn}
+              >
+                <Text style={styles.profileActionText}>Sửa hồ sơ</Text>
+  
+                <Ionicons name='chevron-forward' style={styles.editProfileIcon} />
+              </TouchableOpacity>
+            </View>
+  
+            <View style={styles.libraryWrapper}>
+              <Text style={styles.heading}>Thư viện</Text>
+  
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                decelerationRate='fast'
+                contentContainerStyle={{ gap: 10 }}
+              >
+  
+                <TouchableOpacity
+                  onPress={() => {
+                    dispatch(setBottomTabRouteName('FavoritesStack'))
+                    navigation.navigate('FavoritesStack')
+                  }}
+                  style={styles.libraryItem}>
+                  <Ionicons name='heart-outline' size={30} color={COLORS.primary} />
+                  <Text style={styles.libraryItemText}>Yêu thích</Text>
+                </TouchableOpacity>
+  
+                <TouchableOpacity
+                  onPress={handleNavigateDownloadedSongs}
+                  style={styles.libraryItem}>
+                  <Feather name="arrow-down-circle" size={30} color="#5D3FD3" />
+                  <Text style={styles.libraryItemText}>Đã tải</Text>
+                </TouchableOpacity>
+              </ScrollView>
+            </View>
+  
+            <View style={styles.myPlaylistWrapper}>
+              <Text style={styles.heading}>
+                Playlist của bạn
+              </Text>
+  
+              <ModalAddPlayList showPopup={showPopup} setShowPopup={setShowPopup} loadData={loadData}/>
+  
+              <TouchableOpacity style={styles.addPlaylistBtn} onPress={() => setShowPopup(true)}>
+                <View style={styles.addIconWrapper}>
+                  <FeatherIcon name="plus" style={styles.addIcon} />
+                </View>
+  
+                <View style={styles.textWrapper}>
+                  <Text style={styles.addPlaylistBtnText}>Tạo Playlist mới</Text>
+  
+                  <Text style={styles.toolTip}>Chỉ với vài bước để tạo Playlist</Text>
+                </View>
+              </TouchableOpacity>
+  
+              {playlists.map((playlist, index) => {
+                return (
+                  <ProfilePlaylistCard key={index} navigation={navigation} playlist={playlist}/>
+                )
+              })}
+            </View>
+  
+          </ScrollView>
+        </View>
+      </LinearGradient>
+    )
+  }
+  else {
+    return (
+      <SafeAreaView style={styles.loadingContainer}>
+        <ActivityIndicator size='large' color={COLORS.primary}/>
+      </SafeAreaView>
+    )
+  }
 }
 
 export default Profile

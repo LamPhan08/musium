@@ -16,11 +16,11 @@ const OptionsBottomSheet = ({ song, openBottomSheet, setOpenBottomSheet, loadDat
   // console.log(song)
 
   const handleAdd = async () => {
-    ToastAndroid.show(`Đã thêm ${song.title} vào danh sách yêu thích của bạn!`, ToastAndroid.BOTTOM)
-
     setOpenBottomSheet(!openBottomSheet)
-
+    
     await addSongToFavorites(user._id, song);
+
+    ToastAndroid.show(`Đã thêm ${song.title} vào danh sách yêu thích của bạn!`, ToastAndroid.BOTTOM)
 
     if (loadData) {
       loadData()
@@ -29,12 +29,11 @@ const OptionsBottomSheet = ({ song, openBottomSheet, setOpenBottomSheet, loadDat
 
   const handleRemove = async () => {
     // setIsLoved(!isLoved)
-
-    ToastAndroid.show(`Đã gỡ ${song.title} khỏi danh sách yêu thích của bạn!`, ToastAndroid.BOTTOM)
-
     setOpenBottomSheet(!openBottomSheet)
-
+    
     await removeSongFromFavorites(user._id, song.encodeId)
+    
+    ToastAndroid.show(`Đã gỡ ${song.title} khỏi danh sách yêu thích của bạn!`, ToastAndroid.BOTTOM)
 
     if (loadData) {
       loadData()
