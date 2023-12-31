@@ -85,28 +85,22 @@ const LoginScreen = ({ navigation }) => {
         // Extract user information
         const user = userCredential.user;
         console.log(user);
+        
+        const loginResponse = await mongoAPI.post(`/auth/login`,
+            {
+                email: user.email,
+                password: '123456'
+            }
+        );
+        console.log("Login Response:", loginResponse.data);
+        const userData = loginResponse.data;
+        await AsyncStorage.setItem('userData', JSON.stringify(userData));
+
+        dispatch(setUser(userData.data))
 
         // Sign-in the user with the credential
         return auth().signInWithCredential(googleCredential);
     }
-    // const signInWithGoogle = async () => {
-    //     try {
-    //       await GoogleSignin.hasPlayServices();
-    //       const userInfo = await GoogleSignin.signIn();
-    //       console.log('User Info:', userInfo);
-    //       // Handle the successful login here
-    //     } catch (error) {
-    //       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-    //         console.log('User cancelled the login process');
-    //       } else if (error.code === statusCodes.IN_PROGRESS) {
-    //         console.log('Signin in progress');
-    //       } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-    //         console.log('Play services not available or outdated');
-    //       } else {
-    //         console.log('Something went wrong:', error);
-    //       }
-    //     }
-    //   };
 
     async function onFacebookButtonPress() {
         try {
@@ -153,12 +147,8 @@ const LoginScreen = ({ navigation }) => {
                 password
             }
         );
-        // console.warn(`${email}` + ' ' + `${password}`)
         console.log("Login Response:", loginResponse.data);
-        // Assuming your login response contains user data, adjust the following code accordingly
         const userData = loginResponse.data;
-
-        // Store user data in AsyncStorage
         await AsyncStorage.setItem('userData', JSON.stringify(userData));
 
         dispatch(setUser(userData.data))
@@ -269,7 +259,6 @@ const LoginScreen = ({ navigation }) => {
                             gap: 20
                         }}>
                         <TouchableOpacity
-                            // onPress={() => { }}
                             onPress={
                                 () => onGoogleButtonPress()
                                 .then(() => {
@@ -292,28 +281,11 @@ const LoginScreen = ({ navigation }) => {
                             <GoogleSVG height={24} width={24} />
                         </TouchableOpacity>
                         <TouchableOpacity
-                            // onPress={() => { }}
-                            onPress={() => 
-                                // onFacebookButtonPress().
-                                // then(() => 
-                                //     {
-                                //         console.log('Signed in with Facebook!');
-                                //         navigation.navigate('App')
-                                //     })
-                                // .catch(() => console.log("Sign in with facebook failed"))
+                            onPress={() =>
                                 {
-                                    // setFacebookLoginInProgress(true);
                                     onFacebookButtonPress()
-                                        .then(() => {
-                                            
-                                            // // Conditionally navigate only if Facebook login is not in progress
-                                            // if (!facebookLoginInProgress) {
-                                            //     // navigation.navigate('App');
-                                            //     // console.log('Signed in with Facebook!');
-                                            // }
-                                        })
+                                        .then(() => {})
                                         .catch(() => console.log('Sign in with Facebook failed'))
-                                        // .finally(() => setFacebookLoginInProgress(false));
                                 }
                             }
                             style={{

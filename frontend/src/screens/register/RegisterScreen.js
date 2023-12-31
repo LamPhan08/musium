@@ -94,6 +94,7 @@ const RegisterScreen = ({navigation}) => {
           username: user.displayName,
           email: user.email,
           password: '123456',
+          photo: 'https://res.cloudinary.com/db3qu4bzj/image/upload/v1704011566/avatar_hqflo5.png'
       });
   
       // Assuming the API response has a 'status' property
@@ -155,6 +156,7 @@ const RegisterScreen = ({navigation}) => {
                 username: user.displayName,
                 email: user.email,
                 password: '123456',
+                photo: 'https://res.cloudinary.com/db3qu4bzj/image/upload/v1704011566/avatar_hqflo5.png'
             });
         
             // Assuming the API response has a 'status' property
@@ -239,6 +241,7 @@ const RegisterScreen = ({navigation}) => {
             username,
             email,
             password,
+            photo: 'https://res.cloudinary.com/db3qu4bzj/image/upload/v1704011566/avatar_hqflo5.png'
           }
       );
       const loginResponse = await mongoAPI.post(`/auth/login`, 
