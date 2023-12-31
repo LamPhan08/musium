@@ -21,6 +21,8 @@ import Animated, { SlideInDown, SlideOutDown, FadeIn, FadeOut } from "react-nati
 import ImagePicker from 'react-native-image-crop-picker'
 import { useSelector, useDispatch } from 'react-redux';
 import { mongoAPI } from '../../axios/axios';
+import { setUser } from '../../redux/songSlice';
+
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
 
@@ -31,16 +33,12 @@ const EditProfile = ({ navigation }) => {
   const [isOpen, setOpen] = useState(false);
   const { user } = useSelector(state => state.song);
   const [formData, setFormData] = useState({
-    name: '',
+    username: '',
     // password: '',
     photo: 'https://reactnative.dev/img/tiny_logo.png'
   })
 
-  const [imgSource, setImgSource] = useState({
-    uri:"",
-    type:'',
-    name:"",
-  })
+  const dispatch = useDispatch()
 
   const handleInputChange = (text, fieldName) => {
     // Create a new object by spreading the existing formData
@@ -56,13 +54,19 @@ const EditProfile = ({ navigation }) => {
     const handleSubmit = async e => {
       const updateRespone = await mongoAPI.put(`/user/updateprofile/${user._id}`,
             {
-                username: formData.name,
+                username: formData.username,
                 photo: formData.photo
             }
       )
-      console.log("name", formData.name)
-      console.log("photo", formData.photo)
+      // console.log("name", formData.username)
+      // console.log("photo", formData.photo)
       console.log("Update Response:", updateRespone.data);
+      // const userData = updateRespone.data;
+
+      // // Store user data in AsyncStorage
+      // await AsyncStorage.setItem('userData', JSON.stringify(userData));
+
+      // dispatch(setUser(userData))
     }
 
   const choosePhotoFromLibrary =  () => {
@@ -129,11 +133,27 @@ const EditProfile = ({ navigation }) => {
     // }
   };
 
+  useEffect(() => {
+
+    const getUser = async () => {
+      try {
+        
+        const getDataRespone = await mongoAPI.get(`/user/getuser/${user._id}`)
+        setFormData({...getDataRespone.data})
+
+      } catch (error) {
+        console.error(error.message)
+      }
+    };
+
+    getUser();
+  }, []);
+
   return (
     <LinearGradient colors={["#040306", "#040306"]} style={{ flex: 1 }}  >
       <View style={{ flexDirection: "row", justifyContent: "center" }}>
         <TouchableOpacity
-          onPress={() => navigation.goBack()}
+          onPress={() => navigation.replace('App')}
           style={{ marginHorizontal: 10, flex: 0.85 }}
         >
           <Ionicons name="arrow-back" size={24} color="white" />
@@ -179,8 +199,8 @@ const EditProfile = ({ navigation }) => {
           placeholderTextColor="#666666"
           autoCorrect={false}
           style={styles.textInput}
-          value={formData.name}
-          onChangeText={(text) => handleInputChange(text, 'name')}
+          value={formData.username}
+          onChangeText={(text) => handleInputChange(text, 'username')}
         />
       </View>
 

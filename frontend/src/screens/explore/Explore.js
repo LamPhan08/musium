@@ -12,11 +12,16 @@ import NewReleaseRanking from '../../components/newReleaseRanking/NewReleaseRank
 import { useSelector, useDispatch } from 'react-redux'
 import { setBottomTabRouteName } from '../../redux/songSlice'
 import { getExploreData } from '../../api/explore'
-
+import { mongoAPI } from '../../axios/axios'
 const Explore = ({ navigation }) => {
   const [homeData, setHomeData] = useState([])
   const { user } = useSelector(state => state.song)
   const dispatch = useDispatch()
+  const [formData, setFormData] = useState({
+    username: '',
+    // password: '',
+    photo: 'https://reactnative.dev/img/tiny_logo.png'
+  })
 
   const handleNavigateSearch = () => {
     navigation.navigate('Search')
@@ -54,6 +59,19 @@ const Explore = ({ navigation }) => {
         const result = await getExploreData()
 
         setHomeData(result.data.items)
+
+        const getUser = async () => {
+          try {
+            
+            const getDataRespone = await mongoAPI.get(`/user/getuser/${user._id}`)
+            setFormData({...getDataRespone.data})
+    
+          } catch (error) {
+            console.error(error.message)
+          }
+        };
+    
+         getUser();
       }
     )()
   }, [])
@@ -80,13 +98,15 @@ const Explore = ({ navigation }) => {
               dispatch(setBottomTabRouteName('Profile'))
               navigation.navigate('Profile')
             }}>
-            <Image source={avatar} style={styles.avatar} />
+            <Image source={{
+                  uri: formData.photo,
+                }} style={styles.avatar} />
           </TouchableOpacity>
 
           <View style={styles.nameContainer}>
             <Text style={styles.welcome}>Xin chào!</Text>
 
-            <Text style={styles.name}>Username</Text>
+            <Text style={styles.name}>{formData.username}</Text>
           </View>
 
           <TouchableOpacity onPress={handleNavigateSearch}>

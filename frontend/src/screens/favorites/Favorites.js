@@ -1,7 +1,7 @@
 
 import Entypo from 'react-native-vector-icons/Entypo';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import React, { useState, useCallback, useRef } from "react";
+import React, { useState, useCallback, useRef, useEffect } from "react";
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import {
   ActivityIndicator,
@@ -34,9 +34,16 @@ import CheckSongHasMp3 from '../../utils/checkSongHasMp3';
 import TrackPlayer from 'react-native-track-player';
 import { useDispatch } from 'react-redux';
 import { setSongList } from '../../redux/songSlice';
+import { mongoAPI } from '../../axios/axios';
 
 const Favorites = ({ navigation }) => {
   const [favoriteSongs, setFavoriteSongs] = useState();
+
+  const [formData, setFormData] = useState({
+    username: '',
+    // password: '',
+    photo: 'https://reactnative.dev/img/tiny_logo.png'
+  })
 
   const { user } = useSelector(state => state.song);
   const dispatch = useDispatch()
@@ -97,6 +104,22 @@ const Favorites = ({ navigation }) => {
       loadData();
     }, [])
   );
+
+  useEffect(() => {
+
+    const getUser = async () => {
+      try {
+        
+        const getDataRespone = await mongoAPI.get(`/user/getuser/${user._id}`)
+        setFormData({...getDataRespone.data})
+
+      } catch (error) {
+        console.error(error.message)
+      }
+    };
+
+     getUser();
+  }, []);
 
   return (
     <SafeAreaView style={styles.favoriteSongsContainer}>
@@ -247,9 +270,12 @@ const Favorites = ({ navigation }) => {
                 <Text style={styles.favoritesTitle}>Bài hát đã thích</Text>
 
                 <View style={styles.userWrapper}>
-                  <Image source={avatar} style={styles.avatar} />
+                  <Image source={{
+                  uri: formData.photo,
+                }} 
+                style={styles.avatar} />
 
-                  <Text style={styles.username}>{user.username}</Text>
+                  <Text style={styles.username}>{formData.username}</Text>
 
                   {favoriteSongs.length !== 0 &&
                     <TouchableOpacity onPress={handlePlay} style={styles.playBtn}>

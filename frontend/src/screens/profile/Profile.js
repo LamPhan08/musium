@@ -15,12 +15,18 @@ import ProfilePlaylistCard from '../../components/profilePlaylistCard/ProfilePla
 import { getPermissions } from '../../utils/getPermission';
 import { getUserPlaylists } from '../../api/playlist';
 import { useFocusEffect } from '@react-navigation/native';
+import { mongoAPI } from '../../axios/axios';
 
 const Profile = ({ navigation }) => {
   const { user } = useSelector(state => state.song);
   const dispatch = useDispatch();
   const [showPopup, setShowPopup] = useState(false)
   const [playlists, setPlaylists] = useState();
+  const [formData, setFormData] = useState({
+    username: '',
+    // password: '',
+    photo: 'https://reactnative.dev/img/tiny_logo.png'
+  })
 
   const handleNavigateDownloadedSongs = async () => {
     const granted = await getPermissions();
@@ -64,6 +70,22 @@ const Profile = ({ navigation }) => {
     }, [])
   )
 
+  useEffect(() => {
+
+    const getUser = async () => {
+      try {
+        
+        const getDataRespone = await mongoAPI.get(`/user/getuser/${user._id}`)
+        setFormData({...getDataRespone.data})
+
+      } catch (error) {
+        console.error(error.message)
+      }
+    };
+
+     getUser();
+  }, []);
+
   if (playlists) {
     return (
       <LinearGradient
@@ -80,12 +102,14 @@ const Profile = ({ navigation }) => {
               <TouchableOpacity onPress={handleLogout}>
               <Image
                 style={styles.avatar}
-                source={avatar}
+                source={{
+                  uri: formData.photo,
+                }}
               />
               </TouchableOpacity>
               <View style={styles.usernameWrapper}>
                 <Text style={styles.username} numberOfLines={1}>
-                  {user.username}
+                  {formData.username}
                 </Text>
   
                 <Text style={styles.hello}>Xin chào!</Text>
