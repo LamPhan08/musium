@@ -20,7 +20,7 @@ export default styles = StyleSheet.create({
 
     songDetails: {
         flex: 1,
-        gap: 3,
+        gap: 5,
     },
 
     songTitle: {
