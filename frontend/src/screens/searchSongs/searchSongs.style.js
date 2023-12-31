@@ -23,5 +23,17 @@ export default styles = StyleSheet.create({
 
     songList: {
         paddingHorizontal: 15,
+    },
+
+    noResultsWrapper: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+
+    noResults: {
+        fontFamily: 'Mulish-Bold',
+        fontSize: 16,
+        color: COLORS.primary
     }
 })

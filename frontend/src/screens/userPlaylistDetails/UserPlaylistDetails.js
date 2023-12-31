@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef, useState, useEffect, useCallback } from 'react'
 import { View, Text, TouchableOpacity, Animated, ScrollView, Image, ImageBackground, Dimensions, FlatList, ActivityIndicator } from 'react-native'
 import logo from '../../../assets/images/logo.png'
 import avatar from '../../../assets/images/avatar.png'
@@ -13,18 +13,25 @@ import TrackPlayer from 'react-native-track-player'
 import { setSongList } from '../../redux/songSlice'
 import { COLORS } from '../../constants/colors'
 import PlaylistBottomSheet from '../../components/playlistBottomSheet/PlaylistBottomSheet'
+import { getSpecificPlaylist } from '../../api/playlist'
+import { useFocusEffect } from '@react-navigation/native';
+import UserPlaylistSongCard from '../../components/userPlaylistSongCard/UserPlaylistSongCard'
 
 const { width } = Dimensions.get('window')
 
 const UserPlaylistDetails = ({ navigation, route }) => {
   const { playlist, userId } = route.params
+  const [playlistData, setPlaylistData] = useState(playlist)
   const [showBottomSheet, setShowBottomSheet] = useState(false)
-  const [songs, setSongs] = useState([])
+  const [focus, setFocus] = useState(false)
+  const [songs, setSongs] = useState()
+
+  const dispatch = useDispatch()
 
   const scrollY = useRef(new Animated.Value(0)).current;
 
   const opacity = scrollY.interpolate({
-    inputRange: [width * 0.5, 500],
+    inputRange: [width * 0.5, 250],
     outputRange: [0, 1],
     extrapolate: 'clamp',
   });
@@ -41,7 +48,7 @@ const UserPlaylistDetails = ({ navigation, route }) => {
   )
 
   const handlePlay = async () => {
-    const queue = EditArrayForTrackPlayer(playlist.songs)
+    const queue = EditArrayForTrackPlayer(songs)
 
     dispatch(setSongList(queue))
 
@@ -53,19 +60,34 @@ const UserPlaylistDetails = ({ navigation, route }) => {
   }
 
   const handleNavigateSearchSongs = () => {
-
+    navigation.navigate('SearchSongs', {songs: songs})
   }
 
   const loadData = async () => {
+    const result = await getSpecificPlaylist(userId, playlist._id)
 
+     setPlaylistData(result)
+
+     if (result.songs.length !== 0) {
+      setSongs(await CheckSongHasMp3(result.songs));
+    }
+    else {
+      setSongs([])
+    }
   }
 
+  useFocusEffect(
+    useCallback(() => {
+      loadData()
+    }, [])
+  )
 
+  
 
   return (
     <ImageBackground
-      source={playlist.songs.length !== 0
-        ? { uri: playlist.songs[0].thumbnailM }
+      source={playlistData.songs.length !== 0
+        ? { uri: playlistData.songs[0].thumbnailM }
         : null
       }
       style={styles.playerDetailsContainer}
@@ -76,7 +98,7 @@ const UserPlaylistDetails = ({ navigation, route }) => {
         style={[
           styles.darkView,
           {
-            backgroundColor: playlist.songs.length !== 0
+            backgroundColor: playlistData.songs.length !== 0
               ? 'rgba(0, 0, 0, 0.5)'
               : 'transparent'
           }]}>
@@ -86,7 +108,7 @@ const UserPlaylistDetails = ({ navigation, route }) => {
           </TouchableOpacity>
 
           <Animated.View style={[styles.animatedView, { opacity: opacity }]}>
-            <Text style={styles.playlistHeaderTitle} numberOfLines={1}>{playlist?.title}</Text>
+            <Text style={styles.playlistHeaderTitle} numberOfLines={1}>{playlistData?.title}</Text>
           </Animated.View>
 
           <TouchableOpacity onPress={() => setShowBottomSheet(!showBottomSheet)}>
@@ -100,11 +122,12 @@ const UserPlaylistDetails = ({ navigation, route }) => {
             decelerationRate='fast'
             onScroll={handleScroll}
             scrollEventThrottle={16}
+            contentContainerStyle={{paddingBottom: 10}}
           >
             <View style={styles.playlistIn4Wrapper}>
               <Animated.Image
-                source={playlist.songs.length !== 0
-                  ? { uri: playlist.songs[0].thumbnailM }
+                source={playlistData.songs.length !== 0
+                  ? { uri: playlistData.songs[0].thumbnailM }
                   : logo
                 }
                 style={[
@@ -113,14 +136,14 @@ const UserPlaylistDetails = ({ navigation, route }) => {
                     width: imageSize, height: imageSize
                   }]} />
 
-              <Text style={styles.playlistTitle}>{playlist.title}</Text>
+              <Text style={styles.playlistTitle}>{playlistData.title}</Text>
 
               <View style={styles.userWrapper}>
                 <Image source={avatar} style={styles.avatar} />
 
-                <Text style={styles.username}>{playlist.creator}</Text>
+                <Text style={styles.username}>{playlistData.creator}</Text>
 
-                {playlist.songs.length !== 0 &&
+                {playlistData.songs.length !== 0 &&
                   <TouchableOpacity onPress={handlePlay} style={styles.playBtn}>
                     <Ionicons name='play' style={styles.playIcon} />
                   </TouchableOpacity>
@@ -128,11 +151,11 @@ const UserPlaylistDetails = ({ navigation, route }) => {
               </View>
             </View>
 
-            {playlist.songs.length !== 0
+            {playlistData.songs.length !== 0
               ?
               <View style={styles.songListWrapper}>
                 <View style={styles.btnWrapper}>
-                  <Text style={styles.playlistSongTotal}>{playlist.songs.length} bài</Text>
+                  <Text style={styles.playlistSongTotal}>{playlistData.songs.length} bài</Text>
 
                   <TouchableOpacity onPress={handleNavigateSearchSongs}>
                     <Ionicons name='search' style={styles.searchIcon} />
@@ -141,7 +164,7 @@ const UserPlaylistDetails = ({ navigation, route }) => {
 
                 <FlatList
                   style={styles.songList}
-                  data={favoriteSongs}
+                  data={songs}
                   initialNumToRender={20}
                   maxToRenderPerBatch={10}
                   updateCellsBatchingPeriod={50}
@@ -149,7 +172,13 @@ const UserPlaylistDetails = ({ navigation, route }) => {
                   scrollEnabled={false}
                   renderItem={({ item, index }) => {
                     return (
-                      <SongCard song={item} key={index} playlistSongs={EditArrayForTrackPlayer(favoriteSongs)} index={index} loadData={loadData} />
+                      <UserPlaylistSongCard 
+                      song={item} 
+                      key={index} 
+                      playlistSongs={EditArrayForTrackPlayer(songs)} 
+                      index={index} 
+                      loadData={loadData} 
+                      playlistId={playlist._id}/>
                     )
                   }}
                 />
@@ -166,7 +195,7 @@ const UserPlaylistDetails = ({ navigation, route }) => {
           : <View style={styles.loadingContainer}>
             <ActivityIndicator
               size='large'
-              color={playlist.songs.length !== 0
+              color={playlistData.songs.length !== 0
                 ? COLORS.white
                 : COLORS.primary
               } />
@@ -178,7 +207,7 @@ const UserPlaylistDetails = ({ navigation, route }) => {
         navigation={navigation}
         showBottomSheet={showBottomSheet}
         setShowBottomSheet={setShowBottomSheet}
-        playlist={playlist}
+        playlist={playlistData}
         userId={userId}
       />
     </ImageBackground>

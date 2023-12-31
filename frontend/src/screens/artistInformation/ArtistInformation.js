@@ -114,7 +114,7 @@ const ArtistInformation = ({ navigation, route }) => {
                           </TouchableOpacity>
                         </View>
 
-                        <FeaturedSongs navigation={navigation} featuredSongs={mp3FeaturedSongs.slice(0, 5)} />
+                        <FeaturedSongs navigation={navigation} featuredSongs={mp3FeaturedSongs} />
                       </View>
                     )
                   }

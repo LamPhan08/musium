@@ -36,9 +36,9 @@ const ArtistPlaylistSlider = ({ navigation, playlistsData }) => {
                 // style={{paddingHorizontal: 15}}
                 decelerationRate='fast'
             >
-                {playlistsData.items.slice(0, 5).map((playlistItem, index) => {
+                {playlistsData.items.map((playlistItem, index) => {
                     return (
-                        <TouchableOpacity style={[styles.playlistPreviewWrapper, {marginRight: index === playlistsData.items.slice(0, 5).length - 1 ? 15 : 0}]} key={index} onPress={() => handleOpenPlaylist(playlistItem)}>
+                        <TouchableOpacity style={[styles.playlistPreviewWrapper, {marginRight: index === playlistsData.items.length - 1 ? 15 : 0}]} key={index} onPress={() => handleOpenPlaylist(playlistItem)}>
                             <Image source={{ uri: playlistItem.thumbnailM }} style={styles.thumbnail} />
 
                             <Text style={styles.playlistTitle} numberOfLines={2}>
@@ -50,13 +50,13 @@ const ArtistPlaylistSlider = ({ navigation, playlistsData }) => {
                     )
                 })}
 
-                {playlistsData.items.length > 5 &&
+                {/* {playlistsData.items.length > 5 &&
                     <TouchableOpacity style={styles.viewAllBtn} onPress={handleViewAll}>
                         <AntDesign name='arrowright' style={styles.viewAllBtnIcon}/>
 
                         <Text style={styles.btnText}>Xem tất cả</Text>
                     </TouchableOpacity>
-                }
+                } */}
             </ScrollView>
         </View>
     )

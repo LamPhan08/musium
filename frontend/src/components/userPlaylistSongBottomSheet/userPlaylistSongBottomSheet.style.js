@@ -1,7 +1,7 @@
-import {StyleSheet} from 'react-native'
-import { COLORS } from '../../constants/colors'
+import { StyleSheet } from "react-native";
+import { COLORS } from "../../constants/colors";
 
-export default styles = StyleSheet.create({
+export default styles  = StyleSheet.create({
     backdrop: {
         ...StyleSheet.absoluteFillObject,
         backgroundColor: "rgba(0, 0, 0, 0.3)",

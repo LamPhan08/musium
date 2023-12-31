@@ -16,7 +16,11 @@ const PlaylistBottomSheet = ({ navigation, showBottomSheet, setShowBottomSheet, 
         setShowBottomSheet(!showBottomSheet)
     }
 
-    
+    const handleChangeTitle = async () => {
+        navigation.navigate('ChangePlaylistTitle', {playlist: playlist, userId: userId})
+
+        setShowBottomSheet(!showBottomSheet)
+    }
     
     return (
         <Modal
@@ -48,7 +52,7 @@ const PlaylistBottomSheet = ({ navigation, showBottomSheet, setShowBottomSheet, 
                 </View>
 
                 <View style={styles.optionsWrapper}>
-                    <TouchableOpacity style={styles.optionBtn}>
+                    <TouchableOpacity style={styles.optionBtn} onPress={handleChangeTitle}>
                         <Feather name='edit-2' style={styles.playlistIcon} />
                         
                         <Text style={styles.optionText}>Chỉnh sửa Playlist</Text>

@@ -15,6 +15,7 @@ import { COLORS } from '../../constants/colors'
 import LottieView from 'lottie-react-native'
 import playPauseAnimation from '../../../assets/images/PlayPauseAnimation.json'
 import OptionsBottomSheet from '../../components/optionsBottomSheet/OptionsBottomSheet'
+import PlaylistListModal from '../../components/playlistListModal/PlaylistListModal'
 import { getFavoriteSongs } from '../../api/favoriteSongs'
 import { Shuffle } from '../../utils/shuffle'
 
@@ -26,6 +27,7 @@ const PlayerDetails = ({ navigation }) => {
   const [shuffle, setShuffle] = useState(shuffledSongList.length !== 0 ? true : false)
   const [openPlaylist, setOpenPlaylist] = useState(false)
   const [showBottomSheet, setShowBottomSheet] = useState(false)
+  const [showAddToPlaylist, setShowAddToPlaylist] = useState(false)
   const [isLiked, setIsLiked] = useState(false)
   
   const dispatch = useDispatch()
@@ -271,7 +273,7 @@ const PlayerDetails = ({ navigation }) => {
           </View>
 
           <View style={styles.othersWrapper}>
-            <TouchableOpacity style={styles.optionBtn}>
+            <TouchableOpacity style={styles.optionBtn} onPress={() => setShowAddToPlaylist(true)}>
               <MaterialCommunityIcons name='music-note-plus' style={styles.playlistIcon} />
             </TouchableOpacity>
 
@@ -285,6 +287,18 @@ const PlayerDetails = ({ navigation }) => {
           </View>
         </View>
       </View>
+
+      <PlaylistListModal 
+        setShowModal={setShowAddToPlaylist}
+        showModal={showAddToPlaylist}
+        song={{
+          encodeId: song?.id,
+          title: song?.title,
+          thumbnailM: song?.thumbnail,
+          url: song?.url,
+          artistsNames: song?.artist
+        }}
+      />
     </ImageBackground>
   )
 }

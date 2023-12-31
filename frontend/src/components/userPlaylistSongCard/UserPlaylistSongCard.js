@@ -1,13 +1,13 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
+import styles from './userPlaylistSongCard.style'
 import { TouchableOpacity, View, Text, Image } from 'react-native'
-import styles from './songCard.style'
 import Feather from 'react-native-vector-icons/Feather'
 import TrackPlayer from 'react-native-track-player'
 import { useDispatch, useSelector } from 'react-redux'
 import { setSong, setSongList, setPlayerState } from '../../redux/songSlice'
-import OptionsBottomSheet from '../optionsBottomSheet/OptionsBottomSheet'
+import UserPlaylistSongBottomSheet from '../userPlaylistSongBottomSheet/UserPlaylistSongBottomSheet'
 
-const SongCard = ({ song, index, playlistSongs, loadData, notShowMenuBtn }) => {
+const UserPlaylistSongCard = ({ song, index, playlistSongs, loadData, notShowMenuBtn, playlistId }) => {
   const [showBottomSheet, setShowBottomSheet] = useState(false)
   const dispatch = useDispatch()
 
@@ -16,7 +16,7 @@ const SongCard = ({ song, index, playlistSongs, loadData, notShowMenuBtn }) => {
 
     dispatch(setSong(playlistSongs[index]))
     dispatch(setSongList(playlistSongs))
-    dispatch(setPlayerState('playin g'))
+    dispatch(setPlayerState('playing'))
 
     await TrackPlayer.skip(index)
 
@@ -28,22 +28,27 @@ const SongCard = ({ song, index, playlistSongs, loadData, notShowMenuBtn }) => {
       <Image source={{ uri: song.thumbnailM }} style={styles.songThumbnail} />
 
       <View style={styles.songDetails}>
-          <Text style={styles.songTitle} numberOfLines={1}>{song.title}</Text>
+        <Text style={styles.songTitle} numberOfLines={1}>{song.title}</Text>
 
-          <Text style={styles.songArtistsNames} numberOfLines={1}>{song.artistsNames}</Text>
+        <Text style={styles.songArtistsNames} numberOfLines={1}>{song.artistsNames}</Text>
       </View>
 
       {!notShowMenuBtn &&
         <TouchableOpacity onPress={() => setShowBottomSheet(!showBottomSheet)}>
-        <Feather name='more-vertical' style={styles.moreIcon} />
-      </TouchableOpacity>
+          <Feather name='more-vertical' style={styles.moreIcon} />
+        </TouchableOpacity>
       }
 
       {showBottomSheet &&
-        <OptionsBottomSheet song={song} openBottomSheet={showBottomSheet} setOpenBottomSheet={setShowBottomSheet} loadData={loadData ? loadData : undefined}/>
+        <UserPlaylistSongBottomSheet 
+        song={song} 
+        openBottomSheet={showBottomSheet} 
+        setOpenBottomSheet={setShowBottomSheet} 
+        loadData={loadData ? loadData : undefined} 
+        playlistId={playlistId}/>
       }
     </TouchableOpacity>
   )
 }
 
-export default SongCard
+export default UserPlaylistSongCard

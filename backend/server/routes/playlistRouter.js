@@ -9,6 +9,8 @@ router.delete('/deletePlaylist', Playlist.deletePlaylist);
 
 router.get('/getUserPlaylists', Playlist.getUserPlaylists);
 
+router.get('/getSpecificPlaylist', Playlist.getSpecificPlaylist);
+
 router.post('/changePlaylistTitle', Playlist.changePlaylistTitle);
 
 router.post('/addSongToPlaylist', Playlist.addSongToPlaylist);

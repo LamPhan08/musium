@@ -39,6 +39,7 @@ export default styles = StyleSheet.create({
     },
 
     playlistIn4Wrapper: {
+        marginTop: 20,
         paddingHorizontal: 15,
         gap: 8
     },
@@ -94,7 +95,7 @@ export default styles = StyleSheet.create({
 
     songListWrapper: {
         paddingHorizontal: 15,
-        marginTop: 10
+        paddingTop: 25
     },
 
     btnWrapper: {
@@ -135,4 +136,10 @@ export default styles = StyleSheet.create({
         color: COLORS.grey,
         fontSize: 15
     },
+
+    loadingContainer: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
+    }
 })
