@@ -8,7 +8,7 @@ import LottieView from 'lottie-react-native'
 import { COLORS } from '../../constants/colors'
 import { usePlaybackState } from 'react-native-track-player'
 import { addSongToFavorites, removeSongFromFavorites } from '../../api/favoriteSongs'
-
+import logo from '../../../assets/images/logo.png'
 
 const SongThumbnail = ({ isLiked, setIsLiked }) => {
   const { song, playerState, user } = useSelector(state => state.song)
@@ -78,7 +78,17 @@ const SongThumbnail = ({ isLiked, setIsLiked }) => {
         // }}
         />
 
-        <Image source={{ uri: song.thumbnail }} style={styles.thumbnail} />
+        <Image
+         source={
+          (!song.thumbnail && !song.cover)
+            ? logo
+            : {
+              uri: song.thumbnail
+                ? song.thumbnail
+                : song.cover
+            }
+        }
+         style={styles.thumbnail} />
       </View>
 
 
@@ -90,15 +100,29 @@ const SongThumbnail = ({ isLiked, setIsLiked }) => {
           <Text style={styles.artist} numberOfLines={1}>{song.artist}</Text>
         </View>
 
-        <TouchableOpacity onPress={handleLike}>
+        <TouchableOpacity onPress={handleLike} disabled={song.thumbnail ? false : true}>
           {isLiked
             ? <Ionicons name='heart' style={styles.icon} color={COLORS.primary} />
-            : <Ionicons name='heart-outline' style={styles.icon} color={COLORS.white} />
+            : <Ionicons 
+            name='heart-outline' 
+            style={styles.icon} 
+            color={song.thumbnail
+              ? COLORS.white
+              : 'rgba(255, 255, 255, 0.2)'
+            } 
+             />
           }
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={handleNavigateComment}>
-          <Ionicons name='chatbubble-ellipses-outline' style={styles.icon} color={COLORS.white} />
+        <TouchableOpacity onPress={handleNavigateComment} disabled={song.thumbnail ? false : true}>
+          <Ionicons 
+          name='chatbubble-ellipses-outline' 
+          style={styles.icon} 
+          color={song.thumbnail
+            ? COLORS.white
+            : 'rgba(255, 255, 255, 0.2)'
+          } 
+          />
         </TouchableOpacity>
       </View>
     </View>

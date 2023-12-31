@@ -3,15 +3,13 @@ import { Image, ScrollView, Text, View, TouchableOpacity, FlatList, SafeAreaView
 import { COLORS } from '../../constants/colors';
 import SearchBar from '../../components/searchBar/SearchBar';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
-import { getAll, getAlbums, searchSongs, SortSongFields, SortSongOrder } from "react-native-get-music-files";
+import { getAll, SortSongFields, SortSongOrder } from "react-native-get-music-files";
 import StorageAudio from '../../components/storageAudio/StorageAudio';
 import styles from './downloadedSong.style'
 import Entypo from 'react-native-vector-icons/Entypo'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const DownloadedSong = ({ navigation }) => {
-  const [searchText, setSearchText] = useState("")
-  const [focus, setFocus] = useState(false)
   const [music, setMusic] = useState()
 
   const handleNavigateSearchSongs = () => {
@@ -78,7 +76,7 @@ const DownloadedSong = ({ navigation }) => {
           >
             {music.map((item, index) => {
               return (
-                <StorageAudio key={index} song={item} />
+                <StorageAudio key={index} song={item} index={index} songList={music}/>
               )
             })}
           </ScrollView>

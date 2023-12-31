@@ -28,6 +28,7 @@ export default styles = StyleSheet.create({
         resizeMode: 'contain',
         borderRadius: 200,
         position: 'absolute',
+        backgroundColor: COLORS.lightBlack
     },
 
     songDetailsWrapper: {

@@ -18,6 +18,7 @@ import OptionsBottomSheet from '../../components/optionsBottomSheet/OptionsBotto
 import PlaylistListModal from '../../components/playlistListModal/PlaylistListModal'
 import { getFavoriteSongs } from '../../api/favoriteSongs'
 import { Shuffle } from '../../utils/shuffle'
+import logo from '../../../assets/images/logo.png'
 
 const PlayerDetails = ({ navigation }) => {
   const { song, songList, playerState, user, shuffledSongList } = useSelector(state => state.song)
@@ -29,7 +30,7 @@ const PlayerDetails = ({ navigation }) => {
   const [showBottomSheet, setShowBottomSheet] = useState(false)
   const [showAddToPlaylist, setShowAddToPlaylist] = useState(false)
   const [isLiked, setIsLiked] = useState(false)
-  
+
   const dispatch = useDispatch()
 
   const progress = useProgress()
@@ -169,23 +170,48 @@ const PlayerDetails = ({ navigation }) => {
   }, [playerState])
 
   useEffect(() => {
-    loadData()
+    if (song.thumbnail) {
+      loadData()
+    }
   }, [])
 
   return (
-    <ImageBackground style={styles.playerDetailsContainer} source={{ uri: song.thumbnail }} resizeMode='cover' blurRadius={15}>
+    <ImageBackground
+      style={styles.playerDetailsContainer}
+      source={
+        (!song.thumbnail && !song.cover)
+          ? logo
+          : {
+            uri: song.thumbnail
+              ? song.thumbnail
+              : song.cover
+          }
+      }
+      resizeMode='cover'
+      blurRadius={15}
+    >
       <View style={styles.detailsWrapper}>
         <View style={styles.toolbar}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Entypo name='chevron-thin-down' style={styles.toolbarIcon} />
+            <Entypo name='chevron-thin-down' style={styles.toolbarIcon} color={COLORS.white} />
           </TouchableOpacity>
 
           <Text style={styles.title}>
             {title}
           </Text>
 
-          <TouchableOpacity onPress={() => setShowBottomSheet(!showBottomSheet)}>
-            <Feather name='more-vertical' style={styles.toolbarIcon} />
+          <TouchableOpacity
+            onPress={() => setShowBottomSheet(!showBottomSheet)}
+            disabled={song.thumbnail ? false : true}
+          >
+            <Feather
+              name='more-vertical'
+              style={styles.toolbarIcon}
+              color={song.thumbnail
+                ? COLORS.white
+                : 'rgba(255, 255, 255, 0.2)'
+              }
+            />
           </TouchableOpacity>
         </View>
 
@@ -233,7 +259,7 @@ const PlayerDetails = ({ navigation }) => {
 
           <View style={styles.controlWrapper}>
             <TouchableOpacity style={[styles.optionBtn, { backgroundColor: repeat ? 'rgba(169, 169, 169, 0.2)' : 'transparent' }]} onPress={handleRepeat}>
-              <Feather name='repeat' style={styles.toolbarIcon} />
+              <Feather name='repeat' style={styles.toolbarIcon} color={COLORS.white}/>
             </TouchableOpacity>
 
             <View style={styles.playPauseSkipController}>
@@ -268,13 +294,24 @@ const PlayerDetails = ({ navigation }) => {
             </View>
 
             <TouchableOpacity style={[styles.optionBtn, { backgroundColor: shuffle ? 'rgba(169, 169, 169, 0.2)' : 'transparent' }]} onPress={handleShuffle} disabled={songList.length <= 1 ? true : false}>
-              <Feather name='shuffle' style={styles.toolbarIcon}/>
+              <Feather name='shuffle' style={styles.toolbarIcon} color={COLORS.white}/>
             </TouchableOpacity>
           </View>
 
           <View style={styles.othersWrapper}>
-            <TouchableOpacity style={styles.optionBtn} onPress={() => setShowAddToPlaylist(true)}>
-              <MaterialCommunityIcons name='music-note-plus' style={styles.playlistIcon} />
+            <TouchableOpacity
+              style={styles.optionBtn}
+              onPress={() => setShowAddToPlaylist(true)}
+              disabled={song.thumbnail ? false : true}
+            >
+              <MaterialCommunityIcons
+                name='music-note-plus'
+                style={styles.playlistIcon}
+                color={song.thumbnail
+                  ? COLORS.white
+                  : 'rgba(255, 255, 255, 0.2)'
+                }
+              />
             </TouchableOpacity>
 
             <View style={styles.qualityWrapper}>
@@ -282,13 +319,13 @@ const PlayerDetails = ({ navigation }) => {
             </View>
 
             <TouchableOpacity style={[styles.optionBtn, { backgroundColor: openPlaylist ? 'rgba(169, 169, 169, 0.2)' : 'transparent' }]} onPress={() => setOpenPlaylist(!openPlaylist)}>
-              <MaterialCommunityIcons name='playlist-music' style={styles.playlistIcon} />
+              <MaterialCommunityIcons name='playlist-music' style={styles.playlistIcon} color={COLORS.white} />
             </TouchableOpacity>
           </View>
         </View>
       </View>
 
-      <PlaylistListModal 
+      <PlaylistListModal
         setShowModal={setShowAddToPlaylist}
         showModal={showAddToPlaylist}
         song={{

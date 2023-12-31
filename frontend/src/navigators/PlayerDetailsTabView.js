@@ -7,11 +7,13 @@ import SongLyrics from '../screens/songLyrics/SongLyrics'
 import { COLORS } from '../constants/colors'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Feather from 'react-native-vector-icons/Feather'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import { setPlayerState } from '../redux/songSlice'
 import whiteSoundWave from '../../assets/images/whiteSoundWave.gif'
 import whiteStaticSoundWave from '../../assets/images/whiteStaticSoundWave.png'
 import TrackPlayer, { usePlaybackState } from 'react-native-track-player'
 import OptionsBottomSheet from '../components/optionsBottomSheet/OptionsBottomSheet'
+import logo from '../../assets/images/logo.png'
 
 const { width } = Dimensions.get('window')
 
@@ -20,6 +22,8 @@ const PlayerDetailsTabView = ({ navigation, onChangeTitle, openPlaylist, setOpen
     const [showBottomSheet, setShowBottomSheet] = useState(false)
     const [bottomSheetSong, setBottomSheetSong] = useState()
     const [scroll, setScroll] = useState(false)
+
+    const dispatch = useDispatch()
 
     const songFlatlistRef = useRef()
 
@@ -41,7 +45,7 @@ const PlayerDetailsTabView = ({ navigation, onChangeTitle, openPlaylist, setOpen
             }
 
             case 'SongThumbnail': {
-                return <SongThumbnail isLiked={isLiked} setIsLiked={setIsLiked}/>
+                return <SongThumbnail isLiked={isLiked} setIsLiked={setIsLiked} />
             }
 
             case 'SongLyrics': {
@@ -55,8 +59,10 @@ const PlayerDetailsTabView = ({ navigation, onChangeTitle, openPlaylist, setOpen
     }
 
     const handlePlaySong = async (index) => {
-        
+
         await TrackPlayer.skip(index)
+
+        dispatch(setPlayerState('playing'))
 
         if (playbackState.state === 'paused') {
             TrackPlayer.play()
@@ -72,12 +78,12 @@ const PlayerDetailsTabView = ({ navigation, onChangeTitle, openPlaylist, setOpen
         length: 70,
         offset: 70 * index,
         index
-    })    
+    })
 
     const scrollToIndex = (index) => {
         songFlatlistRef.current?.scrollToIndex({ animated: true, index: index });
         setScroll(true)
-      };
+    };
 
     useEffect(() => {
         onChangeTitle(routes[index].title)
@@ -112,10 +118,10 @@ const PlayerDetailsTabView = ({ navigation, onChangeTitle, openPlaylist, setOpen
                         showsVerticalScrollIndicator={false}
                         decelerationRate='fast'
                         style={styles.playlistWrapper}
-                        initialNumToRender={20}
-                        maxToRenderPerBatch={5}
-                        updateCellsBatchingPeriod={100}
-                        windowSize={20}
+                        // initialNumToRender={20}
+                        // maxToRenderPerBatch={5}
+                        // updateCellsBatchingPeriod={100}
+                        // windowSize={20}
                         renderItem={({ item, index }) => {
                             // if (item.id === song.id && scroll) {
                             //     scrollToIndex(index)
@@ -125,20 +131,30 @@ const PlayerDetailsTabView = ({ navigation, onChangeTitle, openPlaylist, setOpen
                                 <TouchableOpacity
                                     style={[styles.songCard,
                                     {
-                                        backgroundColor: item.id === song.id
+                                        backgroundColor: item.title === song.title
                                             ? 'rgba(169, 169, 169, 0.2)'
                                             : 'transparent'
                                     }]}
                                     key={index}
                                     onPress={() => handlePlaySong(index)}
                                 >
-                                    <Image source={{ uri: item.thumbnail }} style={styles.songThumbnail} />
+                                    <Image
+                                        source={
+                                            (!item.thumbnail && !item.cover)
+                                                ? logo
+                                                : {
+                                                    uri: item.thumbnail
+                                                        ? item.thumbnail
+                                                        : item.cover
+                                                }
+                                        }
+                                        style={styles.songThumbnail} />
 
                                     <View style={styles.songDetails}>
                                         <View style={styles.songTitleWrapper}>
                                             {/* <Image source={playbackState.state === 'playing' ? soundWave : staticSoundWave} style={styles.soundWaveImage} /> */}
 
-                                            {item.id === song.id
+                                            {item.title === song.title
                                                 && <Image source={playbackState.state === 'playing'
                                                     ? whiteSoundWave
                                                     : whiteStaticSoundWave} style={styles.soundWaveImage}
@@ -151,9 +167,11 @@ const PlayerDetailsTabView = ({ navigation, onChangeTitle, openPlaylist, setOpen
                                         <Text style={styles.songArtistsNames} numberOfLines={1}>{item.artist}</Text>
                                     </View>
 
-                                    <TouchableOpacity onPress={() => handleShowBottomSheet(item)}>
-                                        <Feather name='more-vertical' style={styles.moreIcon} />
-                                    </TouchableOpacity>
+                                    {item.thumbnail &&
+                                        <TouchableOpacity onPress={() => handleShowBottomSheet(item)}>
+                                            <Feather name='more-vertical' style={styles.moreIcon} />
+                                        </TouchableOpacity>
+                                    }
                                 </TouchableOpacity>
                             )
                         }}
@@ -161,16 +179,16 @@ const PlayerDetailsTabView = ({ navigation, onChangeTitle, openPlaylist, setOpen
 
                     {bottomSheetSong &&
                         <OptionsBottomSheet
-                        openBottomSheet={showBottomSheet}
-                        setOpenBottomSheet={setShowBottomSheet}
-                        song={{
-                            encodeId: bottomSheetSong.id,
-                            title: bottomSheetSong.title,
-                            url: bottomSheetSong.url,
-                            artistsNames: bottomSheetSong.artist,
-                            thumbnailM: bottomSheetSong.thumbnail
-                        }}
-                    />
+                            openBottomSheet={showBottomSheet}
+                            setOpenBottomSheet={setShowBottomSheet}
+                            song={{
+                                encodeId: bottomSheetSong.id,
+                                title: bottomSheetSong.title,
+                                url: bottomSheetSong.url,
+                                artistsNames: bottomSheetSong.artist,
+                                thumbnailM: bottomSheetSong.thumbnail
+                            }}
+                        />
                     }
                 </View>
 
@@ -267,7 +285,8 @@ const styles = StyleSheet.create({
         height: 50,
         width: 50,
         resizeMode: 'contain',
-        borderRadius: 10
+        borderRadius: 10,
+        backgroundColor: COLORS.headerBlack
     },
 
     songDetails: {

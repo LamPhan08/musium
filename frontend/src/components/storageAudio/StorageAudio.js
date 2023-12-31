@@ -4,13 +4,21 @@ import React from "react";
 import styles from './storageAudio.style'
 import logo from '../../../assets/images/logo.png'
 import TrackPlayer from "react-native-track-player";
+import { useDispatch } from "react-redux";
+import { setSong, setSongList } from "../../redux/songSlice";
 
+const StorageAudio = ({ song, index, songList }) => {
+  const dispatch = useDispatch();
 
-const StorageAudio = ({ song, index, playlistSongs }) => {
   const playMusic = async () => {
-    await TrackPlayer.setQueue([song])
+    await TrackPlayer.setQueue(songList);
 
-    TrackPlayer.play()
+    dispatch(setSong(song));
+    dispatch(setSongList(songList));
+
+    await TrackPlayer.skip(index);
+
+    TrackPlayer.play();
   }
 
   return (

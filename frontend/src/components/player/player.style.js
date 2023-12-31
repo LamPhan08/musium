@@ -17,6 +17,7 @@ export default styles = StyleSheet.create({
         height: 40,
         width: 40,
         borderRadius: 100,
+        backgroundColor: COLORS.lightBlack
     },
 
     songDetails:{

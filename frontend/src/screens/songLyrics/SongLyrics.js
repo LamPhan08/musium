@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useRef, memo } from 'react'
+import React, { useState, useEffect, useRef, memo, useCallback } from 'react'
 import { View, Text, Image, FlatList, TouchableOpacity, TouchableHighlight } from 'react-native'
 import { getSongLyric } from '../../api/getData'
 import styles from './songLyrics.style'
 import { useSelector, useDispatch } from 'react-redux'
 import { setPlayerState } from '../../redux/songSlice'
 import TrackPlayer, { useProgress } from 'react-native-track-player'
+import { useFocusEffect } from '@react-navigation/native'
 
 const SongLyrics = () => {
   const { song } = useSelector(state => state.song)
@@ -15,12 +16,28 @@ const SongLyrics = () => {
 
   const progress = useProgress()
 
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     (
+  //       async () => {
+  //         if (song.thumbnail) {
+  //           const data = await getSongLyric(song.id)
+
+  //           setSongLyrics(data.sentences)
+  //         }
+  //       }
+  //     )()
+  //   }, [song])
+  // )
+
   useEffect(() => {
     (
       async () => {
-        const data = await getSongLyric(song.id)
+        if (song.thumbnail) {
+          const data = await getSongLyric(song.id)
 
-        setSongLyrics(data.sentences)
+          setSongLyrics(data.sentences)
+        }
       }
     )()
   }, [song])

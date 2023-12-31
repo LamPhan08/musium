@@ -5,7 +5,8 @@ const {width} = Dimensions.get('window')
 
 export default styles = StyleSheet.create({
     playerDetailsContainer: {
-        flex: 1
+        flex: 1,
+        backgroundColor: COLORS.background
     },
 
     detailsWrapper: {
@@ -24,7 +25,6 @@ export default styles = StyleSheet.create({
 
     toolbarIcon: {
         fontSize: 22,
-        color: COLORS.white
     },
 
     title: {
@@ -125,6 +125,5 @@ export default styles = StyleSheet.create({
 
     playlistIcon: {
         fontSize: 22,
-        color: COLORS.white
-    }
+        }
 })

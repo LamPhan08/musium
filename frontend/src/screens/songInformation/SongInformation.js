@@ -1,4 +1,4 @@
-import React, { useState, useEffect, memo } from 'react'
+import React, { useState, useEffect, memo, useCallback } from 'react'
 import { View, Text, ScrollView, Image, TouchableOpacity, ActivityIndicator } from 'react-native'
 import styles from './songInformation.style'
 import { useSelector } from 'react-redux'
@@ -7,8 +7,9 @@ import Feather from 'react-native-vector-icons/Feather'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { COLORS } from '../../constants/colors'
 import ConvertTimestamp from '../../utils/convertTimestamp'
+import { useFocusEffect } from '@react-navigation/native'
 
-const SongInformation = ({navigation}) => {
+const SongInformation = ({ navigation }) => {
   const { song } = useSelector(state => state.song)
   const [songIn4, setSongIn4] = useState()
 
@@ -17,19 +18,39 @@ const SongInformation = ({navigation}) => {
       artistAlias: artist.alias,
       artistName: artist.name
     })
-  } 
+  }
+
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     (
+  //       async () => {
+  //         if (song.thumbnail) {
+  //           const data = await getSongIn4(song.id)
+
+  //           setSongIn4(data)
+  //         }
+  //         else {
+  //           setSongIn4(null)
+  //         }
+  //       }
+  //     )()
+  //   }, [song])
+  // )
 
   useEffect(() => {
     (
       async () => {
-        const data = await getSongIn4(song.id)
+        if (song.thumbnail) {
+          const data = await getSongIn4(song.id)
 
-        setSongIn4(data)
+          setSongIn4(data)
+        }
+        else {
+          setSongIn4(null)
+        }
       }
     )()
   }, [song])
-
-  // console.log(songIn4)
 
 
   if (songIn4) {
@@ -62,12 +83,12 @@ const SongInformation = ({navigation}) => {
             </View>
           </View>
 
-          <View 
-          style={[
-            styles.songDetailsWrapper, 
-            {
-              marginTop: (!songIn4.composers && !songIn4.genres && songIn4.releaseDate === 0 && !songIn4.distributor) ? 0 : 20 
-            }]}
+          <View
+            style={[
+              styles.songDetailsWrapper,
+              {
+                marginTop: (!songIn4.composers && !songIn4.genres && songIn4.releaseDate === 0 && !songIn4.distributor) ? 0 : 20
+              }]}
           >
             {songIn4.composers !== undefined
               ? <View style={styles.detailsItem}>
@@ -86,14 +107,14 @@ const SongInformation = ({navigation}) => {
               </View>
             }
 
-             {
+            {
               songIn4.releaseDate !== 0 && <View style={styles.detailsItem}>
-              <Text style={styles.detailsProperty}>Ngày phát hành</Text>
+                <Text style={styles.detailsProperty}>Ngày phát hành</Text>
 
-              <Text style={styles.detailsValue}>{ConvertTimestamp(songIn4.releaseDate).toString()}</Text>
-            </View>
-             }
-            
+                <Text style={styles.detailsValue}>{ConvertTimestamp(songIn4.releaseDate).toString()}</Text>
+              </View>
+            }
+
 
             {/* {
               songIn4.releaseDate && <View>
@@ -139,6 +160,44 @@ const SongInformation = ({navigation}) => {
           </View>
         }
       </ScrollView>
+    )
+  }
+  else if (songIn4 === null) {
+    return (
+      <View style={styles.songIn4Container}>
+        <Text style={styles.heading}>Thông tin bài hát</Text>
+
+        <View style={styles.songIn4Wrapper}>
+          <View style={styles.songTitleWrapper}>
+            <Image style={styles.songThumbnail} source={{ uri: song.cover }} />
+
+            <View style={styles.titleAndArtistsWrapper}>
+              <Text style={styles.songTitle} numberOfLines={1}>{song.title}</Text>
+
+              <Text style={styles.songArtists} numberOfLines={1}>{song.artist}</Text>
+
+            </View>
+          </View>
+
+          <View
+            style={[
+              styles.songDetailsWrapper,
+              {
+                marginTop: !song.album ? 0 : 20
+              }]}
+          >
+            {song.album &&
+              <View style={styles.detailsItem}>
+                <Text style={styles.detailsProperty}>Album</Text>
+
+                <Text style={styles.detailsValue}>{song.album}</Text>
+              </View>
+            }
+          </View>
+        </View>
+
+
+      </View>
     )
   }
   else {

@@ -8,11 +8,11 @@ import soundWave from '../../../assets/images/soundWave.gif'
 import staticSoundWave from '../../../assets/images/staticSoundWave.png'
 import * as Progress from 'react-native-progress'
 import { COLORS } from '../../constants/colors'
-
+import logo from '../../../assets/images/logo.png'
 
 const { width } = Dimensions.get('window')
 
-const Player = ({navigation}) => {
+const Player = ({ navigation }) => {
     const { song, songList } = useSelector(state => state.song)
 
     const playbackState = usePlaybackState()
@@ -24,13 +24,13 @@ const Player = ({navigation}) => {
 
     const handlePause = () => {
         TrackPlayer.pause()
-        
+
     }
 
     const handlePlay = () => {
         if (playbackState.state === 'paused') {
             TrackPlayer.play()
-        } 
+        }
         else {
             TrackPlayer.seekTo(0)
         }
@@ -87,7 +87,18 @@ const Player = ({navigation}) => {
             />
 
             <View style={styles.playerContainer}>
-                <Image style={styles.playerThumbnail} source={{ uri: song.thumbnail }} />
+                <Image
+                    style={styles.playerThumbnail}
+                    source={
+                        (!song.thumbnail && !song.cover)
+                            ? logo
+                            : {
+                                uri: song.thumbnail
+                                    ? song.thumbnail
+                                    : song.cover
+                            }
+                    }
+                />
 
                 <View style={styles.songDetails}>
                     <View style={styles.titleWrapper}>
@@ -105,7 +116,7 @@ const Player = ({navigation}) => {
                     </TouchableOpacity>
 
                     {playbackState.state === 'loading'
-                        ? <ActivityIndicator size="small" color={COLORS.white} style={[styles.loadingAnimation, {width: 25}]}/>
+                        ? <ActivityIndicator size="small" color={COLORS.white} style={[styles.loadingAnimation, { width: 25 }]} />
                         : (playbackState.state === 'paused' || playbackState.state === 'ended'
                             ? <TouchableOpacity onPress={handlePlay}>
                                 <Ionicons name='play' style={styles.controlIcon} />

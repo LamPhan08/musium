@@ -91,7 +91,7 @@ const Profile = ({ navigation }) => {
       <LinearGradient
         colors={[COLORS.primary, COLORS.background]}
         style={styles.profileContainer}
-        locations={[0, 0.35]}
+        locations={[0, 0.3]}
       >
         <View style={styles.darkenView}>
           <ScrollView
