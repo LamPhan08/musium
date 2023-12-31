@@ -12,11 +12,12 @@ const SongCard = ({ song, index, playlistSongs, loadData, notShowMenuBtn }) => {
   const dispatch = useDispatch()
 
   const handlePlayMusic = async () => {
+    // console.log(playlistSongs)
     await TrackPlayer.setQueue(playlistSongs)
 
     dispatch(setSong(playlistSongs[index]))
     dispatch(setSongList(playlistSongs))
-    dispatch(setPlayerState('playin g'))
+    dispatch(setPlayerState('playing'))
 
     await TrackPlayer.skip(index)
 

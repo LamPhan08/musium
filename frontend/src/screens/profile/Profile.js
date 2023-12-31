@@ -32,7 +32,7 @@ const Profile = ({ navigation }) => {
     const granted = await getPermissions();
 
     if (granted[PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE] === 'granted' || granted[PermissionsAndroid.PERMISSIONS.READ_MEDIA_AUDIO] === 'granted') {
-      navigation.navigate("Downloaded")
+      navigation.navigate("DownloadedSong")
     }
     else {
       ToastAndroid.show('Bạn chưa cấp quyền!', ToastAndroid.BOTTOM)

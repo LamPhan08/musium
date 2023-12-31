@@ -13,7 +13,6 @@ import LocalAudio from '../screens/localAudio/LocalAudio';
 import Profile from '../screens/profile/Profile';
 import TrackPlayer, { useTrackPlayerEvents, Event } from 'react-native-track-player';
 import AddPlayList from '../screens/addPlayList/AddPlayList';
-import DownloadedSong from '../screens/downloadedSong/DownloadedSong';
 
 
 const Stack = createNativeStackNavigator();
@@ -73,7 +72,6 @@ const RootNavigation = () => {
             <Stack.Screen name="Splash" component={Splash} />
             <Stack.Screen name="EditProfile" component={EditProfile} />
             <Stack.Screen name="AddPlayList" component={AddPlayList} />
-            <Stack.Screen name="Downloaded" component={DownloadedSong} />
             <Stack.Screen name="Profile" component={Profile} />
             <Stack.Screen name="LocalAudio" component={LocalAudio} />
             <Stack.Screen name='PlayerDetails' component={PlayerDetails} options={{

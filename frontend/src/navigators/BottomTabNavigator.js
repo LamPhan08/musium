@@ -11,6 +11,7 @@ import ArtistInformation from '../screens/artistInformation/ArtistInformation';
 import SearchSongs from '../screens/searchSongs/SearchSongs';
 import UserPlaylistDetails from '../screens/userPlaylistDetails/UserPlaylistDetails';
 import ChangePlaylistTitle from '../screens/changePlaylistTitle/ChangePlaylistTitle';
+import DownloadedSong from '../screens/downloadedSong/DownloadedSong';
 import Player from '../components/player/Player';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import AntDesign from 'react-native-vector-icons/AntDesign'
@@ -84,6 +85,11 @@ const ProfileStack = () => {
       }} />
 
       <TabStack.Screen name="ChangePlaylistTitle" component={ChangePlaylistTitle} options={{
+        presentation: 'modal',
+        animation: 'slide_from_right'
+      }} />
+
+      <TabStack.Screen name="DownloadedSong" component={DownloadedSong} options={{
         presentation: 'modal',
         animation: 'slide_from_right'
       }} />
