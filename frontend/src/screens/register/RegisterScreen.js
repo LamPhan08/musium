@@ -48,7 +48,6 @@ import { useSelector } from 'react-redux';
 const {width, height} = Dimensions.get('window')
 
 const RegisterScreen = ({navigation}) => {
-  const [facebookLoginInProgress, setFacebookLoginInProgress] = useState(false);
 
   const {user} = useSelector(state => state.song)
 
@@ -90,63 +89,57 @@ const RegisterScreen = ({navigation}) => {
     const user = userCredential.user;
     console.log(user);
 
-    const registerResponse = await mongoAPI.post(`/auth/register`, 
-          {
-            username: user.displayName,
-            email: user.email,
-            password: '123456',
-          }
-    );
+      const registerResponse = await mongoAPI.post(`/auth/register`, {
+        username: user.displayName,
+        email: user.email,
+        password: '123456',
+      })
 
     // Sign-in the user with the credential
     return auth().signInWithCredential(googleCredential);
   }
   async function onFacebookButtonPress() {
     try {
-        // Attempt login with permissions
-        const result = await LoginManager.logInWithPermissions([
-            'email'
-        ]);
-    
-        if (result.grantedPermissions === "") {
-            // throw 'User cancelled the login process';
-            console.log("No permission granted")
-        }
+      // Attempt login with permissions
+      const result = await LoginManager.logInWithPermissions(['email']);
 
-        if (result.isCancelled) {
-        // throw 'User cancelled the login process';
-            console.log("Clicked cancel")
-            // navigation.navigate('Login')
-        }
-    
-        // Once signed in, get the users AccessToken
-        const data = await AccessToken.getCurrentAccessToken();
-    
-        if (!data) {
-        throw 'Something went wrong obtaining access token';
-        }
-    
-        // Create a Firebase credential with the AccessToken
-        const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
+      if (result.isCancelled) {
+          console.log("Clicked cancel");
+          // You can handle the cancel action here, e.g., show a message to the user.
+      } else {
+          // Once signed in, get the users AccessToken
+          const data = await AccessToken.getCurrentAccessToken();
 
-        const userCredential = await auth().signInWithCredential(facebookCredential);
-        // Extract user information
-        const user = userCredential.user;
-        console.log(user);
+          if (!data) {
+              throw 'Something went wrong obtaining access token';
+          }
 
-        const registerResponse = await mongoAPI.post(`/auth/register`, 
+          // Create a Firebase credential with the AccessToken
+          const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
+
+          const userCredential = await auth().signInWithCredential(facebookCredential);
+
+          // Extract user information
+          const user = userCredential.user;
+          console.log(user);
+
+            const registerResponse = await mongoAPI.post(`/auth/register`, 
             {
               username: user.displayName,
               email: user.email,
               password: '123456',
             }
-        );
-    
-        // Sign-in the user with the credential
-        return auth().signInWithCredential(facebookCredential);
-    } catch (error) {
-        console.log(error.message)
-    }
+          );
+
+          // Sign-in the user with the credential
+          // Return the user data or any other relevant information if needed
+
+          // Only navigate to 'App' screen if the login is successful
+          navigation.navigate('App');
+      }
+  } catch (error) {
+      console.log(error.message);
+  }
   }
 
   const validate = () => {
@@ -409,19 +402,12 @@ const RegisterScreen = ({navigation}) => {
                           //     })
                           // .catch(() => console.log("Sign in with facebook failed"))
                           {
-                              setFacebookLoginInProgress(true);
                               onFacebookButtonPress()
                                   .then(() => {
-                                      console.log('Signed in with Facebook!');
-                                      // Conditionally navigate only if Facebook login is not in progress
-                                      if (!facebookLoginInProgress) {
-                                          navigation.navigate('App');
-                                      }
                                   })
                                   .catch(() => console.log('Sign in with Facebook failed'))
-                                  .finally(() => setFacebookLoginInProgress(false));
                           }
-                      }
+                        }
                         style={{
                             borderColor: '#ddd',
                             borderWidth: 0.5,

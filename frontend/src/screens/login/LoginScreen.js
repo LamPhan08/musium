@@ -41,7 +41,7 @@ import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
 const { width, height } = Dimensions.get('window')
 
 const LoginScreen = ({ navigation }) => {
-    const [facebookLoginInProgress, setFacebookLoginInProgress] = useState(false);
+    // const [facebookLoginInProgress, setFacebookLoginInProgress] = useState(false);
 
     const [inputs, setInputs] = React.useState({
         email: '',
@@ -111,42 +111,39 @@ const LoginScreen = ({ navigation }) => {
     async function onFacebookButtonPress() {
         try {
             // Attempt login with permissions
-            const result = await LoginManager.logInWithPermissions([
-                'email'
-            ]);
-        
-            if (result.grantedPermissions === "") {
-                // throw 'User cancelled the login process';
-                console.log("No permission granted")
-            }
-
+            const result = await LoginManager.logInWithPermissions(['email']);
+    
             if (result.isCancelled) {
-            // throw 'User cancelled the login process';
-                console.log("Clicked cancel")
-                // navigation.navigate('Login')
+                console.log("Clicked cancel");
+                // You can handle the cancel action here, e.g., show a message to the user.
+            } else {
+                // Once signed in, get the users AccessToken
+                const data = await AccessToken.getCurrentAccessToken();
+    
+                if (!data) {
+                    throw 'Something went wrong obtaining access token';
+                }
+    
+                // Create a Firebase credential with the AccessToken
+                const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
+    
+                const userCredential = await auth().signInWithCredential(facebookCredential);
+    
+                // Extract user information
+                const user = userCredential.user;
+                console.log(user);
+    
+                // Sign-in the user with the credential
+                // Return the user data or any other relevant information if needed
+    
+                // Only navigate to 'App' screen if the login is successful
+                navigation.navigate('App');
             }
-        
-            // Once signed in, get the users AccessToken
-            const data = await AccessToken.getCurrentAccessToken();
-        
-            if (!data) {
-            throw 'Something went wrong obtaining access token';
-            }
-        
-            // Create a Firebase credential with the AccessToken
-            const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
-
-            const userCredential = await auth().signInWithCredential(facebookCredential);
-            // Extract user information
-            const user = userCredential.user;
-            console.log(user);
-        
-            // Sign-in the user with the credential
-            return auth().signInWithCredential(facebookCredential);
         } catch (error) {
-            console.log(error.message)
+            console.log(error.message);
         }
     }
+    
 
     const handleClick = async e => {
         e.preventDefault();
@@ -305,17 +302,18 @@ const LoginScreen = ({ navigation }) => {
                                 //     })
                                 // .catch(() => console.log("Sign in with facebook failed"))
                                 {
-                                    setFacebookLoginInProgress(true);
+                                    // setFacebookLoginInProgress(true);
                                     onFacebookButtonPress()
                                         .then(() => {
-                                            console.log('Signed in with Facebook!');
-                                            // Conditionally navigate only if Facebook login is not in progress
-                                            if (!facebookLoginInProgress) {
-                                                navigation.navigate('App');
-                                            }
+                                            
+                                            // // Conditionally navigate only if Facebook login is not in progress
+                                            // if (!facebookLoginInProgress) {
+                                            //     // navigation.navigate('App');
+                                            //     // console.log('Signed in with Facebook!');
+                                            // }
                                         })
                                         .catch(() => console.log('Sign in with Facebook failed'))
-                                        .finally(() => setFacebookLoginInProgress(false));
+                                        // .finally(() => setFacebookLoginInProgress(false));
                                 }
                             }
                             style={{
