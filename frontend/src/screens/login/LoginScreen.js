@@ -71,69 +71,104 @@ const LoginScreen = ({ navigation }) => {
     // }, []);
 
     async function onGoogleButtonPress() {
-        // Check if your device supports Google Play
-        await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
-        // Get the users ID token
-        const { idToken } = await GoogleSignin.signIn();
+        // // Check if your device supports Google Play
+        // await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+        // // Get the users ID token
+        // const { idToken } = await GoogleSignin.signIn();
 
-        // Create a Google credential with the token
-        const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+        // // Create a Google credential with the token
+        // const googleCredential = auth.GoogleAuthProvider.credential(idToken);
 
-        // Sign-in the user with the credential
-        const userCredential = await auth().signInWithCredential(googleCredential);
+        // // Sign-in the user with the credential
+        // const userCredential = await auth().signInWithCredential(googleCredential);
 
-        // Extract user information
-        const user = userCredential.user;
-        console.log(user);
+        // // Extract user information
+        // const user = userCredential.user;
+        // console.log(user);
         
-        const loginResponse = await mongoAPI.post(`/auth/login`,
-            {
-                email: user.email,
-                password: '123456'
+        // const loginResponse = await mongoAPI.post(`/auth/login`,
+        //     {
+        //         email: user.email,
+        //         password: '123456'
+        //     }
+        // );
+        // console.log("Login Response:", loginResponse.data);
+        // const userData = loginResponse.data;
+        // await AsyncStorage.setItem('userData', JSON.stringify(userData));
+
+        // dispatch(setUser(userData.data))
+
+        // // Sign-in the user with the credential
+        // return auth().signInWithCredential(googleCredential);
+        try {
+            await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+            const { idToken } = await GoogleSignin.signIn();
+            const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+            const userCredential = await auth().signInWithCredential(googleCredential);
+            const user = userCredential.user;
+            console.log(user);
+      
+            // Check if the user exists in MongoDB
+            const loginResponse = await mongoAPI.post(`/auth/login`, {
+              email: user.email,
+              password: '123456', // Provide a default password or handle it differently
+            });
+      
+            console.log("Login Response:", loginResponse.data);
+            const userData = loginResponse.data;
+      
+            if (userData.success) {
+              // User exists, log them in
+              await AsyncStorage.setItem('userData', JSON.stringify(userData));
+              dispatch(setUser(userData.data));
+              navigation.replace('App');
+            } else {
+              // User doesn't exist, proceed with social media sign-in
+              // ... (your existing code for storing user data in MongoDB)
             }
-        );
-        console.log("Login Response:", loginResponse.data);
-        const userData = loginResponse.data;
-        await AsyncStorage.setItem('userData', JSON.stringify(userData));
-
-        dispatch(setUser(userData.data))
-
-        // Sign-in the user with the credential
-        return auth().signInWithCredential(googleCredential);
+          } catch (error) {
+            console.log(error.message);
+          }
     }
 
     async function onFacebookButtonPress() {
         try {
-            // Attempt login with permissions
             const result = await LoginManager.logInWithPermissions(['email']);
-    
+      
             if (result.isCancelled) {
-                console.log("Clicked cancel");
-                // You can handle the cancel action here, e.g., show a message to the user.
+              console.log("Clicked cancel");
             } else {
-                // Once signed in, get the users AccessToken
-                const data = await AccessToken.getCurrentAccessToken();
-    
-                if (!data) {
-                    throw 'Something went wrong obtaining access token';
-                }
-    
-                // Create a Firebase credential with the AccessToken
-                const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
-    
-                const userCredential = await auth().signInWithCredential(facebookCredential);
-    
-                // Extract user information
-                const user = userCredential.user;
-                console.log(user);
-    
-                // Sign-in the user with the credential
-                // Return the user data or any other relevant information if needed
-    
-                // Only navigate to 'App' screen if the login is successful
-                navigation.navigate('App');
+              const data = await AccessToken.getCurrentAccessToken();
+      
+              if (!data) {
+                throw 'Something went wrong obtaining access token';
+              }
+      
+              const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
+              const userCredential = await auth().signInWithCredential(facebookCredential);
+              const user = userCredential.user;
+              console.log(user);
+      
+              // Check if the user exists in MongoDB
+              const loginResponse = await mongoAPI.post(`/auth/login`, {
+                email: user.email,
+                password: '123456', // Provide a default password or handle it differently
+              });
+      
+              console.log("Login Response:", loginResponse.data);
+              const userData = loginResponse.data;
+      
+              if (userData.success) {
+                // User exists, log them in
+                await AsyncStorage.setItem('userData', JSON.stringify(userData));
+                dispatch(setUser(userData.data));
+                navigation.replace('App');
+              } else {
+                // User doesn't exist, proceed with social media sign-in
+                // ... (your existing code for storing user data in MongoDB)
+              }
             }
-        } catch (error) {
+          } catch (error) {
             console.log(error.message);
         }
     }
