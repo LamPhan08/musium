@@ -96,7 +96,7 @@ const Favorites = ({ navigation }) => {
   }
 
   const handleNavigateSearchFavorites = () => {
-    navigation.navigate('SearchFavoriteSongs', { favoriteSongs })
+    navigation.navigate('SearchSongs', { songs: favoriteSongs })
   }
 
   useFocusEffect(

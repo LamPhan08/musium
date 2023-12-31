@@ -17,9 +17,9 @@ const FeaturedSongs = ({navigation, featuredSongs }) => {
                 )
             })}
 
-            <TouchableOpacity style={styles.viewMoreBtn} >
+            {/* <TouchableOpacity style={styles.viewMoreBtn} >
                 <Text style={styles.btnText}>Xem thêm</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
         </View>
     )
 }

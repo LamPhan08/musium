@@ -77,7 +77,7 @@ const PlaylistDetails = ({ navigation, route }) => {
   }
 
   const handleViewArtist = (artist) => {
-    navigation.navigate('ArtistInformation', {
+    navigation.push('ArtistInformation', {
       artistAlias: artist.alias,
       artistName: artist.name
     })

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { View, TouchableOpacity, Text, Animated, Easing } from 'react-native';
+import { View, TouchableOpacity, Keyboard, Animated, Easing } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Profile from '../screens/profile/Profile';
@@ -8,8 +8,9 @@ import Explore from '../screens/explore/Explore';
 import Search from '../screens/search/Search';
 import PlaylistDetails from '../screens/playlistDetails/PlaylistDetails';
 import ArtistInformation from '../screens/artistInformation/ArtistInformation';
-import SearchFavoriteSongs from '../screens/searchFavoriteSongs/SearchFavoriteSongs';
+import SearchSongs from '../screens/searchSongs/SearchSongs';
 import UserPlaylistDetails from '../screens/userPlaylistDetails/UserPlaylistDetails';
+import ChangePlaylistTitle from '../screens/changePlaylistTitle/ChangePlaylistTitle';
 import Player from '../components/player/Player';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import AntDesign from 'react-native-vector-icons/AntDesign'
@@ -30,14 +31,17 @@ const ExploreStack = () => {
       }}
     >
       <TabStack.Screen name='Explore' component={Explore} />
+
       <TabStack.Screen name="Search" component={Search} options={{
         presentation: 'modal',
         animation: 'slide_from_bottom'
       }} />
+
       <TabStack.Screen name="PlaylistDetails" component={PlaylistDetails} options={{
         presentation: 'modal',
         animation: 'slide_from_right'
       }} />
+
       <TabStack.Screen name='ArtistInformation' component={ArtistInformation} options={{
         presentation: 'modal',
         animation: 'slide_from_right'
@@ -55,7 +59,8 @@ const FavoritesStack = () => {
       }}
     >
       <TabStack.Screen name='Favorites' component={Favorites} />
-      <TabStack.Screen name="SearchFavoriteSongs" component={SearchFavoriteSongs} options={{
+
+      <TabStack.Screen name="SearchSongs" component={SearchSongs} options={{
         presentation: 'modal',
         animation: 'slide_from_bottom'
       }} />
@@ -72,9 +77,20 @@ const ProfileStack = () => {
       }}
     >
       <TabStack.Screen name='Profile' component={Profile} />
+
       <TabStack.Screen name="UserPlaylistDetails" component={UserPlaylistDetails} options={{
         presentation: 'modal',
         animation: 'slide_from_right'
+      }} />
+
+      <TabStack.Screen name="ChangePlaylistTitle" component={ChangePlaylistTitle} options={{
+        presentation: 'modal',
+        animation: 'slide_from_right'
+      }} />
+
+      <TabStack.Screen name="SearchSongs" component={SearchSongs} options={{
+        presentation: 'modal',
+        animation: 'slide_from_bottom'
       }} />
     </TabStack.Navigator>
   )
@@ -82,10 +98,12 @@ const ProfileStack = () => {
 
 const BottomTabNavigator = ({ navigation }) => {
   const { song, bottomTabRouteName } = useSelector(state => state.song)
+  const [keyboardShow, setKeyboardShow] = useState(0)
   const dispatch = useDispatch();
 
   const animateScale = new Animated.Value(0)
   const animateIcon = new Animated.Value(0)
+  const animateBottombar = new Animated.Value(keyboardShow)
 
   const interpolateView = animateScale.interpolate({
     inputRange: [0, 1],
@@ -95,6 +113,11 @@ const BottomTabNavigator = ({ navigation }) => {
   const interpolateIcon = animateIcon.interpolate({
     inputRange: [0, 0.5, 1],
     outputRange: [1, 2, 1]
+  })
+
+  const marginBottombar = animateBottombar.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, -122]
   })
 
   const animateTabOpen = () => {
@@ -118,11 +141,28 @@ const BottomTabNavigator = ({ navigation }) => {
     ]).start()
   }
 
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setKeyboardShow(1);
+      }
+    )
 
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setKeyboardShow(0);
+      }
+    );
 
-  // useEffect(() => {
-  //   animateTabOpen()
-  // }, [routeName])
+    return () => {
+      keyboardDidHideListener.remove();
+      keyboardDidShowListener.remove();
+    };
+  }, [])
+
+  
   useEffect(() => {
     animateTabOpen();
   }, [bottomTabRouteName])
@@ -132,13 +172,15 @@ const BottomTabNavigator = ({ navigation }) => {
       screenOptions={{
         headerShown: false,
         lazy: true,
+        tabBarHideOnKeyboard: true
       }}
+
       backBehavior='none'
       initialRouteName='ProfileStack'
       tabBar={({ state, descriptors, navigation }) => {
 
         return (
-          <View style={{ backgroundColor: COLORS.bottomTabBar }}>
+          <Animated.View style={{ backgroundColor: COLORS.bottomTabBar, marginBottom: marginBottombar}} >
             {song ? <Player navigation={navigation} /> : null}
 
             <View style={{ flexDirection: 'row', backgroundColor: 'rgba(0, 0, 0, 0.2)', height: 60, alignItems: 'center', }}>
@@ -215,7 +257,7 @@ const BottomTabNavigator = ({ navigation }) => {
                 );
               })}
             </View>
-          </View>
+          </Animated.View>
         )
       }}
     >

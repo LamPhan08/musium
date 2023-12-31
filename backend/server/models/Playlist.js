@@ -26,17 +26,17 @@ const Playlist = new mongoose.Schema({
                         required: true,
                         unique: true
                     },
-
+        
                     title: {
                         type: String,
                         required: true
                     },
-
+        
                     thumbnailM: {
                         type: String,
                         required: true
                     },
-
+        
                     artistsNames: {
                         type: String,
                         required: true

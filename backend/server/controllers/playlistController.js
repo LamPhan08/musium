@@ -102,7 +102,7 @@ const getUserPlaylists = async (req, res) => {
     }
 }
 
-const changePlaylistTitle = async () => {
+const changePlaylistTitle = async (req, res) => {
     try {
         const { userId, playlistId, title } = req.body;
 
@@ -122,15 +122,15 @@ const changePlaylistTitle = async () => {
 
             {
                 $set: {
-                    title: title
+                    'playlists.$.title': title
                 }
             }
         )
 
         if (result.modifiedCount > 0) {
-            return res.json({ message: 'Playlist deleted successfully' });
+            return res.json({ message: 'Playlist title changed successfully' });
         } else {
-            return res.status(404).json({ error: 'Playlist is not deleted' });
+            return res.status(404).json({ error: 'Playlist title is not changed' });
         }
     }
     catch (err) {
@@ -142,12 +142,63 @@ const changePlaylistTitle = async () => {
     }
 }
 
+const getSpecificPlaylist = async (req, res) => {
+    try {
+        const { userId, playlistId } = req.query;
+
+        if (!userId || !playlistId) {
+            return res.status(400).json({ error: 'Missing parameter' });
+        }
+
+        let playlistData = await Playlist.findOne(
+            {userId},
+            {playlists: {
+                $elemMatch: {
+                    _id: playlistId
+                }
+            }}
+        )
+
+        if (!playlistData) {
+            return res.json('Playlist not found!')
+        }
+
+        res.json(playlistData.playlists[0]);
+
+    }
+    catch (err) {
+        res.status(500).json({
+            success: false,
+            message: 'Error creating playlist',
+            error: err.message
+        });
+    }
+}
+
 const addSongToPlaylist = async (req, res) => {
     try {
         const { userId, song, playlistId } = req.body;
 
         if (!userId || !song || !playlistId) {
             return res.status(400).json({ error: 'Missing parameter' });
+        }
+
+        const existingSong = await Playlist.findOne({
+            userId,
+            playlists: {
+                $elemMatch: {
+                    _id: playlistId,
+                    songs: { 
+                        $elemMatch: { 
+                            encodeId: song.encodeId
+                        } 
+                    }
+                  }
+            }
+        })
+
+        if (existingSong) {
+            return res.status(400).json({ error: 'Song already exists in the playlist' });
         }
 
         const result = await Playlist.updateOne(
@@ -162,7 +213,7 @@ const addSongToPlaylist = async (req, res) => {
 
             {
                 $push: {
-                    songs: song
+                    'playlists.$.songs': song
                 }
             }
         )
@@ -202,7 +253,7 @@ const removeSongFromPlaylist = async (req, res) => {
 
             {
                 $pull: {
-                    songs: {
+                    'playlists.$.songs': {
                         encodeId: songId
                     }
                 }
@@ -229,6 +280,7 @@ module.exports = {
     createPlaylist,
     deletePlaylist,
     getUserPlaylists,
+    getSpecificPlaylist,
     changePlaylistTitle,
     addSongToPlaylist,
     removeSongFromPlaylist
