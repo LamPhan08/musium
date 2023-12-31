@@ -10,6 +10,7 @@ const userRoute = require('./server/routes/userRouter')
 const favoritesRoute = require('./server/routes/favoriteSongsRouter')
 const exploreRoute = require('./server/routes/exploreRouter')
 const playlistRoute = require('./server/routes/playlistRouter')
+const commentRoute = require('./server/routes/commentRouter')
 const cookieParser = require('cookie-parser')
 const port = process.env.PORT || 3000
 
@@ -53,6 +54,7 @@ app.use('/api/v1/user', userRoute)
 app.use('/api/v1', favoritesRoute)
 app.use('/api/v1', exploreRoute)
 app.use('/api/v1', playlistRoute)
+app.use('/api/v1', commentRoute)
 
 app.listen(port, () => {
     connect()

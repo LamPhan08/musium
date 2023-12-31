@@ -73,7 +73,7 @@ const Favorites = ({ navigation }) => {
 
     // console.log(result)
 
-    if (result.length !== 0) {
+    if (result) {
       setFavoriteSongs(await CheckSongHasMp3(result.songs));
     }
     else {
