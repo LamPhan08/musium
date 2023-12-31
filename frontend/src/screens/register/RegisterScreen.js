@@ -89,11 +89,38 @@ const RegisterScreen = ({navigation}) => {
     const user = userCredential.user;
     console.log(user);
 
+    try {
       const registerResponse = await mongoAPI.post(`/auth/register`, {
-        username: user.displayName,
-        email: user.email,
-        password: '123456',
-      })
+          username: user.displayName,
+          email: user.email,
+          password: '123456',
+      });
+  
+      // Assuming the API response has a 'status' property
+      if (registerResponse.status === 200) {
+          console.log('Registration successful:', registerResponse.data);
+          // Handle success logic here
+      } else {
+          console.log('Unexpected status code:', registerResponse.status);
+          // Handle other status codes (e.g., 404, 500) here
+      }
+    } catch (error) {
+        if (error.response) {
+            // The request was made and the server responded with a status code
+            console.log('Error status code:', error.response.status);
+            console.log('Error data:', error.response.data);
+            console.log("The account has been already created")
+            // Handle specific status codes (e.g., 404, 500) or server errors here
+        } else if (error.request) {
+            // The request was made but no response was received
+            console.log('No response received from the server');
+            // Handle network or server unreachable errors here
+        } else {
+            // Something happened in setting up the request that triggered an Error
+            console.log('Error:', error.message);
+            // Handle other types of errors here
+        }
+    }
 
     // Sign-in the user with the credential
     return auth().signInWithCredential(googleCredential);
@@ -123,13 +150,38 @@ const RegisterScreen = ({navigation}) => {
           const user = userCredential.user;
           console.log(user);
 
-            const registerResponse = await mongoAPI.post(`/auth/register`, 
-            {
-              username: user.displayName,
-              email: user.email,
-              password: '123456',
+          try {
+            const registerResponse = await mongoAPI.post(`/auth/register`, {
+                username: user.displayName,
+                email: user.email,
+                password: '123456',
+            });
+        
+            // Assuming the API response has a 'status' property
+            if (registerResponse.status === 200) {
+                console.log('Registration successful:', registerResponse.data);
+                // Handle success logic here
+            } else {
+                console.log('Unexpected status code:', registerResponse.status);
+                // Handle other status codes (e.g., 404, 500) here
             }
-          );
+          } catch (error) {
+              if (error.response) {
+                  // The request was made and the server responded with a status code
+                  console.log('Error status code:', error.response.status);
+                  console.log('Error data:', error.response.data);
+                  console.log("The account has been already created")
+                  // Handle specific status codes (e.g., 404, 500) or server errors here
+              } else if (error.request) {
+                  // The request was made but no response was received
+                  console.log('No response received from the server');
+                  // Handle network or server unreachable errors here
+              } else {
+                  // Something happened in setting up the request that triggered an Error
+                  console.log('Error:', error.message);
+                  // Handle other types of errors here
+              }
+          }
 
           // Sign-in the user with the credential
           // Return the user data or any other relevant information if needed
@@ -195,17 +247,8 @@ const RegisterScreen = ({navigation}) => {
             password
           }
       );
-      // console.log(user);
-      // console.log(`${username} `+ ' ' + `${email}` + ' ' + `${password}`)
-          // console.log('registerResponse:', registerResponse)
-          // console.log('loginResponse:', loginResponse)
-
-      // navigation.navigate('App')
       console.log("Login Response:", loginResponse.data);
-        // Assuming your login response contains user data, adjust the following code accordingly
         const userData = loginResponse.data;
-
-        // Store user data in AsyncStorage
         await AsyncStorage.setItem('userData', JSON.stringify(userData));
 
         dispatch(setUser(userData.data))
