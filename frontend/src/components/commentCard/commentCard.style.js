@@ -34,7 +34,8 @@ export default styles = StyleSheet.create({
 
     username: {
         fontFamily: 'Mulish-Bold',
-        fontSize: 13
+        fontSize: 13,
+        maxWidth: 100
     },
 
     dotIcon: {

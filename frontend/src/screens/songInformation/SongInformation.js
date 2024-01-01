@@ -8,6 +8,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import { COLORS } from '../../constants/colors'
 import ConvertTimestamp from '../../utils/convertTimestamp'
 import { useFocusEffect } from '@react-navigation/native'
+import logo from '../../../assets/images/logo.png'
 
 const SongInformation = ({ navigation }) => {
   const { song } = useSelector(state => state.song)
@@ -169,7 +170,13 @@ const SongInformation = ({ navigation }) => {
 
         <View style={styles.songIn4Wrapper}>
           <View style={styles.songTitleWrapper}>
-            <Image style={styles.songThumbnail} source={{ uri: song.cover }} />
+            <Image style={styles.songThumbnail}
+             source={
+              song.cover
+                ? { uri: song.cover }
+                : logo
+             } 
+             />
 
             <View style={styles.titleAndArtistsWrapper}>
               <Text style={styles.songTitle} numberOfLines={1}>{song.title}</Text>

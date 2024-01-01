@@ -17,11 +17,11 @@ const Explore = ({ navigation }) => {
   const [homeData, setHomeData] = useState([])
   const { user } = useSelector(state => state.song)
   const dispatch = useDispatch()
-  const [formData, setFormData] = useState({
-    username: '',
-    // password: '',
-    photo: 'https://reactnative.dev/img/tiny_logo.png'
-  })
+  // const [formData, setFormData] = useState({
+  //   username: '',
+  //   // password: '',
+  //   photo: 'https://reactnative.dev/img/tiny_logo.png'
+  // })
 
   const handleNavigateSearch = () => {
     navigation.navigate('Search')
@@ -60,18 +60,18 @@ const Explore = ({ navigation }) => {
 
         setHomeData(result.data.items)
 
-        const getUser = async () => {
-          try {
+        // const getUser = async () => {
+        //   try {
             
-            const getDataRespone = await mongoAPI.get(`/user/getuser/${user._id}`)
-            setFormData({...getDataRespone.data})
+        //     const getDataRespone = await mongoAPI.get(`/user/getuser/${user._id}`)
+        //     setFormData({...getDataRespone.data})
     
-          } catch (error) {
-            console.error(error.message)
-          }
-        };
+        //   } catch (error) {
+        //     console.error(error.message)
+        //   }
+        // };
     
-         getUser();
+        //  getUser();
       }
     )()
   }, [])
@@ -99,14 +99,14 @@ const Explore = ({ navigation }) => {
               navigation.navigate('Profile')
             }}>
             <Image source={{
-                  uri: formData.photo,
+                  uri: user.photo,
                 }} style={styles.avatar} />
           </TouchableOpacity>
 
           <View style={styles.nameContainer}>
             <Text style={styles.welcome}>Xin chào!</Text>
 
-            <Text style={styles.name}>{formData.username}</Text>
+            <Text style={styles.name}>{user.username}</Text>
           </View>
 
           <TouchableOpacity onPress={handleNavigateSearch}>

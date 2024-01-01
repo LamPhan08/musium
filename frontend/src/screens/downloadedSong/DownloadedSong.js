@@ -38,7 +38,7 @@ const DownloadedSong = ({ navigation }) => {
 
   
   const handleNavigateSearchSongs = () => {
-
+    navigation.navigate('SearchSongs', { storageAudios: music })
   }
 
   useEffect(() => {

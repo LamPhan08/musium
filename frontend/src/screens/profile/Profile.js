@@ -15,18 +15,19 @@ import ProfilePlaylistCard from '../../components/profilePlaylistCard/ProfilePla
 import { getPermissions } from '../../utils/getPermission';
 import { getUserPlaylists } from '../../api/playlist';
 import { useFocusEffect } from '@react-navigation/native';
-import { mongoAPI } from '../../axios/axios';
+import auth from '@react-native-firebase/auth';
+import { GoogleSignin } from '@react-native-google-signin/google-signin'
 
 const Profile = ({ navigation }) => {
   const { user } = useSelector(state => state.song);
   const dispatch = useDispatch();
   const [showPopup, setShowPopup] = useState(false)
   const [playlists, setPlaylists] = useState();
-  const [formData, setFormData] = useState({
-    username: '',
-    // password: '',
-    photo: 'https://reactnative.dev/img/tiny_logo.png'
-  })
+  // const [formData, setFormData] = useState({
+  //   username: '',
+  //   // password: '',
+  //   photo: 'https://reactnative.dev/img/tiny_logo.png'
+  // })
 
   const handleNavigateDownloadedSongs = async () => {
     const granted = await getPermissions();
@@ -38,20 +39,6 @@ const Profile = ({ navigation }) => {
       ToastAndroid.show('Bạn chưa cấp quyền!', ToastAndroid.BOTTOM)
     }
   }
-
-  // Function to handle logout
-  const handleLogout = async () => {
-    try {
-      // Clear user data from AsyncStorage
-      await AsyncStorage.removeItem('userData');
-      console.log('removed user data from storage and proceed to login screen')
-
-      // Navigate to the "Login" screen
-      navigation.replace('Login');
-    } catch (error) {
-      console.error('Error logging out:', error);
-    }
-  };
 
   const loadData = async () => {
     const result = await getUserPlaylists(user._id);
@@ -70,21 +57,21 @@ const Profile = ({ navigation }) => {
     }, [])
   )
 
-  useEffect(() => {
+  // useEffect(() => {
 
-    const getUser = async () => {
-      try {
+  //   const getUser = async () => {
+  //     try {
         
-        const getDataRespone = await mongoAPI.get(`/user/getuser/${user._id}`)
-        setFormData({...getDataRespone.data})
+  //       const getDataRespone = await mongoAPI.get(`/user/getuser/${user._id}`)
+  //       setFormData({...getDataRespone.data})
 
-      } catch (error) {
-        console.error(error.message)
-      }
-    };
+  //     } catch (error) {
+  //       console.error(error.message)
+  //     }
+  //   };
 
-     getUser();
-  }, []);
+  //    getUser();
+  // }, []);
 
   if (playlists) {
     return (
@@ -99,17 +86,15 @@ const Profile = ({ navigation }) => {
             decelerationRate='fast'
           >
             <View style={styles.userWrapper}>
-              <TouchableOpacity onPress={handleLogout}>
               <Image
                 style={styles.avatar}
                 source={{
-                  uri: formData.photo,
+                  uri: user.photo,
                 }}
               />
-              </TouchableOpacity>
               <View style={styles.usernameWrapper}>
                 <Text style={styles.username} numberOfLines={1}>
-                  {formData.username}
+                  {user.username}
                 </Text>
   
                 <Text style={styles.hello}>Xin chào!</Text>
@@ -118,11 +103,11 @@ const Profile = ({ navigation }) => {
               <TouchableOpacity
                 onPress={() => {
                   // handle onPress
-                  navigation.navigate("EditProfile")
+                  navigation.navigate("ViewProfile")
                 }}
                 style={styles.editProfileBtn}
               >
-                <Text style={styles.profileActionText}>Sửa hồ sơ</Text>
+                <Text style={styles.profileActionText}>Xem hồ sơ</Text>
   
                 <Ionicons name='chevron-forward' style={styles.editProfileIcon} />
               </TouchableOpacity>

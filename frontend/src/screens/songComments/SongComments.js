@@ -32,7 +32,7 @@ const SongComments = ({ navigation, route }) => {
 
         if (result) {
             
-            setComments(result.comments)
+            setComments(result.comments.reverse())
 
         }
         else {

@@ -5,7 +5,7 @@ import Splash from '../screens/splash/Splash';
 import OnboardingScreen from '../screens/OnboardingScreen';
 import LoginScreen from '../screens/login/LoginScreen';
 import RegisterScreen from '../screens/register/RegisterScreen';
-import EditProfile from '../screens/editprofilescreen/EditProfile'
+import EditProfile from '../screens/editProfile/EditProfile'
 import PlayerDetails from '../screens/playerDetails/PlayerDetails';
 import SongComments from '../screens/songComments/SongComments';
 import { useDispatch } from 'react-redux';
@@ -14,7 +14,7 @@ import LocalAudio from '../screens/localAudio/LocalAudio';
 import Profile from '../screens/profile/Profile';
 import TrackPlayer, { useTrackPlayerEvents, Event } from 'react-native-track-player';
 import AddPlayList from '../screens/addPlayList/AddPlayList';
-
+import ViewProfile from '../screens/viewProfile/ViewProfile';
 
 const Stack = createNativeStackNavigator();
 
@@ -64,7 +64,10 @@ const RootNavigation = () => {
                 headerShown: false,
                 presentation: 'modal',
                 animation: 'slide_from_right'
+                
             }}
+            
+            
         >
             <Stack.Screen name="Onboarding" component={OnboardingScreen} />
 
@@ -75,8 +78,6 @@ const RootNavigation = () => {
             <Stack.Screen name="App" component={BottomTabNavigator} />
 
             <Stack.Screen name="Splash" component={Splash} />
-
-            <Stack.Screen name="EditProfile" component={EditProfile} />
 
             <Stack.Screen name="AddPlayList" component={AddPlayList} />
             
@@ -92,6 +93,16 @@ const RootNavigation = () => {
             <Stack.Screen name='SongComments' component={SongComments} options={{
                 presentation: 'modal',
                 animation: 'slide_from_bottom'
+            }} />
+
+            <Stack.Screen name='ViewProfile' component={ViewProfile} options={{
+                presentation: 'modal',
+                animation: 'slide_from_right',
+                
+            }}/>
+            <Stack.Screen name='EditProfile' component={EditProfile} options={{
+                presentation: 'modal',
+                animation: 'slide_from_right'
             }} />
 
 

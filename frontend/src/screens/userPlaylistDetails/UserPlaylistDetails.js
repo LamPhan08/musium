@@ -6,7 +6,7 @@ import Entypo from 'react-native-vector-icons/Entypo'
 import Feather from 'react-native-vector-icons/Feather'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import styles from './userPlaylistDetails.style'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import EditArrayForTrackPlayer from '../../utils/editArrayForTrackPlayer'
 import CheckSongHasMp3 from '../../utils/checkSongHasMp3'
 import TrackPlayer from 'react-native-track-player'
@@ -20,6 +20,8 @@ import UserPlaylistSongCard from '../../components/userPlaylistSongCard/UserPlay
 const { width } = Dimensions.get('window')
 
 const UserPlaylistDetails = ({ navigation, route }) => {
+  const {user} = useSelector(state => state.song)
+
   const { playlist, userId } = route.params
   const [playlistData, setPlaylistData] = useState(playlist)
   const [showBottomSheet, setShowBottomSheet] = useState(false)
@@ -139,9 +141,9 @@ const UserPlaylistDetails = ({ navigation, route }) => {
               <Text style={styles.playlistTitle}>{playlistData.title}</Text>
 
               <View style={styles.userWrapper}>
-                <Image source={avatar} style={styles.avatar} />
+                <Image source={{uri: user.photo}} style={styles.avatar} />
 
-                <Text style={styles.username}>{playlistData.creator}</Text>
+                <Text style={styles.username}>{playlistData.creator === 'musium' ? 'musium' : user.username}</Text>
 
                 {playlistData.songs.length !== 0 &&
                   <TouchableOpacity onPress={handlePlay} style={styles.playBtn}>

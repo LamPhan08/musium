@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, View, FlatList, TouchableOpacity, Text, } from 'react-native';
+import { SafeAreaView, View, FlatList, TouchableOpacity, Text, Keyboard } from 'react-native';
 import styles from './searchSongs.style';
 import SearchBar from '../../components/searchBar/SearchBar';
 import Entypo from 'react-native-vector-icons/Entypo'
@@ -15,18 +15,20 @@ const SearchSongs = ({ navigation, route }) => {
     const [searchText, setSearchText] = useState('')
     const [focus, setFocus] = useState(false)
 
-    const handleFind = () => {
-
-    }
+    const handleFind = () => {}
 
     const delaySearch = debounce(async () => {
         if (searchText !== '') {
-                const filteredSongs = initialSongs.filter((song) =>
-                    song.title.toLowerCase().includes(searchText.toLowerCase()) ||
-                    song.artistsNames.toLowerCase().includes(searchText.toLowerCase())
-                );
+            const filteredSongs = initialSongs.filter((song) =>
+                song.title.toLowerCase().includes(searchText.toLowerCase()) ||
+                (
+                    song.artistsNames
+                        ? song.artistsNames.toLowerCase().includes(searchText.toLowerCase())
+                        : song.artist.toLowerCase().includes(searchText.toLowerCase())
+                )
+            );
 
-                setSongList(filteredSongs);
+            setSongList(filteredSongs);
         }
         else {
             setSongList(initialSongs)
@@ -70,12 +72,7 @@ const SearchSongs = ({ navigation, route }) => {
                         }
                         else {
                             return (
-                                <StorageAudio
-                                    key={index}
-                                    index={index}
-                                    song={item}
-                                    playlistSongs={songList}
-                                />
+                                <StorageAudio key={index} song={item} index={index} songList={songList}/>
                             )
                         }
                     }}

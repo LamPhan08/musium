@@ -6,24 +6,23 @@ const jwt = require('jsonwebtoken');
 // user registration
 const register = async (req, res) => {
     try {
+        const { username, email, password, photo } = req.body;
 
-        /* hashing password (drawback: cannot see password in db => leave this snippet in comment)
-            const salt = bcrypt.genSaltSync(10)
-            const hash = bcrypt.hashSync(req.body.password, salt);
-            
-            const newUser = new User({
-                username: req.body.username,
-                email: req.body.email,
-                password: hash,
-                photo: req.body.photo
-            });
-        */
+        if (!username || !email || !password || !photo) {
+            return res.status(400).json({ error: 'Missing parameter' });
+        }
+
+        let existingUser = await User.findOne({email})
+
+        if (existingUser) {
+            return res.json('User already exists');
+        }
         
         const newUser = new User({
-            username: req.body.username,
-            email: req.body.email,
-            password: req.body.password,
-            photo: req.body.photo
+            username: username,
+            email: email,
+            password: password,
+            photo: photo
         });
 
         await newUser.save();
@@ -53,11 +52,7 @@ const login = async (req, res) => {
         // if user doesn't exist
         if(!user)
         {
-            return res.status(404)
-            .json({
-                success: false,
-                message: 'User not found'
-            });
+            return res.json('User not found')
         }
 
         /* leave this snippet in comment:
@@ -75,11 +70,7 @@ const login = async (req, res) => {
         // if the password is incorrect
         if(req.body.password !== user.password)
         {
-            return res.status(401)
-            .json({
-                success: false,
-                message: 'Incorrect email or password'
-            });
+            return res.json('Incorrect email or password')
         }
 
         const {password, role, ...rest} = user._doc;

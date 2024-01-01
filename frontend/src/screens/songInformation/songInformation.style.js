@@ -37,7 +37,8 @@ export default styles = StyleSheet.create({
         height: 70,
         width: 70,
         resizeMode: 'contain',
-        borderRadius: 7
+        borderRadius: 7,
+        backgroundColor: COLORS.lightBlack
     },
 
     titleAndArtistsWrapper: {

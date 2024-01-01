@@ -7,6 +7,7 @@ import {
     Image,
     Dimensions,
     Keyboard,
+    ToastAndroid,
 } from 'react-native';
 
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -85,7 +86,7 @@ const LoginScreen = ({ navigation }) => {
         // // Extract user information
         // const user = userCredential.user;
         // console.log(user);
-        
+
         // const loginResponse = await mongoAPI.post(`/auth/login`,
         //     {
         //         email: user.email,
@@ -107,88 +108,113 @@ const LoginScreen = ({ navigation }) => {
             const userCredential = await auth().signInWithCredential(googleCredential);
             const user = userCredential.user;
             console.log(user);
-      
+
+            const registerResponse = await mongoAPI.post('auth/register', {
+                username: user.displayName,
+                photo: user.photoURL,
+                email: user.email,
+                password: '123456',
+            })
+
+            console.log('registerResponse.data:', registerResponse.data)
+
             // Check if the user exists in MongoDB
             const loginResponse = await mongoAPI.post(`/auth/login`, {
-              email: user.email,
-              password: '123456', // Provide a default password or handle it differently
+                email: user.email,
+                password: '123456', // Provide a default password or handle it differently
             });
-      
+
             console.log("Login Response:", loginResponse.data);
             const userData = loginResponse.data;
-      
+
             if (userData.success) {
-              // User exists, log them in
-              await AsyncStorage.setItem('userData', JSON.stringify(userData));
-              dispatch(setUser(userData.data));
-              navigation.replace('App');
+                // User exists, log them in
+                await AsyncStorage.setItem('userData', JSON.stringify(userData));
+                dispatch(setUser(userData.data));
+                navigation.replace('App');
             } else {
-              // User doesn't exist, proceed with social media sign-in
-              // ... (your existing code for storing user data in MongoDB)
+                // User doesn't exist, proceed with social media sign-in
+                // ... (your existing code for storing user data in MongoDB)
             }
-          } catch (error) {
-            console.log(error.message);
-          }
+        } catch (error) {
+            console.log(error.response.data);
+        }
     }
 
     async function onFacebookButtonPress() {
         try {
             const result = await LoginManager.logInWithPermissions(['email']);
-      
+
             if (result.isCancelled) {
-              console.log("Clicked cancel");
+                console.log("Clicked cancel");
             } else {
-              const data = await AccessToken.getCurrentAccessToken();
-      
-              if (!data) {
-                throw 'Something went wrong obtaining access token';
-              }
-      
-              const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
-              const userCredential = await auth().signInWithCredential(facebookCredential);
-              const user = userCredential.user;
-              console.log(user);
-      
-              // Check if the user exists in MongoDB
-              const loginResponse = await mongoAPI.post(`/auth/login`, {
-                email: user.email,
-                password: '123456', // Provide a default password or handle it differently
-              });
-      
-              console.log("Login Response:", loginResponse.data);
-              const userData = loginResponse.data;
-      
-              if (userData.success) {
-                // User exists, log them in
-                await AsyncStorage.setItem('userData', JSON.stringify(userData));
-                dispatch(setUser(userData.data));
-                navigation.replace('App');
-              } else {
-                // User doesn't exist, proceed with social media sign-in
-                // ... (your existing code for storing user data in MongoDB)
-              }
+                const data = await AccessToken.getCurrentAccessToken();
+
+                if (!data) {
+                    throw 'Something went wrong obtaining access token';
+                }
+
+                const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
+                const userCredential = await auth().signInWithCredential(facebookCredential);
+                const user = userCredential.user;
+                console.log(user);
+
+                const registerResponse = await mongoAPI.post('auth/register', {
+                    username: user.displayName,
+                    photo: user.photoURL,
+                    email: user.email,
+                    password: '123456',
+                })
+                
+                console.log('registerResponse.data:', registerResponse.data)
+
+                // Check if the user exists in MongoDB
+                const loginResponse = await mongoAPI.post(`/auth/login`, {
+                    email: user.email,
+                    password: '123456', // Provide a default password or handle it differently
+                });
+
+                console.log("Login Response:", loginResponse.data);
+                const userData = loginResponse.data;
+
+                if (userData.success) {
+                    // User exists, log them in
+                    await AsyncStorage.setItem('userData', JSON.stringify(userData));
+                    dispatch(setUser(userData.data));
+                    navigation.replace('App');
+                } else {
+                    // User doesn't exist, proceed with social media sign-in
+                    // ... (your existing code for storing user data in MongoDB)
+                }
             }
-          } catch (error) {
+        } catch (error) {
             console.log(error.message);
         }
     }
-    
 
-    const handleClick = async e => {
-        e.preventDefault();
+
+    const handleClick = async () => {
         const loginResponse = await mongoAPI.post(`/auth/login`,
             {
                 email,
                 password
             }
         );
-        console.log("Login Response:", loginResponse.data);
-        const userData = loginResponse.data;
-        await AsyncStorage.setItem('userData', JSON.stringify(userData));
 
-        dispatch(setUser(userData.data))
+        if (loginResponse.data === 'Incorrect email or password') {
+            ToastAndroid.show('Tài khoản hoặc mật khẩu không đúng!', ToastAndroid.BOTTOM)
+        }
+        else if (loginResponse.data === 'User not found') {
+            ToastAndroid.show('Tài khoản hoặc mật khẩu không hợp lệ!', ToastAndroid.BOTTOM)
+        }
+        else {
+            const userData = loginResponse.data;
+            await AsyncStorage.setItem('userData', JSON.stringify(userData));
 
-        navigation.replace('App')
+            dispatch(setUser(userData.data))
+
+            navigation.replace('App')
+        }
     }
 
     const handleOnchange = (text, input) => {
@@ -203,7 +229,7 @@ const LoginScreen = ({ navigation }) => {
         let isValid = true;
 
         if (!inputs.email) {
-            handleError('Please input email', 'email');
+            handleError('Vui lòng điền email', 'email');
             isValid = false;
         } else if (!inputs.email.match(/\S+@\S+\.\S+/)) {
             handleError('Vui lòng điền email hợp lệ', 'email');
@@ -211,10 +237,10 @@ const LoginScreen = ({ navigation }) => {
         }
 
         if (!inputs.password) {
-            handleError('Bạn phải điền password ', 'password');
+            handleError('Bạn phải điền mật khẩu ', 'password');
             isValid = false;
-        } else if (inputs.password.length < 5) {
-            handleError('Password quá yếu', 'password');
+        } else if (inputs.password.length < 6) {
+            handleError('Mật khẩu phải từ 6 ký tự trở lên', 'password');
             isValid = false;
         }
 
@@ -280,7 +306,7 @@ const LoginScreen = ({ navigation }) => {
 
                     />
 
-                    <CustomButton label={"Đăng nhập"} onPress={handleClick} />
+                    <CustomButton label={"Đăng nhập"} onPress={validate} />
 
                     <Text style={{ textAlign: 'center', color: '#FFFFFF', marginBottom: 30, fontFamily: 'Mulish-Regular' }}>
                         Hoặc tiếp tục với
@@ -296,14 +322,13 @@ const LoginScreen = ({ navigation }) => {
                         <TouchableOpacity
                             onPress={
                                 () => onGoogleButtonPress()
-                                .then(() => {
-                                    console.log('Signed in with Google!');
-                                    navigation.navigate('App');
-                                }
-                                )
-                                .catch((error) => {
-                                    console.log(error.message);
-                                })
+                                    .then(() => {
+                                        console.log('Signed in with Google!');
+                                    }
+                                    )
+                                    .catch((error) => {
+                                        console.log(error.message);
+                                    })
                                 // signInWithGoogle
                             }
                             style={{
@@ -316,12 +341,11 @@ const LoginScreen = ({ navigation }) => {
                             <GoogleSVG height={24} width={24} />
                         </TouchableOpacity>
                         <TouchableOpacity
-                            onPress={() =>
-                                {
-                                    onFacebookButtonPress()
-                                        .then(() => {})
-                                        .catch(() => console.log('Sign in with Facebook failed'))
-                                }
+                            onPress={() => {
+                                onFacebookButtonPress()
+                                    .then(() => { })
+                                    .catch(() => console.log('Sign in with Facebook failed'))
+                            }
                             }
                             style={{
                                 borderColor: '#ddd',

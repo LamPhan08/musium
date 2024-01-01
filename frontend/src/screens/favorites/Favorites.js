@@ -39,11 +39,11 @@ import { mongoAPI } from '../../axios/axios';
 const Favorites = ({ navigation }) => {
   const [favoriteSongs, setFavoriteSongs] = useState();
 
-  const [formData, setFormData] = useState({
-    username: '',
-    // password: '',
-    photo: 'https://reactnative.dev/img/tiny_logo.png'
-  })
+  // const [formData, setFormData] = useState({
+  //   username: '',
+  //   // password: '',
+  //   photo: 'https://reactnative.dev/img/tiny_logo.png'
+  // })
 
   const { user } = useSelector(state => state.song);
   const dispatch = useDispatch()
@@ -105,21 +105,21 @@ const Favorites = ({ navigation }) => {
     }, [])
   );
 
-  useEffect(() => {
+  // useEffect(() => {
 
-    const getUser = async () => {
-      try {
+  //   const getUser = async () => {
+  //     try {
         
-        const getDataRespone = await mongoAPI.get(`/user/getuser/${user._id}`)
-        setFormData({...getDataRespone.data})
+  //       const getDataRespone = await mongoAPI.get(`/user/getuser/${user._id}`)
+  //       setFormData({...getDataRespone.data})
 
-      } catch (error) {
-        console.error(error.message)
-      }
-    };
+  //     } catch (error) {
+  //       console.error(error.message)
+  //     }
+  //   };
 
-     getUser();
-  }, []);
+  //    getUser();
+  // }, []);
 
   return (
     <SafeAreaView style={styles.favoriteSongsContainer}>
@@ -271,11 +271,11 @@ const Favorites = ({ navigation }) => {
 
                 <View style={styles.userWrapper}>
                   <Image source={{
-                  uri: formData.photo,
+                  uri: user.photo,
                 }} 
                 style={styles.avatar} />
 
-                  <Text style={styles.username}>{formData.username}</Text>
+                  <Text style={styles.username}>{user.username}</Text>
 
                   {favoriteSongs.length !== 0 &&
                     <TouchableOpacity onPress={handlePlay} style={styles.playBtn}>
