@@ -20,6 +20,7 @@ const createPlaylist = async (req, res) => {
         playlistData.playlists.push({
             creator: username,
             title: title,
+            playlistId: 'none',
             songs: []
         })
 
@@ -36,6 +37,84 @@ const createPlaylist = async (req, res) => {
         res.status(500).json({
             success: false,
             message: 'Error creating playlist',
+            error: err.message
+        });
+    }
+}
+
+const addPlaylistToProfile = async (req, res) => {
+    try {
+        const { userId, title, songs, playlistId } = req.body;
+
+        if (!userId || !title || !songs || !playlistId) {
+            return res.status(400).json({ error: 'Missing parameter' });
+        }
+
+        let playlistData = await Playlist.findOne({userId})
+
+        if (!playlistData) {
+            playlistData = new Playlist({
+                userId,
+                playlists: []
+            })
+        }
+
+        playlistData.playlists.push({
+            creator: 'musium',
+            playlistId: playlistId,
+            title: title,
+            songs: songs,
+
+        })
+
+
+        await playlistData.save()
+
+        res.json({ 
+            success: true,
+            message: 'Playlist added successfully!' 
+        });
+
+    }
+    catch (err) {
+        res.status(500).json({
+            success: false,
+            message: 'Error adding playlist',
+            error: err.message
+        });
+    }
+}
+
+const removePlaylistFromProfile = async (req, res) => {
+    try {
+        const { userId, playlistId } = req.body;
+
+        if (!userId || !playlistId) {
+            return res.status(400).json({ error: 'Missing parameter' });
+        }
+
+        const result = await Playlist.updateOne(
+            {
+                userId,
+            },
+
+            {
+                $pull: {
+                    playlists: { playlistId: playlistId }
+                }
+            }
+        )
+
+        if (result.modifiedCount > 0) {
+            return res.json({ message: 'Playlist deleted successfully' });
+        } else {
+            return res.status(404).json({ error: 'Playlist is not deleted' });
+        }
+    }
+    catch (err) {
+        res.status(500).json({
+            success: false,
+            message: 'Error deleting playlist',
             error: err.message
         });
     }
@@ -283,6 +362,8 @@ module.exports = {
     getSpecificPlaylist,
     changePlaylistTitle,
     addSongToPlaylist,
-    removeSongFromPlaylist
+    removeSongFromPlaylist,
+    addPlaylistToProfile,
+    removePlaylistFromProfile
 }
 

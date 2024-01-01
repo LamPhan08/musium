@@ -43,9 +43,15 @@ const ModalAddPlayList = ({ showPopup, setShowPopup, loadData }) => {
             onShow={() => inputRef.current?.focus()}
             transparent={true}
             visible={showPopup}
-            onRequestClose={() => setShowPopup(!showPopup)}
+            onRequestClose={() => {
+                setShowPopup(!showPopup)
+                setName('')
+            }}
         >
-            <Pressable style={styles.popupModal} onPress={() => setShowPopup(!showPopup)} />
+            <Pressable style={styles.popupModal} onPress={() => {
+                setShowPopup(!showPopup)
+                setName('')
+            }} />
 
             <View style={styles.modal}>
                 <View style={styles.inputWrapper}>

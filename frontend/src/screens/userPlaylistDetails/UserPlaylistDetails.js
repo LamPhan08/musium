@@ -1,7 +1,6 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react'
 import { View, Text, TouchableOpacity, Animated, ScrollView, Image, ImageBackground, Dimensions, FlatList, ActivityIndicator } from 'react-native'
 import logo from '../../../assets/images/logo.png'
-import avatar from '../../../assets/images/avatar.png'
 import Entypo from 'react-native-vector-icons/Entypo'
 import Feather from 'react-native-vector-icons/Feather'
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -141,7 +140,14 @@ const UserPlaylistDetails = ({ navigation, route }) => {
               <Text style={styles.playlistTitle}>{playlistData.title}</Text>
 
               <View style={styles.userWrapper}>
-                <Image source={{uri: user.photo}} style={styles.avatar} />
+                <Image 
+                source={
+                  playlistData.creator === 'musium'
+                    ? logo
+                    : {uri: user.photo}
+                } 
+                style={styles.avatar} 
+                />
 
                 <Text style={styles.username}>{playlistData.creator === 'musium' ? 'musium' : user.username}</Text>
 

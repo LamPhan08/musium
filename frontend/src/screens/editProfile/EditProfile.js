@@ -32,7 +32,7 @@ const EditProfile = ({ navigation }) => {
   const [img, setImg] = useState(user.photo)
   const [isOpen, setOpen] = useState(false);
   const [formData, setFormData] = useState({
-    username: '',
+    username: user.username,
     // password: '',
     photo: user.photo
   })
@@ -144,21 +144,21 @@ const EditProfile = ({ navigation }) => {
     // }
   };
 
-  useEffect(() => {
+  // useEffect(() => {
 
-    const getUser = async () => {
-      try {
+  //   const getUser = async () => {
+  //     try {
 
-        const getDataRespone = await mongoAPI.get(`/user/getuser/${user._id}`)
-        setFormData({ ...getDataRespone.data })
+  //       const getDataRespone = await mongoAPI.get(`/user/getuser/${user._id}`)
+  //       setFormData({ ...getDataRespone.data })
 
-      } catch (error) {
-        console.error(error.message)
-      }
-    };
+  //     } catch (error) {
+  //       console.error(error.message)
+  //     }
+  //   };
 
-    getUser();
-  }, []);
+  //   getUser();
+  // }, []);
 
 console.log('formData.username:', formData.username)
 console.log('user.username:', user.username)

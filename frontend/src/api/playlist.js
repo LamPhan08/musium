@@ -13,6 +13,21 @@ export const createPlaylist = async (userId, title, username) => {
     }
 }
 
+export const addPlaylistToProfile = async (userId, title, songs, playlistId) => {
+    console.log(playlistId)
+    try {
+        await mongoAPI.post('/addPlaylistToProfile', {
+            userId,
+            title,
+            songs,
+            playlistId
+        })
+    }
+    catch (err) {
+        console.log(err.response.data)
+    }
+}
+
 export const getUserPlaylists = async (userId) => {
     try {
         const response = await mongoAPI.get('/getUserPlaylists', {
@@ -91,6 +106,21 @@ export const removeSongFromPlaylist = async (userId, songId, playlistId) => {
             data: {
                 userId: userId,
                 songId: songId,
+                playlistId: playlistId
+            }
+        })
+
+    }
+    catch (err) {
+        console.log(err.response.data)
+    }
+}
+
+export const removePlaylistFromProfile = async (userId, playlistId) => {
+    try {
+        await mongoAPI.delete('/removePlaylistFromProfile', {
+            data: {
+                userId: userId,
                 playlistId: playlistId
             }
         })

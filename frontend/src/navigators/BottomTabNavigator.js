@@ -182,7 +182,7 @@ const BottomTabNavigator = ({ navigation }) => {
       }}
 
       backBehavior='none'
-      initialRouteName='ProfileStack'
+      initialRouteName='ExploreStack'
       tabBar={({ state, descriptors, navigation }) => {
 
         return (

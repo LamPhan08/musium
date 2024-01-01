@@ -69,7 +69,8 @@ export default styles = StyleSheet.create({
     avatar: {
         height: 40,
         width: 40,
-        borderRadius: 50
+        borderRadius: 50,
+        backgroundColor: COLORS.lightBlack
     },
 
     username: {

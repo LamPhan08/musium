@@ -44,7 +44,7 @@ const Profile = ({ navigation }) => {
     const result = await getUserPlaylists(user._id);
 
     if (result.length !== 0) {
-      setPlaylists(result.playlists)
+      setPlaylists(result.playlists.reverse())
     }
     else {
       setPlaylists([])

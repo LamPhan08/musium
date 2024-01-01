@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { View, Text, ScrollView, Image, ImageBackground, TouchableOpacity, ActivityIndicator, FlatList, Animated, Dimensions } from 'react-native'
+import { View, Text, ScrollView, Image, ImageBackground, TouchableOpacity, ActivityIndicator, FlatList, Animated, Dimensions, ToastAndroid } from 'react-native'
 import styles from './playlistDetails.style'
 import { getPlaylistDetails } from '../../api/getData'
 import Entypo from 'react-native-vector-icons/Entypo'
@@ -11,13 +11,16 @@ import SongCard from '../../components/songCard/SongCard'
 import CheckSongHasMp3 from '../../utils/checkSongHasMp3'
 import EditArrayForTrackPlayer from '../../utils/editArrayForTrackPlayer'
 import TrackPlayer from 'react-native-track-player'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { setSongList } from '../../redux/songSlice'
+import { addPlaylistToProfile, getUserPlaylists, removePlaylistFromProfile } from '../../api/playlist'
 
 const { width } = Dimensions.get('window')
 // console.log(width * 0.65)
 
 const PlaylistDetails = ({ navigation, route }) => {
+  const { user } = useSelector(state => state.song)
+
   const { playlistId, playlistThumbnail } = route.params
   const [playlistData, setPlaylistData] = useState()
   const [playlistSong, setPlaylistSong] = useState()
@@ -41,10 +44,21 @@ const PlaylistDetails = ({ navigation, route }) => {
     extrapolate: 'clamp',
   })
 
+
+  const checkAddedPlaylistToProfile = async (data) => {
+    const result = await getUserPlaylists(user._id)
+
+    const check = result.playlists.some(playlist => playlist.playlistId === data.encodeId)
+
+    setIsLiked(check)
+
+  }
+
   useEffect(() => {
     (
       async () => {
         const result = await getPlaylistDetails(playlistId)
+        await checkAddedPlaylistToProfile(result)
 
         setPlaylistData(result)
 
@@ -54,8 +68,21 @@ const PlaylistDetails = ({ navigation, route }) => {
   }, [])
 
 
-  const handleLike = () => {
-    setIsLiked(!isLiked)
+  const handleLike = async () => {
+    if (isLiked) {
+      await removePlaylistFromProfile(user._id, playlistData.encodeId)
+
+      await checkAddedPlaylistToProfile(playlistData)
+
+      ToastAndroid.show(`Đã gỡ ${playlistData.title} ra khỏi mục cá nhân!`, ToastAndroid.BOTTOM)
+    }
+    else {
+      await addPlaylistToProfile(user._id, playlistData.title, playlistSong, playlistData.encodeId)
+
+      await checkAddedPlaylistToProfile(playlistData)
+
+      ToastAndroid.show(`Đã thêm ${playlistData.title} vào mục cá nhân!`, ToastAndroid.BOTTOM)
+    }
   }
 
   const handleHeaderPlay = async () => {
@@ -87,6 +114,7 @@ const PlaylistDetails = ({ navigation, route }) => {
     [{ nativeEvent: { contentOffset: { y: scrollY } } }],
     { useNativeDriver: false }
   )
+
 
   // console.log(playlistData)
 
@@ -160,22 +188,22 @@ const PlaylistDetails = ({ navigation, route }) => {
 
               {playlistSong.length !== 0
                 ? <View style={styles.btnWrapper}>
-                <Text style={styles.playlistSongTotal}>{playlistSong.length} bài</Text>
+                  <Text style={styles.playlistSongTotal}>{playlistSong.length} bài</Text>
 
-                <TouchableOpacity onPress={handlePlay} style={styles.playBtn}>
-                  <Ionicons name='play' style={styles.icon} color={COLORS.white} />
+                  <TouchableOpacity onPress={handlePlay} style={styles.playBtn}>
+                    <Ionicons name='play' style={styles.icon} color={COLORS.white} />
 
-                  <Text style={styles.btnText}>Phát</Text>
-                </TouchableOpacity>
+                    <Text style={styles.btnText}>Phát</Text>
+                  </TouchableOpacity>
 
-                <TouchableOpacity onPress={handleLike}>
-                  {isLiked
-                    ? <Ionicons name='heart' style={styles.icon} color={COLORS.primary} />
-                    : <Ionicons name='heart-outline' style={styles.icon} color={COLORS.white} />
-                  }
-                </TouchableOpacity>
-              </View>
-              : <Text style={styles.noSongs}>Không có bài hát nào!</Text>
+                  <TouchableOpacity onPress={handleLike}>
+                    {isLiked
+                      ? <Ionicons name='heart' style={styles.icon} color={COLORS.primary} />
+                      : <Ionicons name='heart-outline' style={styles.icon} color={COLORS.white} />
+                    }
+                  </TouchableOpacity>
+                </View>
+                : <Text style={styles.noSongs}>Không có bài hát nào!</Text>
               }
             </View>
 

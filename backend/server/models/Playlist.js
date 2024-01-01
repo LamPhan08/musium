@@ -14,6 +14,11 @@ const Playlist = new mongoose.Schema({
                 required: true
             },
 
+            playlistId: {
+                type: String,
+                required: true
+            },
+
             title: {
                 type: String,
                 required: true
@@ -24,7 +29,6 @@ const Playlist = new mongoose.Schema({
                     encodeId: {
                         type: String,
                         required: true,
-                        unique: true
                     },
         
                     title: {
