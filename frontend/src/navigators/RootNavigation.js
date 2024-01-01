@@ -7,6 +7,7 @@ import LoginScreen from '../screens/login/LoginScreen';
 import RegisterScreen from '../screens/register/RegisterScreen';
 import EditProfile from '../screens/editprofilescreen/EditProfile'
 import PlayerDetails from '../screens/playerDetails/PlayerDetails';
+import SongComments from '../screens/songComments/SongComments';
 import { useDispatch } from 'react-redux';
 import { setSong, setPlayerState } from '../redux/songSlice';
 import LocalAudio from '../screens/localAudio/LocalAudio';
@@ -66,15 +67,29 @@ const RootNavigation = () => {
             }}
         >
             <Stack.Screen name="Onboarding" component={OnboardingScreen} />
+
             <Stack.Screen name="Login" component={LoginScreen} />
+
             <Stack.Screen name="Register" component={RegisterScreen} />
+
             <Stack.Screen name="App" component={BottomTabNavigator} />
+
             <Stack.Screen name="Splash" component={Splash} />
+
             <Stack.Screen name="EditProfile" component={EditProfile} />
+
             <Stack.Screen name="AddPlayList" component={AddPlayList} />
+            
             <Stack.Screen name="Profile" component={Profile} />
+
             <Stack.Screen name="LocalAudio" component={LocalAudio} />
+
             <Stack.Screen name='PlayerDetails' component={PlayerDetails} options={{
+                presentation: 'modal',
+                animation: 'slide_from_bottom'
+            }} />
+            
+            <Stack.Screen name='SongComments' component={SongComments} options={{
                 presentation: 'modal',
                 animation: 'slide_from_bottom'
             }} />

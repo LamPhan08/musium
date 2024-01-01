@@ -2,7 +2,7 @@ const Comment = require('../models/Comment')
 
 const postComment = async (req, res) => {
     try {
-        const { songId, userId, username, avatar, content } = req.body;
+        const { songId, userId, username, avatar, content, timestamp } = req.body;
 
         if (!songId || !userId || !username || !avatar || !content) {
             return res.status(400).json({ error: 'Missing parameter' });
@@ -18,10 +18,12 @@ const postComment = async (req, res) => {
         }
 
         commentData.comments.push({
-            userId,
-            username,
-            avatar,
-            content
+            userId: userId,
+            username: username,
+            avatar: avatar,
+            content: content,
+            createdAt: timestamp,
+            likes: []
         })
 
         await commentData.save();
@@ -103,9 +105,9 @@ const getSongComments = async (req, res) => {
 
 const likeComment = async (req, res) => {
     try {
-        const { songId, commentId } = req.body
+        const { songId, commentId, userId } = req.body
 
-        if (!songId || !commentId) {
+        if (!songId || !commentId || !userId) {
             return res.status(400).json({ error: 'Missing parameter' });
         }
 
@@ -120,8 +122,10 @@ const likeComment = async (req, res) => {
             },
 
             {
-                $inc: {
-                    'comments.$.likes': 1
+                $push: {
+                    'comments.$.likes': {
+                        userId: userId
+                    }
                 }
             }
         )
@@ -144,9 +148,9 @@ const likeComment = async (req, res) => {
 
 const unLikeComment = async (req, res) => {
     try {
-        const { songId, commentId } = req.body
+        const { songId, commentId, userId } = req.body
 
-        if (!songId || !commentId) {
+        if (!songId || !commentId || !userId) {
             return res.status(400).json({ error: 'Missing parameter' });
         }
 
@@ -161,8 +165,10 @@ const unLikeComment = async (req, res) => {
             },
 
             {
-                $inc: {
-                    'comments.$.likes': -1
+                $pull: {
+                    'comments.$.likes': {
+                        userId: userId
+                    }
                 }
             }
         )

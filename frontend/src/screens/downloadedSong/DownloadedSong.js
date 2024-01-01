@@ -1,20 +1,15 @@
 import React, { useState, useEffect } from 'react'
-import { Image, ScrollView, Text, View, TouchableOpacity, FlatList, SafeAreaView, ActivityIndicator } from "react-native";
+import { ScrollView, Text, View, TouchableOpacity, SafeAreaView, ActivityIndicator } from "react-native";
 import { COLORS } from '../../constants/colors';
-import SearchBar from '../../components/searchBar/SearchBar';
-import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { getAll, SortSongFields, SortSongOrder } from "react-native-get-music-files";
 import StorageAudio from '../../components/storageAudio/StorageAudio';
 import styles from './downloadedSong.style'
 import Entypo from 'react-native-vector-icons/Entypo'
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import TrackPlayer from 'react-native-track-player';
 
 const DownloadedSong = ({ navigation }) => {
   const [music, setMusic] = useState()
-
-  const handleNavigateSearchSongs = () => {
-
-  }
 
   const getMusicFiles = async () => {
     try {
@@ -35,6 +30,17 @@ const DownloadedSong = ({ navigation }) => {
     }
   };
 
+  const handlePlayAll = async () => {
+    await TrackPlayer.setQueue(music)
+
+    TrackPlayer.play()
+  }
+
+  
+  const handleNavigateSearchSongs = () => {
+
+  }
+
   useEffect(() => {
     getMusicFiles();
   }, []);
@@ -53,7 +59,7 @@ const DownloadedSong = ({ navigation }) => {
 
       {music && music.length !== 0 &&
         <View style={styles.btnWrapper}>
-          <TouchableOpacity style={styles.playAllBtn}>
+          <TouchableOpacity style={styles.playAllBtn} onPress={handlePlayAll}>
             <Ionicons name='play' style={styles.playIcon} />
 
             <Text style={styles.all}>Tất cả ({music.length})</Text>

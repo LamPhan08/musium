@@ -10,7 +10,7 @@ import { usePlaybackState } from 'react-native-track-player'
 import { addSongToFavorites, removeSongFromFavorites } from '../../api/favoriteSongs'
 import logo from '../../../assets/images/logo.png'
 
-const SongThumbnail = ({ isLiked, setIsLiked }) => {
+const SongThumbnail = ({ navigation, isLiked, setIsLiked }) => {
   const { song, playerState, user } = useSelector(state => state.song)
   const playbackState = usePlaybackState()
   const circleSoundRef = useRef()
@@ -40,7 +40,7 @@ const SongThumbnail = ({ isLiked, setIsLiked }) => {
   }
 
   const handleNavigateComment = () => {
-
+    navigation.navigate('SongComments', {songId: song.id})
   }
 
   // console.log(playbackState.state)

@@ -11,6 +11,6 @@ router.get('/getSongComments', Comment.getSongComments);
 
 router.post('/likeComment', Comment.likeComment);
 
-router.post('/unLikeComment', Comment.unLikeComment);
+router.delete('/unLikeComment', Comment.unLikeComment);
 
 module.exports = router;

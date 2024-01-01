@@ -5,7 +5,7 @@ const initialState = {
     song: undefined,
     playerState: '',
     user: {
-        avatar: '',
+        photo: '',
         username: '',
         email: '',
         _id: ''
@@ -31,6 +31,7 @@ export const songSlice = createSlice({
         setUser: (state, action) => {
             state.user._id = action.payload._id
             state.user.username = action.payload.username
+            state.user.photo = action.payload.photo
             state.user.email = action.payload.email
         },
         setShuffledSongList: (state, action) => {

@@ -45,7 +45,7 @@ const PlayerDetailsTabView = ({ navigation, onChangeTitle, openPlaylist, setOpen
             }
 
             case 'SongThumbnail': {
-                return <SongThumbnail isLiked={isLiked} setIsLiked={setIsLiked} />
+                return <SongThumbnail navigation={navigation} isLiked={isLiked} setIsLiked={setIsLiked} />
             }
 
             case 'SongLyrics': {
