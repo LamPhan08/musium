@@ -45,6 +45,8 @@ const DownloadedSong = ({ navigation }) => {
     getMusicFiles();
   }, []);
 
+  // console.log(music)
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -82,7 +84,7 @@ const DownloadedSong = ({ navigation }) => {
           >
             {music.map((item, index) => {
               return (
-                <StorageAudio key={index} song={item} index={index} songList={music}/>
+                <StorageAudio key={index} song={{...item, id: index}} index={index} songList={music}/>
               )
             })}
           </ScrollView>

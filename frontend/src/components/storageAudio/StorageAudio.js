@@ -10,6 +10,10 @@ import { setSong, setSongList } from "../../redux/songSlice";
 const StorageAudio = ({ song, index, songList }) => {
   const dispatch = useDispatch();
 
+  songList.forEach((obj, index) => {
+    obj.id = index
+  })
+
   const playMusic = async () => {
     await TrackPlayer.setQueue(songList);
 

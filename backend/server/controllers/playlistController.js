@@ -160,7 +160,7 @@ const getUserPlaylists = async (req, res) => {
         const { userId } = req.query;
 
         if (!userId) {
-            return res.status(400).json({ error: 'Missing parameter' });
+            return res.status(400).json({ error: 'Missing parameter'});
         }
 
         let playlistData = await Playlist.findOne({userId})
