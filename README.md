@@ -16,5 +16,5 @@ Sử dụng Git bash ở thư mục muốn cài đặt và nhập câu lệnh: "
 ***Bước 1:*** Mở Visual Studio Code  
 ***Bước 2:*** Nhấp vào **File** > **Open Folder...** > Vào thư mục vừa tải Source Code từ Github và chọn > **Select Folder**  
 ***Bước 3:*** Khởi động máy ảo từ **Android Studio**  
-***Bước 4:*** Nhấp vào **Terminal** > **New Terminal** > Nhập dòng lệnh **cd backend**, **npm i** để tải các gói package và nhập **npm start** để chạy backend
+***Bước 4:*** Nhấp vào **Terminal** > **New Terminal** > Nhập dòng lệnh **cd backend**, **npm i** để tải các gói package và nhập **npm start** để chạy backend  
 ***Bước 5:*** Nhấp vào **Terminal** > **New Terminal** > Nhập dòng lệnh **cd frontend**, **npm i** để tải các gói package và nhập **npm start** để chạy frontend
