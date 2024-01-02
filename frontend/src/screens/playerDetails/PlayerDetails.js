@@ -100,6 +100,8 @@ const PlayerDetails = ({ navigation }) => {
 
   const handleSeek = (timestamp) => {
     TrackPlayer.seekTo(timestamp)
+
+    TrackPlayer.play()
   }
 
   // console.log(shuffledSongList)

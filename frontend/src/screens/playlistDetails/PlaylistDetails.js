@@ -47,11 +47,18 @@ const PlaylistDetails = ({ navigation, route }) => {
 
   const checkAddedPlaylistToProfile = async (data) => {
     const result = await getUserPlaylists(user._id)
+    console.log('result:', result)
 
-    const check = result.playlists.some(playlist => playlist.playlistId === data.encodeId)
 
-    setIsLiked(check)
+    if (result.length === 0) {
+      setIsLiked(false)
+    }
+    else {
+      const check = result.playlists.some(playlist => playlist.playlistId === data.encodeId)
 
+
+      setIsLiked(check)
+    }
   }
 
   useEffect(() => {

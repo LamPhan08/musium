@@ -1,8 +1,8 @@
 import axios from "axios";
 
-const BASE_URL = "http://192.168.1.4:5000/api"
+const BASE_URL = "https://e879-2001-ee0-169-d332-2919-9479-7a2-ae10.ngrok-free.app/api"
 
-const MONGO_BASE_URL = 'http://192.168.1.4:5000/api/v1' //changable
+const MONGO_BASE_URL = 'https://e879-2001-ee0-169-d332-2919-9479-7a2-ae10.ngrok-free.app/api/v1' //changable
 
 
 export const mongoAPI = axios.create({
